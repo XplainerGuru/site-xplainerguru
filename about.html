@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Team | Xplainer Guru</title>
+    <link rel="icon" type="image/png" href="logo.png">
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
+    <style>
+        .container { max-width: 1000px; margin: 60px auto; padding: 0 20px; }
+        
+        /* Mentor Card (Academic Look) */
+        .mentor-card { background: #fff; padding: 50px; border-radius: 24px; border: 1px solid #e2e8f0; text-align: center; max-width: 600px; margin: 0 auto 80px; box-shadow: 0 4px 20px rgba(0,0,0,0.02); }
+        .badge { background: #eff6ff; color: #2563eb; padding: 8px 18px; border-radius: 50px; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; }
+        
+        /* Developer Card (Dark Mode Match) */
+        #foundation { background: #0f172a; color: #fff; padding: 60px 50px; border-radius: 32px; display: flex; justify-content: space-between; align-items: center; position: relative; overflow: hidden; box-shadow: 0 20px 40px rgba(15, 23, 42, 0.2); }
+        .d-btn { padding: 14px 28px; border-radius: 12px; background: rgba(255,255,255,0.1); color: #fff; font-weight: 600; border: 1px solid rgba(255,255,255,0.05); text-decoration: none; display: inline-block; margin-right: 12px; margin-top: 25px; transition: 0.2s; font-size: 14px; }
+        .d-btn:hover { background: #fff; color: #0f172a; }
+        
+        @media(max-width:768px) { #foundation { flex-direction:column; text-align:center; padding: 40px 30px; } }
+    </style>
+</head>
+<body>
+    
+    <div class="container">
+        <h2 style="text-align:center; margin-bottom:40px; font-family:'Poppins'; color:#0f172a; font-size: 2rem;">Academic Leadership</h2>
+        <div class="mentor-card">
+            <div class="badge">Chief Mentor</div>
+            <h2 style="margin-top:20px; font-family:'Poppins'; color:#0f172a; font-size: 1.8rem;">Shiwendu Kaushal</h2>
+            <p style="color:#64748b; font-weight:500; margin-top:10px; font-size: 1.1rem;">FOUNDER & EDUCATOR</p>
+            <a id="s-ig-about" href="#" target="_blank" style="margin-top:25px; display:inline-block; font-weight:700; color:#2563eb; text-decoration: none; border-bottom:2px solid transparent; transition:0.2s;">
+                View Instagram Profile &rarr;
+            </a>
+        </div>
+
+        <h2 style="text-align:center; margin-bottom:40px; font-family:'Poppins'; color:#0f172a; font-size: 2rem;">Platform Foundation</h2>
+        <div id="foundation">
+            <div style="position: relative; z-index: 2;">
+                <div class="badge" style="background:#f59e0b; color:#0f172a;">Lead Architect</div>
+                <h2 style="margin-top:20px; color:#fff; font-family:'Poppins'; font-size: 2rem;" id="dev-name-about">Ashutosh Kaushal</h2>
+                <p style="opacity:0.8; max-width:450px; margin-top:15px; line-height: 1.6;" id="dev-bio-about">Loading...</p>
+                <div>
+                    <a id="a-ig-about" href="#" target="_blank" class="d-btn">Instagram</a>
+                    <a id="a-li-about" href="#" target="_blank" class="d-btn">LinkedIn</a>
+                </div>
+            </div>
+            <img src="logo.png" style="height:140px; filter: grayscale(1) invert(1); opacity:0.08; position: absolute; right: -20px; bottom: -20px;">
+        </div>
+    </div>
+
+    <script src="content.js"></script>
+    <script src="master.js"></script>
+    <script>
+        document.getElementById('s-ig-about').href = CONFIG.mentor.ig;
+        document.getElementById('dev-name-about').innerText = CONFIG.developer.name;
+        document.getElementById('dev-bio-about').innerText = CONFIG.developer.bio;
+        document.getElementById('a-ig-about').href = CONFIG.developer.ig;
+        document.getElementById('a-li-about').href = CONFIG.developer.li;
+    </script>
+</body>
+</html>
