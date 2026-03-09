@@ -2,31 +2,31 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Notes | Xplainer Guru</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <title>Handwritten Notes | Xplainer Guru</title>
     <link rel="icon" type="image/png" href="logo.png">
-    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700&family=Poppins:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;700&family=Poppins:wght@700;800&display=swap" rel="stylesheet">
     <style>
-        /* Only body and content styles */
-        body { font-family: 'Manrope', sans-serif; background: #f8fafc; margin: 0; display: flex; flex-direction: column; min-height: 100vh; }
-        .container { max-width: 850px; margin: 40px auto 60px; padding: 0 20px; }
-        .note-item { background: #fff; border-radius: 20px; padding: 30px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #eef2f6; margin-bottom: 20px; }
-        .btn-view { background: #2563eb; color: #fff; padding: 14px 28px; border-radius: 12px; font-weight: 700; text-decoration: none; }
+        .container { max-width: 1000px; margin: 40px auto; padding: 0 15px; }
+        .notes-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+        .note-card { background: #fff; border-radius: 20px; padding: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border: 1px solid #e2e8f0; }
+        .dl-btn { background: #000080; color: #fff; padding: 10px 20px; border-radius: 10px; border:none; cursor:pointer; font-weight: 700; width:100%; margin-top:15px; }
     </style>
 </head>
 <body>
-    
+    <script src="content.js"></script><script src="master.js"></script>
     <div class="container">
-        <h1 style="font-family:'Poppins'; border-left: 6px solid #2563eb; padding-left: 20px; margin-bottom: 50px; color:#0f172a;">Handwritten Notes</h1>
-        <div id="notes-list"></div>
+        <h1 style="font-family:'Poppins';">Study Notes</h1>
+        <p style="color:#64748b; margin-bottom:40px;">Get premium notes by clicking the download buttons below.</p>
+        
+        <div class="notes-grid">
+            <div class="note-card">
+                <span style="background:#eff6ff; color:#2563eb; padding:4px 10px; border-radius:6px; font-size:11px; font-weight:800;">HISTORY</span>
+                <h3 style="margin: 15px 0 10px; font-family:'Poppins';">Trade to Territory</h3>
+                <p style="font-size: 14px; color:#64748b;">Complete Chapter 2 handwritten notes.</p>
+                <button class="dl-btn" onclick="checkAuth('Download PDF')">Download PDF</button>
+            </div>
+        </div>
     </div>
-
-    <script src="content.js"></script>
-    <script src="master.js"></script>
-    <script>
-        const list = document.getElementById('notes-list');
-        studyNotes.forEach(n => {
-            list.innerHTML += `<div class="note-item"><div><strong style="font-size:18px; color:#0f172a;">${n.title}</strong><br><small style="color:#64748b; font-weight:600;">Type: ${n.size}</small></div><a href="${n.file}" class="btn-view" target="_blank">Open Notes</a></div>`;
-        });
-    </script>
 </body>
 </html>
