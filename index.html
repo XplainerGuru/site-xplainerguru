@@ -2,52 +2,43 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Xplainer Guru | Home</title>
     <link rel="icon" type="image/png" href="logo.png">
-    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700&family=Poppins:wght@600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700&family=Poppins:wght@800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://paulirish.github.io/lite-youtube-embed/src/lite-yt-embed.css" />
     <style>
-        /* Only Home Specific Styles */
-        .hero { background: #1e3a8a; color: #fff; text-align: center; padding: 100px 20px 160px; border-bottom-left-radius: 60px; border-bottom-right-radius: 60px; }
-        .hero h1 { font-size: clamp(2rem, 6vw, 3.2rem); margin-bottom: 10px; font-family: 'Poppins'; }
-        
-        .wa-wrapper { padding: 0 20px; margin-top: -70px; z-index: 10; position: relative; }
-        .wa-card { background: #fff; max-width: 900px; margin: 0 auto; border-radius: 20px; padding: 25px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 15px 30px rgba(0,0,0,0.1); border: 1px solid rgba(0,0,0,0.04); }
-        .wa-btn { background: #0f172a; color: #fff; padding: 12px 25px; border-radius: 10px; font-weight: 800; text-decoration: none; }
-
-        .container { max-width: 1200px; margin: 0 auto; padding: 60px 20px; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 30px; }
-        .card { background: #fff; border-radius: 20px; overflow: hidden; border: 1px solid #f1f5f9; transition: 0.3s; }
-        .tag { font-size: 11px; font-weight: 800; color: #2563eb; background: #eff6ff; padding: 5px 12px; border-radius: 6px; text-transform: uppercase; margin-bottom: 10px; display: inline-block; font-family: 'Poppins'; }
-
-        @media (max-width: 768px) { .wa-card { flex-direction: column; text-align: center; gap: 20px; } .wa-btn { width: 100%; } }
+        .hero { background: #1e3a8a; color: #fff; text-align: center; padding: 100px 20px 140px; border-bottom-left-radius: 50px; border-bottom-right-radius: 50px; }
+        .slider-wrapper { position: relative; max-width: 1000px; margin: -60px auto 40px; overflow: hidden; border-radius: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.15); }
+        .slider-track { display: flex; transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1); }
+        .slide { min-width: 100%; background: #fff; }
+        lite-youtube { width: 100% !important; max-width: 100%; aspect-ratio: 16/9; border: none; }
+        .nav-btn { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(0,0,128,0.7); color: #fff; border: none; width: 45px; height: 45px; border-radius: 50%; cursor: pointer; font-size: 24px; z-index: 100; display: flex; align-items: center; justify-content: center; }
+        .btn-prev { left: 15px; } .btn-next { right: 15px; }
+        .slide-info { padding: 25px; border-top: 1px solid #eee; }
     </style>
 </head>
 <body>
-    <section class="hero">
-        <h1>Master Your Syllabus</h1>
-        <p style="opacity:0.8; margin-top:10px;">Premium video lectures and professional handwritten notes.</p>
-    </section>
-    
-    <div class="wa-wrapper"><div class="wa-card"><div><h3 style="font-size:18px; font-family:'Poppins'; font-weight:700;">Official Study Group</h3><p style="color:#64748b; font-size:14px;">Daily PDFs & Updates.</p></div><a id="wa-chan-banner" href="#" class="wa-btn" target="_blank">Join Channel </a></div></div>
-
-    <div class="container">
-        <h2 style="font-family:'Poppins'; color:#0f172a;">Latest Series</h2><br>
-        <div class="grid" id="feed-grid"></div>
+    <section class="hero"><h1 style="font-family:'Poppins';">Master Your Syllabus</h1><p>Premium lectures and professional notes.</p></section>
+    <div class="slider-wrapper">
+        <button class="nav-btn btn-prev" onclick="manual(-1)">&lt;</button>
+        <button class="nav-btn btn-next" onclick="manual(1)">&gt;</button>
+        <div class="slider-track" id="track"></div>
     </div>
-
-    <script src="content.js"></script>
-    <script src="master.js"></script>
+    <script src="content.js"></script><script src="master.js"></script>
     <script src="https://paulirish.github.io/lite-youtube-embed/src/lite-yt-embed.js"></script>
     <script>
-        const grid = document.getElementById('feed-grid');
+        const track = document.getElementById('track');
+        let index = 0;
         contentDatabase.forEach(item => {
-            const card = document.createElement('div'); card.className = 'card';
-            card.innerHTML = `<lite-youtube videoid="${item.id}"></lite-youtube><div style="padding:20px;"><span class="tag">${item.tag}</span><h3 style="font-family:'Poppins'; font-size:1.1rem; font-weight:700; margin:0;">${item.title}</h3></div>`;
-            grid.appendChild(card);
+            const slide = document.createElement('div'); slide.className = 'slide';
+            slide.innerHTML = `<lite-youtube videoid="${item.id}"></lite-youtube><div class="slide-info"><h3 style="margin:0; font-family:'Poppins';">${item.title}</h3></div>`;
+            track.appendChild(slide);
         });
-        document.getElementById('wa-chan-banner').href = CONFIG.waChannel;
+        function update() { track.style.transform = `translateX(-${index * 100}%)`; }
+        function move() { index = (index + 1) % contentDatabase.length; update(); }
+        function manual(step) { clearInterval(auto); index = (index + step + contentDatabase.length) % contentDatabase.length; update(); auto = setInterval(move, 5000); }
+        let auto = setInterval(move, 5000);
     </script>
 </body>
 </html>

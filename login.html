@@ -2,89 +2,33 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Login | Xplainer Guru</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>Join | Xplainer Guru</title>
     <link rel="icon" type="image/png" href="logo.png">
-    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700&family=Poppins:wght@600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700&family=Poppins:wght@700&display=swap" rel="stylesheet">
     <style>
-        .auth-container { max-width: 400px; margin: 80px auto; background: #fff; padding: 40px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border: 1px solid #eef2f6; text-align: center; }
-        .auth-container h2 { font-family: 'Poppins'; color: #000080; margin-bottom: 30px; font-size: 24px; }
-        .input-group { margin-bottom: 20px; text-align: left; }
-        .input-group label { display: block; font-size: 13px; font-weight: 700; color: #64748b; margin-bottom: 8px; }
-        .input-group input { width: 100%; padding: 12px 15px; border: 1px solid #cbd5e1; border-radius: 10px; font-family: 'Manrope'; font-size: 15px; outline: none; transition: 0.3s; box-sizing: border-box; }
-        .input-group input:focus { border-color: #000080; box-shadow: 0 0 0 3px rgba(0,0,128,0.1); }
-        .auth-btn { width: 100%; background: #000080; color: #fff; border: none; padding: 14px; border-radius: 10px; font-weight: 700; font-size: 16px; font-family: 'Manrope'; cursor: pointer; transition: 0.3s; margin-top: 10px; }
-        .auth-btn:hover { background: #0f172a; }
-        .switch-link { margin-top: 20px; font-size: 14px; color: #64748b; }
-        .switch-link span { color: #000080; font-weight: 700; cursor: pointer; text-decoration: underline; }
+        body { background: #f8fafc; font-family: 'Manrope'; display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; padding: 15px; }
+        .box { width: 100%; max-width: 380px; background: #fff; padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); text-align: center; }
+        h2 { color: #000080; font-family: 'Poppins'; margin-bottom: 20px; }
+        input { width: 100%; padding: 14px; margin-bottom: 12px; border: 1px solid #cbd5e1; border-radius: 10px; font-size: 16px; outline: none; box-sizing: border-box; }
+        .btn { width: 100%; background: #000080; color: #fff; padding: 15px; border: none; border-radius: 10px; font-weight: 700; cursor: pointer; font-size: 16px; }
     </style>
 </head>
 <body>
-    
-    <div class="auth-container">
-        <img src="logo.png" style="width: 60px; border-radius: 50%; margin-bottom: 10px;">
-        <h2 id="form-title">Welcome Back</h2>
-        
-        <form id="auth-form" onsubmit="handleAuth(event)">
-            <div class="input-group" id="name-group" style="display: none;">
-                <label>Full Name</label>
-                <input type="text" id="fullname" placeholder="John Doe">
-            </div>
-            <div class="input-group">
-                <label>Email Address</label>
-                <input type="email" id="email" required placeholder="you@example.com">
-            </div>
-            <div class="input-group">
-                <label>Password</label>
-                <input type="password" id="password" required placeholder="••••••••">
-            </div>
-            <button type="submit" class="auth-btn" id="submit-btn">Login</button>
+    <div class="box">
+        <img src="logo.png" style="width: 50px; border-radius: 50%; margin-bottom: 10px;">
+        <h2>Welcome</h2>
+        <form onsubmit="save(event)">
+            <input type="text" id="n" placeholder="Name" required>
+            <input type="email" id="e" placeholder="Email" required>
+            <button class="btn">Login & Continue</button>
         </form>
-
-        <div class="switch-link" id="switch-text">
-            Don't have an account? <span onclick="toggleMode()">Sign Up</span>
-        </div>
     </div>
-
-    <script src="content.js"></script>
-    <script src="master.js"></script>
     <script>
-        let isLoginMode = true;
-
-        function toggleMode() {
-            isLoginMode = !isLoginMode;
-            document.getElementById('form-title').innerText = isLoginMode ? "Welcome Back" : "Create Account";
-            document.getElementById('name-group').style.display = isLoginMode ? "none" : "block";
-            document.getElementById('fullname').required = !isLoginMode;
-            document.getElementById('submit-btn').innerText = isLoginMode ? "Login" : "Create Account";
-            document.getElementById('switch-text').innerHTML = isLoginMode ? 
-                `Don't have an account? <span onclick="toggleMode()">Sign Up</span>` : 
-                `Already have an account? <span onclick="toggleMode()">Login</span>`;
-        }
-
-        function handleAuth(e) {
-            e.preventDefault();
-            // Yahan future mein Firebase ka code aayega. 
-            // Abhi testing ke liye hum LocalStorage mein save kar rahe hain.
-            const email = document.getElementById('email').value;
-            let name = isLoginMode ? email.split('@')[0] : document.getElementById('fullname').value;
-            
-            const userData = {
-                name: name,
-                email: email,
-                pic: "" // Blank rakhne se master.js default UI avatar le lega
-            };
-            
-            localStorage.setItem('xg_user', JSON.stringify(userData));
-            
-            // Redirect logic (Agar test page se aaya tha toh wapis test page pe bhej do)
-            const urlParams = new URLSearchParams(window.location.search);
-            const redirect = urlParams.get('redirect');
-            if(redirect) {
-                window.location.href = redirect;
-            } else {
-                window.location.href = "dashboard.html"; // Ya index.html
-            }
+        function save(ev) {
+            ev.preventDefault();
+            localStorage.setItem('xg_user', JSON.stringify({name: document.getElementById('n').value, email: document.getElementById('e').value}));
+            window.location.href = "dashboard.html";
         }
     </script>
 </body>
