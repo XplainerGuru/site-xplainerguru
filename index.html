@@ -11,22 +11,15 @@
         .banner-link { width: 100%; display: block; margin: 5px 0 25px; text-decoration: none; }
         .banner-link img { width: 100%; height: auto; display: block; object-fit: contain; }
         .wa-box { max-width: 900px; margin: 0 auto 30px; padding: 25px; background: #f0fdf4; border-radius: 20px; border: 1px solid #dcfce7; text-align: center; }
-        
-        /* Slider Fix: No white space */
         .slider-wrapper { position: relative; width: 100%; max-width: 1000px; margin: 0 auto 40px; overflow: hidden; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); background: #fff; }
         .slider-track { display: flex; transition: transform 0.6s ease; width: 100%; }
         .slide { min-width: 100%; width: 100%; }
-        lite-youtube { width: 100% !important; max-width: 100% !important; aspect-ratio: 16/9; display: block; border: none; }
-        
-        .nav-btn { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(0,0,128,0.7); color: #fff; border: none; width: 45px; height: 45px; border-radius: 50%; cursor: pointer; z-index: 100; font-size: 24px; display: flex; align-items: center; justify-content: center; }
+        lite-youtube { width: 100% !important; max-width: 100% !important; aspect-ratio: 16/9; display: block; }
+        .nav-btn { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(0,0,128,0.7); color: #fff; border: none; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; z-index: 100; font-size: 20px; }
     </style>
 </head>
 <body>
-    <script src="content.js"></script><script src="master.js"></script>
-
-    <a href="https://whatsapp.com/channel/0029Vb7p4QV0QeadmOIpgx36" class="banner-link" target="_blank">
-        <img src="banner.jpg" alt="Xplainer Guru Banner">
-    </a>
+    <a href="https://whatsapp.com/channel/0029Vb7p4QV0QeadmOIpgx36" class="banner-link" target="_blank"><img src="banner.jpg"></a>
 
     <div class="wa-box">
         <h3 style="margin:0; font-family:'Poppins'; color:#166534;">Join Our Channel</h3>
@@ -39,6 +32,8 @@
         <div class="slider-track" id="track"></div>
     </div>
 
+    <script src="content.js"></script>
+    <script src="master.js"></script>
     <script src="https://paulirish.github.io/lite-youtube-embed/src/lite-yt-embed.js"></script>
     <script>
         const track = document.getElementById('track');

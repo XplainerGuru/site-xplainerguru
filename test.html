@@ -9,8 +9,8 @@
     <style>
         .container { max-width: 1000px; margin: 40px auto; padding: 0 15px; display: flex; justify-content: center; }
         .cs-banner { background: #0f172a; color: #fff; padding: 80px 30px; border-radius: 40px; text-align: center; width: 100%; position: relative; overflow: hidden; border: 1px solid rgba(255,255,255,0.1); }
-        .cs-banner h1 { font-family: 'Poppins'; font-size: clamp(2rem, 8vw, 3.5rem); margin: 0; z-index: 2; position: relative; }
-        .cs-banner p { opacity: 0.7; margin: 20px 0; z-index: 2; position: relative; }
+        .cs-banner h1 { font-family: 'Poppins'; font-size: clamp(2rem, 8vw, 3.5rem); margin: 0; position: relative; z-index: 2; }
+        .cs-banner p { opacity: 0.7; margin: 20px 0; position: relative; z-index: 2; }
         .pulse { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 300px; height: 300px; background: radial-gradient(circle, #2563eb 0%, transparent 70%); opacity: 0.1; animation: p 4s infinite; }
         @keyframes p { 0% { transform: translate(-50%, -50%) scale(0.8); opacity: 0.1; } 50% { opacity: 0.2; } 100% { transform: translate(-50%, -50%) scale(1.5); opacity: 0; } }
         .dot { width: 12px; height: 12px; background: #2563eb; border-radius: 50%; display: inline-block; animation: b 1.4s infinite both; margin: 0 4px; }
@@ -18,12 +18,13 @@
     </style>
 </head>
 <body>
-    <script src="content.js"></script><script src="master.js"></script>
+    <script src="content.js"></script>
+    <script src="master.js"></script>
     <div class="container">
         <div class="cs-banner">
             <div class="pulse"></div>
             <h1>Mock Tests <br><span style="color:rgba(255,255,255,0.5)">Coming Soon</span></h1>
-            <p>Master your subjects with real-time results. Coming very soon!</p>
+            <p>Master your subjects with real-time results. Our premium test engine is under construction.</p>
             <div class="dot"></div><div class="dot" style="animation-delay:0.2s"></div><div class="dot" style="animation-delay:0.4s"></div>
             <br><button onclick="checkAuth('Attempt Test')" style="background:#2563eb; color:#fff; border:none; padding:15px 40px; border-radius:15px; font-weight:800; margin-top:30px; cursor:pointer;">Notify Me</button>
         </div>
