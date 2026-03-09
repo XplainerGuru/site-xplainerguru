@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>My Profile | Xplainer Guru</title>
+    <link rel="icon" type="image/png" href="logo.png">
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700&family=Poppins:wght@700&display=swap" rel="stylesheet">
+    <style>
+        .container { max-width: 900px; margin: 40px auto; padding: 0 15px; }
+        .hero { background: #0f172a; color: #fff; padding: 40px; border-radius: 24px; display: flex; align-items: center; gap: 25px; position: relative; }
+        .pic-wrap { position: relative; cursor: pointer; }
+        .pic-wrap img { width: 90px; height: 90px; border-radius: 50%; border: 3px solid #000080; object-fit: cover; }
+        .edit { position: absolute; bottom: 0; right: 0; background: #2563eb; color: #fff; font-size: 10px; padding: 4px; border-radius: 4px; font-weight: 800; }
+        .btn-out { background: #ef4444; color: #fff; border: none; padding: 10px 20px; border-radius: 10px; font-weight: 700; cursor: pointer; margin-top: 15px; }
+        @media (max-width: 600px) { .hero { flex-direction: column; text-align: center; } }
+    </style>
+</head>
+<body>
+    <script src="content.js"></script><script src="master.js"></script>
+    <div class="container">
+        <div class="hero">
+            <div class="pic-wrap" onclick="document.getElementById('file').click()">
+                <img id="dp" src=""><span class="edit">EDIT</span>
+                <input type="file" id="file" hidden accept="image/*" onchange="upload(event)">
+            </div>
+            <div>
+                <h1 id="name" style="margin:0; font-family:'Poppins';">User!</h1>
+                <p id="email" style="opacity:0.7; font-size:14px;"></p>
+                <button class="btn-out" onclick="logoutUser()">Logout Now</button>
+            </div>
+        </div>
+        <div style="margin-top:40px; text-align:center; color:#64748b; padding:40px; border:2px dashed #e2e8f0; border-radius:20px;">
+            Your Mock Test History & Certificates will appear here soon.
+        </div>
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const u = JSON.parse(localStorage.getItem('xg_user'));
+            if(!u) window.location.href="login.html";
+            document.getElementById('name').innerText = `Hi, ${u.name}!`;
+            document.getElementById('email').innerText = u.email;
+            document.getElementById('dp').src = u.pic || `https://ui-avatars.com/api/?name=${u.name}&background=000080&color=fff`;
+        });
+        function upload(ev) {
+            const reader = new FileReader();
+            reader.onload = () => {
+                const u = JSON.parse(localStorage.getItem('xg_user')); u.pic = reader.result;
+                localStorage.setItem('xg_user', JSON.stringify(u)); document.getElementById('dp').src = reader.result;
+                window.location.reload(); 
+            }
+            reader.readAsDataURL(ev.target.files[0]);
+        }
+    </script>
+</body>
+</html>

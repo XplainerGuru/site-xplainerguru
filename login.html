@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>Join | Xplainer Guru</title>
+    <link rel="icon" type="image/png" href="logo.png">
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700&family=Poppins:wght@700&display=swap" rel="stylesheet">
+    <style>
+        body { background: #f8fafc; font-family: 'Manrope'; display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; padding: 15px; }
+        .box { width: 100%; max-width: 380px; background: #fff; padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); text-align: center; }
+        h2 { color: #000080; font-family: 'Poppins'; margin-bottom: 20px; }
+        input { width: 100%; padding: 14px; margin-bottom: 12px; border: 1px solid #cbd5e1; border-radius: 10px; font-size: 16px; outline: none; box-sizing: border-box; }
+        .btn { width: 100%; background: #000080; color: #fff; padding: 15px; border: none; border-radius: 10px; font-weight: 700; cursor: pointer; font-size: 16px; }
+    </style>
+</head>
+<body>
+    <div class="box">
+        <img src="logo.png" style="width: 50px; border-radius: 50%; margin-bottom: 10px;">
+        <h2>Welcome</h2>
+        <form onsubmit="save(event)">
+            <input type="text" id="n" placeholder="Name" required>
+            <input type="email" id="e" placeholder="Email" required>
+            <button class="btn">Login & Continue</button>
+        </form>
+    </div>
+    <script>
+        function save(ev) {
+            ev.preventDefault();
+            localStorage.setItem('xg_user', JSON.stringify({name: document.getElementById('n').value, email: document.getElementById('e').value}));
+            window.location.href = "dashboard.html";
+        }
+    </script>
+</body>
+</html>

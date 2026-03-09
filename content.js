@@ -1,15 +1,14 @@
 const CONFIG = {
-    email: "ashutoshkl1412@gmail.com",
-    waNum: "918538944203",
+    email: "xplainerguru@gmail.com",
+    waNum: "910000000000",
     waChannel: "https://whatsapp.com/channel/0029Vb7p4QV0QeadmOIpgx36",
     ig: "https://instagram.com/xplainer.guru.official",
     yt: "https://youtube.com/@XplainerGuruOfficial",
     
-    // LEADERSHIP DATA
     mentor: { 
         name: "Shiwendu Kaushal", 
         role: "FOUNDER & CHIEF EDUCATOR", 
-        ig: "https://www.instagram.com/hr._shivaa?igsh=MWhwNWp5N2k4YXFteA==" 
+        ig: "https://www.instagram.com/shiwendu.kaushal" 
     },
     developer: {
         name: "Ashutosh Kaushal",
@@ -27,6 +26,10 @@ const contentDatabase = [
 ];
 
 const studyNotes = [
-    { title: "History: Chapter 1 Pro Notes", file: "https://drive.google.com/file/d/1DO1tbR3nX0zOHCzPoBOeSBaXmzaUmz_c/view?usp=drivesdk", size: "PDF" },
-    { title: "History: Chapter 2 Pro Notes", file: "https://drive.google.com/file/d/17EfoPNm06TF9lmCxsHFkHH-549tLfVQY/view?usp=drivesdk", size: "PDF" }
+    { title: "History: Chapter 1 Pro Notes", file: "https://drive.google.com/file/d/1DO1tbR3nX0zOHCzPoBOeSBaXmzaUmz_c/view?usp=drivesdk", size: "PDF" }
+];
+
+const mockTests = [
+    { id: "hist_ch1", title: "History: Trade to Territory", questions: 10, time: 15, hasCertificate: true },
+    { id: "hist_ch2", title: "History: Ruling the Countryside", questions: 15, time: 20, hasCertificate: false }
 ];
