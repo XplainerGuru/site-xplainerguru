@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>XG Admin Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700&family=Poppins:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { font-family: 'Manrope', sans-serif; background: #0f172a; color: #fff; margin: 0; padding: 20px; display: none; }
+        .dashboard { max-width: 1200px; margin: 0 auto; }
+        .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 20px; margin-bottom: 30px; }
+        .header h1 { font-family: 'Poppins', sans-serif; margin: 0; color: #2563eb; }
+        
+        .stat-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 30px; }
+        .card { background: rgba(255,255,255,0.05); padding: 20px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.1); text-align: center; }
+        .card h3 { margin: 0; font-size: 2rem; color: #fff; }
+        .card p { margin: 5px 0 0; color: #94a3b8; font-size: 14px; }
+
+        .table-container { background: rgba(255,255,255,0.05); border-radius: 15px; overflow-x: auto; border: 1px solid rgba(255,255,255,0.1); }
+        table { width: 100%; border-collapse: collapse; min-width: 800px; }
+        th, td { padding: 15px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 14px; }
+        th { background: rgba(0,0,0,0.2); color: #94a3b8; font-family: 'Poppins', sans-serif; font-weight: 600; }
+        tr:hover { background: rgba(255,255,255,0.02); }
+        
+        .map-btn { background: #25d366; color: #000; padding: 5px 10px; border-radius: 6px; text-decoration: none; font-weight: 700; font-size: 12px; }
+        .map-btn.denied { background: #ef4444; color: #fff; pointer-events: none; }
+        
+        #loader { text-align: center; padding: 50px; color: #94a3b8; }
+        .error-msg { color: #ef4444; text-align: center; padding: 20px; }
+    </style>
+</head>
+<body>
+
+    <div class="dashboard">
+        <div class="header">
+            <h1>XG Admin Panel</h1>
+            <button onclick="logout()" style="background:#ef4444; color:#fff; border:none; padding:10px 20px; border-radius:8px; cursor:pointer; font-weight:700;">Logout</button>
+        </div>
+
+        <div class="stat-cards">
+            <div class="card"><h3 id="total-users">0</h3><p>Total Users</p></div>
+            <div class="card"><h3 id="mobile-users">0</h3><p>Mobile Users</p></div>
+            <div class="card"><h3 id="pc-users">0</h3><p>PC Users</p></div>
+        </div>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>WhatsApp</th>
+                        <th>Device</th>
+                        <th>Source</th>
+                        <th>Location (Map)</th>
+                    </tr>
+                </thead>
+                <tbody id="user-data">
+                    </tbody>
+            </table>
+            <div id="loader"><i class="fa-solid fa-spinner fa-spin fa-2x"></i><p style="margin-top: 15px;">Fetching Secure Data...</p></div>
+        </div>
+    </div>
+
+    <script>
+        // ADMIN PASSWORD (Change this if you want)
+        const ADMIN_PASS = "admin123"; 
+        
+        // PASTE YOUR WEB APP URL HERE (The one with /exec at the end)
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyNi_NMnULVOfuZFkVj62clNjv8bbQBhdfWv0G4S_mVbxKffMRyDQ5lTPsLNXRIW6l7/exec";
+
+        window.onload = () => {
+            const auth = sessionStorage.getItem('xg_admin_auth');
+            if (auth === ADMIN_PASS) {
+                document.body.style.display = 'block';
+                fetchData();
+            } else {
+                const pass = prompt("Admin Security: Enter Password");
+                if (pass === ADMIN_PASS) {
+                    sessionStorage.setItem('xg_admin_auth', pass);
+                    document.body.style.display = 'block';
+                    fetchData();
+                } else {
+                    alert("Incorrect Password. Access Denied.");
+                    window.location.href = "index.html";
+                }
+            }
+        };
+
+        function logout() {
+            sessionStorage.removeItem('xg_admin_auth');
+            window.location.reload();
+        }
+
+        function fetchData() {
+            fetch(SCRIPT_URL)
+                .then(res => res.json())
+                .then(data => {
+                    document.getElementById('loader').style.display = 'none';
+                    const tbody = document.getElementById('user-data');
+                    
+                    if(!data || data.length === 0) {
+                        tbody.innerHTML = "<tr><td colspan='7' style='text-align:center;'>No user data found yet.</td></tr>";
+                        return;
+                    }
+
+                    let mobileCount = 0; 
+                    let pcCount = 0;
+                    let validUsers = 0;
+
+                    // Skip the first row (Headers) if present, or start from 1
+                    for(let i = 1; i < data.length; i++) {
+                        let row = data[i];
+                        if(!row[1]) continue; // Skip empty rows
+
+                        validUsers++;
+
+                        let name = row[0] || "Unknown";
+                        let email = row[1] || "N/A";
+                        let wa = row[2] || "N/A";
+                        let device = row[3] || "N/A";
+                        let source = row[4] || "Direct";
+                        
+                        // Handle Date format safely
+                        let date = "Unknown";
+                        if(row[5]) {
+                            let d = new Date(row[5]);
+                            date = isNaN(d) ? row[5] : d.toLocaleDateString();
+                        }
+                        
+                        let lat = row[6];
+                        let lng = row[7];
+
+                        // Device Stats
+                        if(device.toLowerCase() === 'pc' || device.toLowerCase() === 'windows') {
+                            pcCount++;
+                        } else if(device.toLowerCase() !== 'n/a') {
+                            mobileCount++;
+                        }
+
+                        // Map Logic Fix
+                        let mapHTML = "";
+                        if(lat && lat !== "Denied" && lat !== "" && lng && lng !== "Denied" && lng !== "") {
+                            // Fixed map URL format
+                            mapHTML = `<a href="https://www.google.com/maps?q=${lat},${lng}" target="_blank" class="map-btn"><i class="fa-solid fa-location-dot"></i> View Map</a>`;
+                        } else {
+                            mapHTML = `<span class="map-btn denied">Denied / Unknown</span>`;
+                        }
+
+                        // Device Icon Logic
+                        let deviceIcon = "fa-mobile-screen";
+                        if(device.toLowerCase() === 'pc' || device.toLowerCase() === 'windows') deviceIcon = "fa-desktop";
+
+                        let tr = `<tr>
+                            <td>${date}</td>
+                            <td><strong>${name}</strong></td>
+                            <td>${email}</td>
+                            <td>${wa}</td>
+                            <td><i class="fa-solid ${deviceIcon}"></i> ${device}</td>
+                            <td>${source}</td>
+                            <td>${mapHTML}</td>
+                        </tr>`;
+                        
+                        // Add row to the top of the table
+                        tbody.insertAdjacentHTML('afterbegin', tr);
+                    }
+
+                    // Update Stats Cards
+                    document.getElementById('total-users').innerText = validUsers;
+                    document.getElementById('mobile-users').innerText = mobileCount;
+                    document.getElementById('pc-users').innerText = pcCount;
+                })
+                .catch(err => {
+                    document.getElementById('loader').innerHTML = `<div class='error-msg'>Failed to fetch data. Make sure Apps Script 'doGet' function is deployed correctly. Error: ${err.message}</div>`;
+                    console.error("Fetch Error: ", err);
+                });
+        }
+    </script>
+</body>
+</html>
