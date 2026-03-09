@@ -1,16 +1,8 @@
 document.addEventListener("DOMContentLoaded", () => {
     const userStr = localStorage.getItem('xg_user');
-    let authHTML = '';
-    let drawerAuthHTML = '';
-    
-    if(userStr) {
-        const user = JSON.parse(userStr);
-        authHTML = `<a href="dashboard.html" class="u-av"><img src="${user.pic || 'https://ui-avatars.com/api/?name='+user.name+'&background=000080&color=fff'}" style="width:38px; height:38px; border-radius:50%; border:2px solid #2563eb; object-fit:cover; display:block;"></a>`;
-        drawerAuthHTML = `<a href="dashboard.html" class="d-link" style="color:#2563eb; font-weight:800;">My Dashboard</a>`;
-    } else {
-        authHTML = `<a href="login.html" style="background:#000080; color:#fff; padding:8px 16px; border-radius:8px; text-decoration:none; font-weight:700; font-size:13px; white-space:nowrap;">Login</a>`;
-        drawerAuthHTML = `<a href="login.html" class="d-link" style="color:#2563eb; font-weight:800;">Login / Sign Up</a>`;
-    }
+    let authHTML = userStr ? 
+        `<a href="dashboard.html" class="u-av"><img src="${JSON.parse(userStr).pic || 'https://ui-avatars.com/api/?name='+JSON.parse(userStr).name+'&background=000080&color=fff'}" style="width:38px; height:38px; border-radius:50%; border:2px solid #2563eb; object-fit:cover; display:block;"></a>` : 
+        `<a href="login.html" style="background:#000080; color:#fff; padding:8px 16px; border-radius:8px; text-decoration:none; font-weight:700; font-size:13px; white-space:nowrap;">Login</a>`;
 
     const masterCSS = `
     <style>
@@ -19,24 +11,18 @@ document.addEventListener("DOMContentLoaded", () => {
         html { scroll-behavior: smooth; }
         body { margin: 0; padding-top: 72px; font-family: 'Manrope', sans-serif; background: #f8fafc; display: flex; flex-direction: column; min-height: 100vh; overflow-x: hidden; width: 100%; }
         
-        /* CLEAN HEADER: Social icons in menu only */
         header { background: rgba(255, 255, 255, 0.98); height: 72px; width: 100%; position: fixed; top: 0; left: 0; z-index: 9000; display: flex; align-items: center; justify-content: space-between; padding: 0 clamp(10px, 3vw, 24px); box-shadow: 0 4px 20px rgba(0,0,0,0.03); backdrop-filter: blur(10px); }
         .nav-l { display: flex; align-items: center; gap: clamp(5px, 2vw, 12px); }
         .brand { font-family: 'Poppins'; font-weight: 800; font-size: clamp(1rem, 4vw, 1.4rem); display: flex; align-items: center; gap: 8px; color: #0f172a; text-decoration: none; white-space: nowrap; }
         .brand img { height: clamp(30px, 5vw, 38px); border-radius: 50%; }
 
-        /* Login button pushed left for mobile safety */
         .nav-r { display: flex; align-items: center; flex-shrink: 0; margin-right: 30px; } 
 
-        /* MENU DRAWER SOCIAL ICONS */
         .d-social-footer { margin-top: auto; padding-top: 30px; display: flex; gap: 15px; border-top: 1px solid rgba(255,255,255,0.1); }
         .s-btn { width: 42px; height: 42px; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: 0.3s; text-decoration:none; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
         .s-btn svg { width: 22px; fill: #fff; }
-        .s-btn.wa { background: var(--wa-green); }
-        .s-btn.yt { background: var(--yt-red); }
-        .s-btn.ig { background: var(--ig-pink); }
+        .s-btn.wa { background: var(--wa-green); } .s-btn.yt { background: var(--yt-red); } .s-btn.ig { background: var(--ig-pink); }
 
-        /* ORIGINAL 4-COLUMN FOOTER */
         footer { background: #0f172a; color: #94a3b8; padding: 80px 20px 40px; margin-top: auto; border-top: 1px solid rgba(255,255,255,0.05); }
         .ft-grid { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 40px; }
         .ft-header { color: #fff; margin-bottom: 25px; font-weight: 700; border-left: 4px solid var(--xg-highlight); padding-left: 15px; font-family: 'Poppins'; font-size: 1.1rem; text-align: left; }
@@ -58,9 +44,7 @@ document.addEventListener("DOMContentLoaded", () => {
             <button onclick="toggleDrawer()" style="background:none; border:none; cursor:pointer; display:flex; align-items:center;"><svg viewBox="0 0 24 24" width="28" height="28" stroke="#0f172a" stroke-width="2.5" fill="none"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg></button>
             <a href="index.html" class="brand"><img src="logo.png">Xplainer<span style="color:var(--xg-highlight)">Guru</span></a>
         </div>
-        <div class="nav-r">
-            ${authHTML}
-        </div>
+        <div class="nav-r">${authHTML}</div>
     </header>
     `;
 
@@ -71,23 +55,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 <a href="index.html" class="brand" style="color:#fff; margin-bottom:20px; display:inline-block;">Xplainer<span style="color:var(--xg-highlight)">Guru</span></a>
                 <p style="font-size:14px; opacity:0.8; line-height:1.7;">Redefining academic success through high-quality video lectures and premium handwritten notes. Empowering students to master their syllabus with expert guidance.</p>
             </div>
-            <div class="ft-col">
-                <h4 class="ft-header">Quick Access</h4>
-                <a href="index.html" class="ft-link">Home Page</a>
-                <a href="tests.html" class="ft-link">Mock Tests</a>
-                <a href="notes.html" class="ft-link">Study Notes</a>
-            </div>
-            <div class="ft-col">
-                <h4 class="ft-header">Meet Mentors</h4>
-                <a href="about.html" class="ft-link">Shiwendu Kaushal</a>
-                <div style="margin-top:25px;"><h4 class="ft-header">Meet Developer</h4><a href="about.html#foundation" class="ft-link">Ashutosh Kaushal</a></div>
-            </div>
-            <div class="ft-col">
-                <h4 class="ft-header">Contact Us</h4>
-                <a href="mailto:${CONFIG.email}" class="ft-link">Email Support</a>
-                <a href="${CONFIG.ig}" target="_blank" class="ft-link">Official Instagram</a>
-                <a href="https://wa.me/${CONFIG.waNum}" target="_blank" class="ft-link">WhatsApp Chat</a>
-            </div>
+            <div class="ft-col"><h4 class="ft-header">Quick Access</h4><a href="index.html" class="ft-link">Home Page</a><a href="test.html" class="ft-link">Mock Tests</a><a href="notes.html" class="ft-link">Study Notes</a></div>
+            <div class="ft-col"><h4 class="ft-header">Meet Mentors</h4><a href="about.html" class="ft-link">Shiwendu Kaushal</a><div style="margin-top:25px;"><h4 class="ft-header">Meet Developer</h4><a href="about.html#foundation" class="ft-link">Ashutosh Kaushal</a></div></div>
+            <div class="ft-col"><h4 class="ft-header">Contact Us</h4><a href="mailto:${CONFIG.email}" class="ft-link">Email Support</a><a href="${CONFIG.ig}" target="_blank" class="ft-link">Official Instagram</a><a href="https://wa.me/${CONFIG.waNum}" target="_blank" class="ft-link">WhatsApp Chat</a></div>
         </div>
         <div class="credits">Designed and Developed by <a href="about.html#foundation">Ashutosh Kaushal</a> | &copy; 2025</div>
     </footer>
@@ -97,7 +67,7 @@ document.addEventListener("DOMContentLoaded", () => {
         <div style="flex:1;">
             ${drawerAuthHTML}
             <a href="index.html" class="d-link">Home</a>
-            <a href="tests.html" class="d-link">Mock Tests</a>
+            <a href="test.html" class="d-link">Mock Tests</a>
             <a href="notes.html" class="d-link">Study Notes</a>
             <a href="about.html" class="d-link">Our Team</a>
         </div>
@@ -116,4 +86,13 @@ document.addEventListener("DOMContentLoaded", () => {
 window.toggleDrawer = () => {
     const isOpen = document.getElementById('drawer').classList.toggle('open');
     document.getElementById('drawer-mask').style.display = isOpen ? 'block' : 'none';
+};
+
+window.checkAuth = (action) => {
+    if(!localStorage.getItem('xg_user')) {
+        alert(`Please Login to ${action}`);
+        window.location.href = "login.html";
+    } else {
+        alert(`${action} coming soon!`);
+    }
 };
