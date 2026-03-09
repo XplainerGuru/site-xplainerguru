@@ -1,37 +1,60 @@
 document.addEventListener("DOMContentLoaded", () => {
     
+    // Check Auth State (Login check)
+    const userStr = localStorage.getItem('xg_user');
+    let authHTML = '';
+    let drawerAuthHTML = '';
+    
+    if(userStr) {
+        const user = JSON.parse(userStr);
+        // User logged in hai -> Avatar dikhao
+        authHTML = `<a href="dashboard.html" class="user-avatar"><img src="${user.pic || 'https://ui-avatars.com/api/?name='+user.name+'&background=0f172a&color=fff'}" alt="Profile"></a>`;
+        drawerAuthHTML = `<a href="dashboard.html" style="color:#2563eb;">My Dashboard <span>&rarr;</span></a><a href="#" onclick="logoutUser()" style="color:#ef4444;">Logout <span>&rarr;</span></a>`;
+    } else {
+        // User login nahi hai -> Login Button dikhao
+        authHTML = `<a href="login.html" class="login-btn">Login</a>`;
+        drawerAuthHTML = `<a href="login.html" style="color:#2563eb;">Login / Sign Up <span>&rarr;</span></a>`;
+    }
+
     // 1. INJECT PROFESSIONAL STYLES
     const masterCSS = `
     <style>
+        :root { --xg-dark: #0f172a; --xg-blue: #000080; --xg-light: #f8fafc; }
         /* --- GLOBAL RESET --- */
-        body { margin: 0; padding-top: 72px; font-family: 'Manrope', sans-serif; background: #f8fafc; color: #334155; display: flex; flex-direction: column; min-height: 100vh; }
+        body { margin: 0; padding-top: 72px; font-family: 'Manrope', sans-serif; background: var(--xg-light); color: #334155; display: flex; flex-direction: column; min-height: 100vh; }
         
         /* --- HEADER --- */
         header { background: rgba(255, 255, 255, 0.98); height: 72px; width: 100%; position: fixed; top: 0; left: 0; z-index: 9000; display: flex; align-items: center; justify-content: space-between; padding: 0 24px; box-shadow: 0 4px 20px rgba(0,0,0,0.03); backdrop-filter: blur(8px); box-sizing: border-box; }
         
         .nav-l { display: flex; align-items: center; gap: 20px; }
-        .brand { font-family: 'Poppins', sans-serif; font-weight: 800; font-size: 1.5rem; display: flex; align-items: center; gap: 10px; color: #0f172a; text-decoration: none; letter-spacing: -0.5px; }
+        .brand { font-family: 'Poppins', sans-serif; font-weight: 800; font-size: 1.5rem; display: flex; align-items: center; gap: 10px; color: var(--xg-dark); text-decoration: none; letter-spacing: -0.5px; }
         .brand img { height: 38px; width: 38px; border-radius: 50%; object-fit: cover; }
         
         .nav-r { display: flex; align-items: center; gap: 12px; }
         .social-btn { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1px solid #e2e8f0; transition: all 0.3s ease; background:#fff; text-decoration:none; }
-        .social-btn svg { width: 18px; fill: #0f172a; transition: fill 0.3s; }
+        .social-btn svg { width: 18px; fill: var(--xg-dark); transition: fill 0.3s; }
         .social-btn:hover { transform: translateY(-3px); border-color: transparent; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
         .social-btn.wa:hover { background: #25d366; } .social-btn.wa:hover svg { fill: #fff; }
         .social-btn.yt:hover { background: #ff0000; } .social-btn.yt:hover svg { fill: #fff; }
         .social-btn.ig:hover { background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%); } .social-btn.ig:hover svg { fill: #fff; }
 
+        /* Auth UI */
+        .login-btn { background: var(--xg-blue); color: #fff; padding: 8px 20px; border-radius: 8px; font-weight: 700; text-decoration: none; font-size: 14px; transition: 0.3s; }
+        .login-btn:hover { background: var(--xg-dark); }
+        .user-avatar img { width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--xg-blue); object-fit: cover; transition: 0.3s; }
+        .user-avatar:hover img { transform: scale(1.05); }
+
         /* --- MENU DRAWER --- */
-        #drawer { position: fixed; top: 0; left: -320px; width: 320px; height: 100%; background: #0f172a; z-index: 10001; transition: cubic-bezier(0.4, 0, 0.2, 1) 0.4s; padding: 40px; display: flex; flex-direction: column; box-shadow: 10px 0 30px rgba(0,0,0,0.3); box-sizing: border-box; }
+        #drawer { position: fixed; top: 0; left: -320px; width: 320px; height: 100%; background: var(--xg-dark); z-index: 10001; transition: cubic-bezier(0.4, 0, 0.2, 1) 0.4s; padding: 40px; display: flex; flex-direction: column; box-shadow: 10px 0 30px rgba(0,0,0,0.3); box-sizing: border-box; }
         #drawer.open { left: 0 !important; }
         #drawer-mask { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 10000; backdrop-filter: blur(4px); }
         #drawer a { color: #94a3b8; padding: 18px 0; border-bottom: 1px solid rgba(255,255,255,0.08); font-family: 'Poppins', sans-serif; font-weight: 600; text-decoration: none; font-size: 16px; display: flex; justify-content: space-between; transition: 0.3s; }
         #drawer a:hover { color: #fff; padding-left: 10px; border-color: rgba(255,255,255,0.2); }
 
         /* --- FOOTER --- */
-        footer { background: #0f172a; color: #94a3b8; padding: 80px 20px 40px; margin-top: auto; border-top: 1px solid rgba(255,255,255,0.05); }
+        footer { background: var(--xg-dark); color: #94a3b8; padding: 80px 20px 40px; margin-top: auto; border-top: 1px solid rgba(255,255,255,0.05); }
         .ft-grid { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 50px; }
-        .ft-header { color: #fff; margin-bottom: 25px; font-weight: 700; border-left: 4px solid #f59e0b; padding-left: 15px; font-family: 'Poppins', sans-serif; letter-spacing: 0.5px; font-size: 1.1rem; }
+        .ft-header { color: #fff; margin-bottom: 25px; font-weight: 700; border-left: 4px solid var(--xg-blue); padding-left: 15px; font-family: 'Poppins', sans-serif; letter-spacing: 0.5px; font-size: 1.1rem; }
         .ft-link { display: block; margin-bottom: 14px; font-size: 14px; text-decoration: none; color: inherit; transition: 0.2s; }
         .ft-link:hover { color: #fff; transform: translateX(5px); }
         .credits { text-align: center; margin-top: 70px; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 25px; font-size: 13px; font-family: 'Manrope', sans-serif; opacity: 0.8; }
@@ -41,12 +64,12 @@ document.addEventListener("DOMContentLoaded", () => {
     `;
     document.head.insertAdjacentHTML('beforeend', masterCSS);
 
-    // 2. INJECT HEADER (Standardized)
+    // 2. INJECT HEADER (With Login/Avatar)
     const headerHTML = `
     <header>
         <div class="nav-l">
             <button onclick="toggleDrawer()" style="background:none; border:none; cursor:pointer; padding:8px; display:flex; align-items:center;">
-                <svg viewBox="0 0 24 24" width="28" height="28" stroke="#0f172a" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                <svg viewBox="0 0 24 24" width="28" height="28" stroke="var(--xg-dark)" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
                     <line x1="3" y1="12" x2="21" y2="12"></line>
                     <line x1="3" y1="6" x2="21" y2="6"></line>
                     <line x1="3" y1="18" x2="21" y2="18"></line>
@@ -54,18 +77,19 @@ document.addEventListener("DOMContentLoaded", () => {
             </button>
             <a href="index.html" class="brand">
                 <img src="logo.png" alt="X">
-                Xplainer<span style="color:#2563eb">Guru</span>
+                Xplainer<span style="color:var(--xg-blue)">Guru</span>
             </a>
         </div>
         <div class="nav-r">
-            <a href="${CONFIG.waChannel}" class="social-btn wa" target="_blank"><svg viewBox="0 0 24 24"><path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.1 1.29 4.74 1.29 5.46 0 9.91-4.45 9.91-9.91 0-5.46-4.45-9.91-9.91-9.91zm0 18.23c-1.5 0-2.98-.39-4.28-1.14l-.3-.18-3.18.83.85-3.1-.19-.3c-.82-1.3-1.26-2.82-1.26-4.34 0-4.58 3.73-8.32 8.32-8.32 4.58 0 8.32 3.73 8.32 8.32 0 4.58-3.73 8.32-8.32 8.32zm4.56-6.24c-.25-.13-1.49-.73-1.72-.82-.23-.08-.39-.13-.56.13-.17.25-.65.82-.79.98-.15.17-.3.19-.55.07-.25-.13-1.06-.39-2.02-1.25-.75-.67-1.26-1.5-1.41-1.75-.15-.25-.01-.39.11-.51.11-.11.25-.3.37-.44.13-.15.17-.25.25-.42.08-.17.04-.32-.02-.45-.06-.13-.56-1.34-.76-1.84-.2-.48-.4-.42-.56-.42h-.48c-.17 0-.44.06-.67.31-.23.25-.87.85-.87 2.07 0 1.22.89 2.4 1.01 2.56.13.17 1.75 2.67 4.24 3.74 1.63.7 2.26.75 3.09.63.92-.14 1.49-.61 1.7-1.19.22-.59.22-1.09.15-1.19-.06-.1-.23-.17-.48-.3z"/></svg></a>
+            ${authHTML}
+            <div style="width: 1px; height: 24px; background: #e2e8f0; margin: 0 5px;"></div>
             <a href="${CONFIG.yt}" class="social-btn yt" target="_blank"><svg viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.498-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg></a>
             <a href="${CONFIG.ig}" class="social-btn ig" target="_blank"><svg viewBox="0 0 24 24"><path d="M7.75 2h8.5A5.75 5.75 0 0 1 22 7.75v8.5A5.75 5.75 0 0 1 16.25 22h-8.5A5.75 5.75 0 0 1 7.75 2zm0 1.5A4.25 4.25 0 0 0 3.5 7.75v8.5A4.25 4.25 0 0 0 7.75 20.5h8.5A4.25 4.25 0 0 0 20.5 16.25v-8.5A4.25 4.25 0 0 0 16.25 3.5h-8.5zM12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10zm0 1.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7zM18 5a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/></svg></a>
         </div>
     </header>
     `;
 
-    // 3. INJECT DRAWER
+    // 3. INJECT DRAWER (With Test Page Link)
     const drawerHTML = `
     <div id="drawer-mask" onclick="toggleDrawer()"></div>
     <div id="drawer">
@@ -73,7 +97,9 @@ document.addEventListener("DOMContentLoaded", () => {
             <span style="color:#fff; font-weight:800; font-size:1.6rem; font-family:'Poppins',sans-serif;">Menu</span>
             <button onclick="toggleDrawer()" style="background:none; border:none; color:#fff; font-size:32px; cursor:pointer; opacity:0.8; transition:0.2s;">&times;</button>
         </div>
+        ${drawerAuthHTML}
         <a href="index.html">Home <span>&rarr;</span></a>
+        <a href="tests.html">Mock Tests <span>&rarr;</span></a>
         <a href="notes.html">Study Notes <span>&rarr;</span></a>
         <a href="about.html">About Team <span>&rarr;</span></a>
     </div>
@@ -84,14 +110,14 @@ document.addEventListener("DOMContentLoaded", () => {
     <footer>
         <div class="ft-grid">
             <div class="ft-col">
-                <a href="index.html" class="brand" style="color:#fff; margin-bottom:20px; display:inline-block;">Xplainer<span style="color:#2563eb">Guru</span></a>
+                <a href="index.html" class="brand" style="color:#fff; margin-bottom:20px; display:inline-block;">Xplainer<span style="color:var(--xg-blue)">Guru</span></a>
                 <p style="font-size:14px; line-height:1.7; opacity:0.8;">Empowering students with accessible, high-quality education and expert guidance.</p>
             </div>
             <div class="ft-col">
                 <h4 class="ft-header">Quick Access</h4>
                 <a href="index.html" class="ft-link">Home Page</a>
+                <a href="tests.html" class="ft-link">Mock Tests</a>
                 <a href="notes.html" class="ft-link">Study Notes</a>
-                <a href="about.html" class="ft-link">Our Team</a>
             </div>
             <div class="ft-col">
                 <h4 class="ft-header">Meet Mentors</h4>
@@ -131,3 +157,9 @@ window.toggleDrawer = function() {
         m.style.display = "block";
     }
 };
+
+// LOGOUT FUNCTION
+window.logoutUser = function() {
+    localStorage.removeItem('xg_user');
+    window.location.reload();
+}

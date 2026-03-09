@@ -33,3 +33,9 @@ const studyNotes = [
     { title: "History: Chapter 1 Pro Notes", file: "https://drive.google.com/file/d/1DO1tbR3nX0zOHCzPoBOeSBaXmzaUmz_c/view?usp=drivesdk", size: "PDF" },
     { title: "History: Chapter 2 Pro Notes", file: "https://drive.google.com/file/d/17EfoPNm06TF9lmCxsHFkHH-549tLfVQY/view?usp=drivesdk", size: "PDF" }
 ];
+
+// NAYA: Tests ka data
+const mockTests = [
+    { id: "hist_ch1", title: "History: Trade to Territory", questions: 10, time: 15, hasCertificate: true },
+    { id: "hist_ch2", title: "History: Ruling the Countryside", questions: 15, time: 20, hasCertificate: false }
+];

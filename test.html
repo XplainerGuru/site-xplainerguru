@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Mock Tests | Xplainer Guru</title>
+    <link rel="icon" type="image/png" href="logo.png">
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700&family=Poppins:wght@700&display=swap" rel="stylesheet">
+    <style>
+        .container { max-width: 850px; margin: 40px auto 60px; padding: 0 20px; }
+        .test-card { background: #fff; border-radius: 20px; padding: 25px 30px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #eef2f6; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.02); transition: 0.3s; }
+        .test-card:hover { border-color: #000080; transform: translateY(-3px); }
+        .test-meta { color: #64748b; font-size: 14px; font-weight: 600; margin-top: 8px; display: flex; gap: 15px; }
+        .btn-start { background: #000080; color: #fff; padding: 12px 24px; border-radius: 10px; font-weight: 700; text-decoration: none; border: none; cursor: pointer; transition: 0.3s; }
+        .btn-start:hover { background: #0f172a; }
+        .cert-badge { background: #fef3c7; color: #d97706; font-size: 11px; padding: 4px 10px; border-radius: 5px; font-weight: 800; text-transform: uppercase; margin-bottom: 8px; display: inline-block; }
+        
+        @media (max-width: 600px) { .test-card { flex-direction: column; align-items: flex-start; gap: 20px; } .btn-start { width: 100%; text-align: center; } }
+    </style>
+</head>
+<body>
+    
+    <div class="container">
+        <h1 style="font-family:'Poppins'; border-left: 6px solid #000080; padding-left: 20px; margin-bottom: 40px; color:#0f172a;">Premium Mock Tests</h1>
+        <div id="tests-list"></div>
+    </div>
+
+    <script src="content.js"></script>
+    <script src="master.js"></script>
+    <script>
+        const list = document.getElementById('tests-list');
+        
+        mockTests.forEach(test => {
+            let certHTML = test.hasCertificate ? `<div class="cert-badge">🎓 Certificate Included</div>` : `<div class="cert-badge" style="background:#f1f5f9; color:#64748b;">📝 Practice Mode</div>`;
+            
+            list.innerHTML += `
+            <div class="test-card">
+                <div>
+                    ${certHTML}
+                    <h3 style="font-size:18px; color:#0f172a; margin: 0; font-family:'Poppins';">${test.title}</h3>
+                    <div class="test-meta">
+                        <span>❓ ${test.questions} Questions</span>
+                        <span>⏱ ${test.time} Mins</span>
+                    </div>
+                </div>
+                <button onclick="checkAuthAndStart('${test.id}')" class="btn-start">Start Test</button>
+            </div>`;
+        });
+
+        // Function: Test shuru karne se pehle login check kare
+        function checkAuthAndStart(testId) {
+            const userLogged = localStorage.getItem('xg_user');
+            if(!userLogged) {
+                // Agar login nahi hai, toh login page par bhejo aur wapas test link parameter me daal do
+                window.location.href = `login.html?redirect=test-engine.html?id=${testId}`;
+            } else {
+                // Agar login hai, toh test engine par bhejo (Yeh file aap aage banayenge)
+                window.location.href = `test-engine.html?id=${testId}`;
+            }
+        }
+    </script>
+</body>
+</html>
