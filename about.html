@@ -2,54 +2,57 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
     <title>Our Team | Xplainer Guru</title>
     <link rel="icon" type="image/png" href="logo.png">
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;700&family=Poppins:wght@700;800&display=swap" rel="stylesheet">
     <style>
-        .container { max-width: 1000px; margin: 60px auto; padding: 0 20px; }
+        .container { max-width: 900px; margin: 40px auto; padding: 0 15px; }
         .team-card { 
-            background: #0f172a; color: #fff; padding: 50px; border-radius: 32px; 
-            display: flex; justify-content: space-between; align-items: center; 
-            position: relative; overflow: hidden; margin-bottom: 40px; 
-            box-shadow: 0 20px 40px rgba(15, 23, 42, 0.2); 
+            background: #0f172a; color: #fff; padding: 40px; border-radius: 30px; 
+            margin-bottom: 30px; position: relative; overflow: hidden; 
             scroll-margin-top: 100px; /* Header space fix */
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1); 
         }
-        .badge { background: #f59e0b; color: #0f172a; padding: 8px 18px; border-radius: 50px; font-size: 11px; font-weight: 800; text-transform: uppercase; display: inline-block; }
-        .d-btn { padding: 14px 28px; border-radius: 12px; background: rgba(255,255,255,0.1); color: #fff; font-weight: 600; text-decoration: none; display: inline-block; margin-top: 25px; font-size: 14px; }
-        .bg-logo { height: 160px; filter: grayscale(1) invert(1); opacity: 0.08; position: absolute; right: -20px; bottom: -20px; }
-        @media(max-width:768px) { .team-card { flex-direction:column; text-align:center; padding: 40px 30px; } }
+        .badge { background: #f59e0b; color: #0f172a; padding: 6px 15px; border-radius: 50px; font-size: 11px; font-weight: 800; text-transform: uppercase; display: inline-block; }
+        .d-btn { padding: 12px 24px; border-radius: 10px; background: rgba(255,255,255,0.1); color: #fff; font-weight: 600; text-decoration: none; display: inline-block; margin-top: 20px; font-size: 14px; transition: 0.3s; }
+        .d-btn:hover { background: var(--xg-highlight); }
+        .bg-logo { height: 150px; filter: grayscale(1) invert(1); opacity: 0.05; position: absolute; right: -10px; bottom: -10px; }
+        @media (max-width: 600px) { .team-card { padding: 30px; text-align: center; } }
     </style>
 </head>
 <body>
+    <script src="content.js"></script><script src="master.js"></script>
     <div class="container">
-        <h2 style="text-align:center; margin-bottom:50px; font-family:'Poppins'; color:#0f172a;">Academic Leadership</h2>
+        <h2 style="text-align:center; margin-bottom:40px; font-family:'Poppins'; color:#0f172a;">Academic Leadership</h2>
+        
         <div class="team-card" id="mentor">
             <div style="position: relative; z-index: 2;">
                 <div class="badge" style="background:#2563eb; color:#fff;">Chief Mentor</div>
-                <h2 style="margin-top:20px; font-family:'Poppins'; font-size: 2rem;">Shiwendu Kaushal</h2>
-                <p style="opacity:0.8; max-width:450px; margin-top:15px; line-height: 1.6;">Simplifying academic concepts and guiding students toward excellence.</p>
-                <a id="s-ig" href="#" target="_blank" class="d-btn">Instagram Profile</a>
+                <h2 style="margin-top:15px; font-family:'Poppins'; font-size: 1.8rem;">Shiwendu Kaushal</h2>
+                <p style="opacity:0.8; line-height: 1.6;">Simplifying academic concepts and guiding students toward excellence.</p>
+                <a id="m-ig" href="#" target="_blank" class="d-btn">Instagram Profile</a>
             </div>
             <img src="logo.png" class="bg-logo">
         </div>
 
-        <h2 style="text-align:center; margin-bottom:50px; margin-top:80px; font-family:'Poppins'; color:#0f172a;">Platform Foundation</h2>
+        <h2 style="text-align:center; margin-bottom:40px; margin-top:60px; font-family:'Poppins'; color:#0f172a;">Platform Foundation</h2>
+        
         <div class="team-card" id="foundation">
             <div style="position: relative; z-index: 2;">
                 <div class="badge">Lead Architect</div>
-                <h2 style="margin-top:20px; font-family:'Poppins'; font-size: 2rem;" id="dev-name">Ashutosh Kaushal</h2>
-                <p style="opacity:0.8; max-width:450px; margin-top:15px; line-height: 1.6;" id="dev-bio">Loading...</p>
-                <div>
-                    <a id="dev-ig" href="#" target="_blank" class="d-btn" style="margin-right: 10px;">Instagram</a>
+                <h2 style="margin-top:15px; font-family:'Poppins'; font-size: 1.8rem;" id="dev-name">Ashutosh Kaushal</h2>
+                <p style="opacity:0.8; line-height: 1.6;" id="dev-bio">Loading...</p>
+                <div style="display:flex; gap:10px; justify-content: inherit;">
+                    <a id="dev-ig" href="#" target="_blank" class="d-btn">Instagram</a>
                     <a id="dev-li" href="#" target="_blank" class="d-btn">LinkedIn</a>
                 </div>
             </div>
             <img src="logo.png" class="bg-logo">
         </div>
     </div>
-    <script src="content.js"></script><script src="master.js"></script>
     <script>
-        document.getElementById('s-ig').href = CONFIG.mentor.ig;
+        document.getElementById('m-ig').href = CONFIG.mentor.ig;
         document.getElementById('dev-name').innerText = CONFIG.developer.name;
         document.getElementById('dev-bio').innerText = CONFIG.developer.bio;
         document.getElementById('dev-ig').href = CONFIG.developer.ig;
