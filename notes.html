@@ -16,12 +16,8 @@
         .page-header { text-align: center; margin-bottom: 40px; }
         .page-header h1 { font-family: 'Poppins'; color: #0f172a; font-size: 2rem; }
 
-        /* FIXED 2-2 GRID SYSTEM FOR NOTES */
-        .notes-grid { 
-            display: grid; 
-            grid-template-columns: repeat(2, 1fr); /* Force 2 columns */
-            gap: 15px; 
-        }
+        /* 2-2 GRID SYSTEM FOR NOTES */
+        .notes-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
         .note-card { background: #fff; border-radius: 15px; padding: 15px; border: 1px solid #e2e8f0; transition: 0.3s; position: relative; display: flex; flex-direction: column; align-items: center; text-align: center; }
         .note-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,128,0.06); }
         .note-icon { width: 40px; height: 40px; background: #eff6ff; color: #2563eb; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; margin-bottom: 12px; }
@@ -32,14 +28,30 @@
             background: #000080; color: #fff; font-weight: 700; cursor: pointer; transition: 0.3s;
             display: flex; align-items: center; justify-content: center; gap: 8px; font-family: 'Manrope'; font-size: 12px;
         }
+        .download-btn:hover { background: #2563eb; }
 
+        /* --- PDF VIEWER MODAL --- */
+        #pdf-viewer-modal {
+            display: none; position: fixed; inset: 0; background: #f8fafc;
+            z-index: 99990; flex-direction: column; width: 100%; height: 100vh;
+        }
+        .pdf-header {
+            background: #0f172a; color: #fff; padding: 15px 20px; display: flex;
+            justify-content: space-between; align-items: center; box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        .pdf-header h3 { margin: 0; font-family: 'Poppins'; font-size: 15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 70%; }
+        .close-pdf-btn { background: #ef4444; color: #fff; border: none; padding: 8px 16px; border-radius: 8px; font-weight: 800; cursor: pointer; transition: 0.2s; }
+        .close-pdf-btn:hover { background: #dc2626; }
+        #pdf-iframe { width: 100%; flex: 1; border: none; background: #e2e8f0; }
+
+        /* --- STRICT AUTH POPUP --- */
         #auth-modal {
-            display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.8);
+            display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.9);
             z-index: 99999; backdrop-filter: blur(8px); align-items: center; justify-content: center; padding: 20px;
         }
         .modal-content {
             background: #fff; padding: 30px 20px; border-radius: 20px; max-width: 350px; width: 100%;
-            text-align: center; box-shadow: 0 25px 50px rgba(0,0,0,0.2); animation: popIn 0.4s ease;
+            text-align: center; box-shadow: 0 25px 50px rgba(0,0,0,0.5); animation: popIn 0.4s ease;
         }
         @keyframes popIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
         
@@ -51,6 +63,7 @@
         }
         .btn-login { background: #2563eb; color: #fff; }
         .btn-signup { background: #f1f5f9; color: #0f172a; border: 1px solid #e2e8f0; }
+        .btn-cancel { background: transparent; color: #ef4444; border: none; cursor: pointer; font-weight: 700; margin-top: 10px; text-decoration: underline; font-family: 'Manrope'; }
 
         @media (max-width: 600px) {
             .notes-grid { gap: 10px; }
@@ -62,14 +75,24 @@
 </head>
 <body>
 
+    <div id="pdf-viewer-modal">
+        <div class="pdf-header">
+            <h3 id="pdf-title">Loading Document...</h3>
+            <button class="close-pdf-btn" onclick="closePdfViewer()"><i class="fa-solid fa-xmark"></i> Close</button>
+        </div>
+        <iframe id="pdf-iframe" src=""></iframe>
+    </div>
+
     <div id="auth-modal">
         <div class="modal-content">
-            <div style="font-size: 30px; color: #2563eb; margin-bottom: 10px;"><i class="fa-solid fa-circle-user"></i></div>
-            <h2>Join Xplainer Guru</h2>
-            <p>To continue reading and downloading premium notes, please create an account or log in.</p>
-            <a href="login.html" class="modal-btn btn-login">Log In Now</a>
-            <a href="login.html" class="modal-btn btn-signup">Create Free Account</a>
-            <p style="font-size: 11px; margin-top: 10px; cursor: pointer; text-decoration: underline;" onclick="closeModal()">Maybe Later</p>
+            <div style="font-size: 35px; color: #2563eb; margin-bottom: 15px;"><i class="fa-solid fa-lock"></i></div>
+            
+            <h2>Unlock Full Access</h2>
+            <p>This document is part of our premium study library. Please log in or create a free account to read the complete notes.</p>
+            
+            <a href="login.html" class="modal-btn btn-login">Log In to Continue</a>
+            <a href="login.html" class="modal-btn btn-signup">Create Account</a>
+            <button class="btn-cancel" onclick="cancelAndClose()">Go Back</button>
         </div>
     </div>
 
@@ -83,6 +106,8 @@
 
     <script src="content.js"></script>
     <script>
+        let pdfTimer; 
+
         document.addEventListener('DOMContentLoaded', () => {
             const grid = document.getElementById('notesGrid');
             if (typeof studyNotes !== 'undefined') {
@@ -93,8 +118,8 @@
                         <div class="note-icon"><i class="fa-solid fa-file-pdf"></i></div>
                         <h3 class="note-title">${note.title}</h3>
                         <div style="font-size: 11px; color: #94a3b8;">Format: ${note.size || 'PDF'}</div>
-                        <button class="download-btn" onclick="startHook('${note.file}')">
-                            <i class="fa-solid fa-eye"></i> View & Download
+                        <button class="download-btn" onclick="startHook('${note.file}', '${note.title.replace(/'/g, "\\'")}')">
+                            <i class="fa-solid fa-eye"></i> View Notes
                         </button>
                     `;
                     grid.appendChild(card);
@@ -102,22 +127,31 @@
             }
         });
 
-        function startHook(url) {
-            window.open(url, '_blank');
+        function startHook(url, title) {
+            document.getElementById('pdf-title').innerText = title;
+            document.getElementById('pdf-iframe').src = url;
+            document.getElementById('pdf-viewer-modal').style.display = 'flex';
+            document.body.style.overflow = 'hidden'; 
+
             const user = localStorage.getItem('xg_user');
             if (!user) {
-                setTimeout(() => {
+                clearTimeout(pdfTimer);
+                pdfTimer = setTimeout(() => {
                     document.getElementById('auth-modal').style.display = 'flex';
-                }, 7000);
-            }
-            if(window.syncToSheet && user) {
-                const userData = JSON.parse(user);
-                window.syncToSheet({...userData, interest: "Viewed Notes"});
+                }, 1500); 
             }
         }
 
-        function closeModal() {
+        function closePdfViewer() {
+            document.getElementById('pdf-viewer-modal').style.display = 'none';
+            document.getElementById('pdf-iframe').src = ""; 
+            document.body.style.overflow = 'auto'; 
+            clearTimeout(pdfTimer); 
+        }
+
+        function cancelAndClose() {
             document.getElementById('auth-modal').style.display = 'none';
+            closePdfViewer(); 
         }
     </script>
 </body>
