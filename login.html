@@ -33,6 +33,11 @@
         
         .error-message { color: #ef4444; font-size: 13.5px; font-weight: 600; margin-bottom: 18px; display: none; background: #fef2f2; padding: 12px; border-radius: 8px; border: 1px solid #fecaca; text-align: left; line-height: 1.5; }
         .hidden { display: none; }
+
+        /* PROFILE PIC CSS ADDED */
+        .pic-upload-container { position: relative; width: 90px; height: 90px; margin: 0 auto 20px; cursor: pointer; }
+        #pic-preview { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 3px solid #e2e8f0; background: #f1f5f9; }
+        .edit-badge { position: absolute; bottom: 0; right: 0; background: #2563eb; color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid white; font-size: 12px; }
     </style>
 </head>
 <body>
@@ -66,6 +71,13 @@
             <div id="signup-error" class="error-message"></div>
 
             <form id="signupForm">
+                
+                <div class="pic-upload-container" onclick="document.getElementById('signPicInput').click()" title="Add Profile Photo">
+                    <img id="pic-preview" src="https://ui-avatars.com/api/?name=User&background=cbd5e1&color=fff" alt="Profile">
+                    <div class="edit-badge"><i class="fa-solid fa-pencil"></i></div>
+                    <input type="file" id="signPicInput" hidden accept="image/*" onchange="previewImage(this)">
+                </div>
+
                 <div class="input-group">
                     <input type="text" id="signName" class="input-field" placeholder="Full Name" required>
                 </div>
@@ -113,6 +125,19 @@
                 `;
             }
         };
+
+        // JS PROFILE PIC LOGIC ADDED
+        let base64Pic = "";
+        function previewImage(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('pic-preview').src = e.target.result;
+                    base64Pic = e.target.result;
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
 
         function saveNewPassword(email) {
             const newPass = document.getElementById('newPass').value;
@@ -218,6 +243,7 @@
                 name: document.getElementById('signName').value.trim(), 
                 email: newEmail, 
                 whatsapp: newPhone || "N/A", // Sets to "N/A" if left blank
+                pic: base64Pic, // PIC ADDED HERE
                 password: newPass 
             };
             
@@ -239,7 +265,8 @@
             usersDB.push(newUser);
             localStorage.setItem('xg_users_db', JSON.stringify(usersDB));
             
-            const activeSession = { name: newUser.name, email: newUser.email, whatsapp: newUser.whatsapp };
+            // PIC ADDED TO SESSION
+            const activeSession = { name: newUser.name, email: newUser.email, whatsapp: newUser.whatsapp, pic: newUser.pic };
             localStorage.setItem('xg_user', JSON.stringify(activeSession));
             
             if(window.syncToSheet) window.syncToSheet({...activeSession, interest: "Registration"});
@@ -263,7 +290,8 @@
             );
             
             if (validUser) {
-                const activeSession = { name: validUser.name, email: validUser.email, whatsapp: validUser.whatsapp };
+                // PIC ADDED TO SESSION
+                const activeSession = { name: validUser.name, email: validUser.email, whatsapp: validUser.whatsapp, pic: validUser.pic };
                 localStorage.setItem('xg_user', JSON.stringify(activeSession));
                 if(window.syncToSheet) window.syncToSheet({...activeSession, interest: "User Logged In"});
                 window.location.href = "dashboard.html";

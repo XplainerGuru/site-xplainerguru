@@ -4,162 +4,245 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Dashboard | Xplainer Guru</title>
-    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;800&family=Poppins:wght@700;800&display=swap" rel="stylesheet">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=Poppins:wght@700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script src="content.js"></script>
     <script src="master.js" defer></script>
+    
     <style>
-        body { font-family: 'Manrope', sans-serif; background: #f8fafc; margin: 0; padding-top: 100px; display: flex; flex-direction: column; min-height: 100vh; align-items: center; }
-        .dash-container { background: white; padding: 40px; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,128,0.05); width: 100%; max-width: 500px; border: 1px solid #e2e8f0; margin-bottom: 50px; }
-        .profile-header { display: flex; align-items: center; gap: 20px; border-bottom: 1px solid #e2e8f0; padding-bottom: 20px; margin-bottom: 20px; }
-        .profile-pic { width: 80px; height: 80px; border-radius: 50%; border: 3px solid #2563eb; object-fit: cover; }
-        .profile-info h2 { font-family: 'Poppins', sans-serif; margin: 0; color: #0f172a; font-size: 1.5rem; }
-        .profile-info p { margin: 5px 0 0; color: #64748b; font-size: 14px; }
+        /* BASE STYLES FIX: Removed padding-bottom from body so footer stays at absolute bottom */
+        body { background: #f8fafc; font-family: 'Manrope', sans-serif; margin: 0; padding-top: 100px; }
         
-        .info-group { margin-bottom: 15px; }
-        .info-label { font-size: 12px; font-weight: 800; color: #94a3b8; text-transform: uppercase; }
-        .info-val { font-size: 15px; color: #0f172a; font-weight: 600; margin-top: 5px; }
+        /* Container ab saara space cover karega aur footer ko niche dhakel dega */
+        .container { max-width: 600px; margin: 0 auto 50px; padding: 0 20px; flex: 1; width: 100%; box-sizing: border-box; }
         
-        .input-field { width: 100%; padding: 12px; margin-top: 5px; border: 1px solid #e2e8f0; border-radius: 8px; font-family: 'Manrope'; font-size: 14px; outline: none; }
+        /* CARD STYLES */
+        .card { background: #fff; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.04); padding: 35px; border: 1px solid #f1f5f9; }
         
-        .btn-group { display: flex; gap: 10px; margin-top: 30px; }
-        .btn { flex: 1; padding: 12px; border-radius: 10px; font-weight: 800; cursor: pointer; transition: 0.3s; font-family: 'Manrope'; border: none; font-size: 14px; }
-        .btn-primary { background: #2563eb; color: white; }
-        .btn-primary:hover { background: #000080; }
-        .btn-secondary { background: #f1f5f9; color: #0f172a; border: 1px solid #e2e8f0; }
-        .btn-secondary:hover { background: #e2e8f0; }
-        .btn-danger { background: #fee2e2; color: #ef4444; border: 1px solid #fecaca; }
-        .btn-danger:hover { background: #fca5a5; color: #b91c1c; }
+        /* HOME BUTTON */
+        .back-home { display: inline-block; color: #64748b; text-decoration: none; font-size: 14px; font-weight: 700; margin-bottom: 20px; transition: 0.2s; }
+        .back-home:hover { color: #2563eb; transform: translateX(-3px); }
+
+        /* PROFILE HEADER */
+        .profile-header { display: flex; align-items: center; gap: 20px; }
         
-        .hidden { display: none; }
+        /* PROFILE PIC WITH PENCIL */
+        .pic-wrapper { position: relative; width: 90px; height: 90px; border-radius: 50%; cursor: pointer; flex-shrink: 0; }
+        .pic-wrapper img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; background: #000080; }
+        .edit-pic-badge { position: absolute; bottom: 0; right: 0; background: #2563eb; color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; border: 2px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+        
+        .profile-info h2 { font-family: 'Poppins'; font-size: 1.6rem; color: #0f172a; margin: 0 0 5px; }
+        .profile-info p { margin: 0; color: #64748b; font-size: 15px; font-weight: 500; }
+        
+        hr { border: none; border-top: 1px solid #e2e8f0; margin: 30px 0; }
+        
+        /* DETAILS SECTION */
+        .detail-group { margin-bottom: 25px; text-align: left; }
+        .detail-group label { display: block; font-size: 12px; font-weight: 800; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+        .detail-group p { margin: 0; font-size: 16px; color: #0f172a; font-weight: 500; }
+        
+        /* INPUTS (For Edit Mode) */
+        .input-field { width: 100%; padding: 14px 15px; border: 1px solid #e2e8f0; border-radius: 8px; font-family: 'Manrope'; font-size: 15px; box-sizing: border-box; transition: 0.3s; color: #0f172a; }
+        .input-field:focus { border-color: #2563eb; outline: none; }
+        .input-readonly { background: #f8fafc; color: #64748b; cursor: not-allowed; }
+        
+        /* BUTTONS */
+        .btn-row { display: flex; gap: 15px; margin-top: 10px; }
+        .btn { flex: 1; padding: 14px; border-radius: 10px; font-family: 'Manrope'; font-weight: 700; font-size: 15px; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.2s; }
+        
+        .btn-blue { background: #2563eb; color: #fff; }
+        .btn-blue:hover { background: #1d4ed8; }
+        
+        .btn-red-light { background: #fee2e2; color: #ef4444; }
+        .btn-red-light:hover { background: #fecaca; }
+        
+        .btn-gray { background: #f1f5f9; color: #0f172a; }
+        .btn-gray:hover { background: #e2e8f0; }
+
+        .btn-solid-red { background: #ef4444; color: #fff; width: 100%; margin-top: 15px; }
+        .btn-solid-red:hover { background: #dc2626; }
+
+        .hidden { display: none !important; }
+        
+        @media (max-width: 600px) {
+            .btn-row { flex-direction: column; }
+            .card { padding: 25px; }
+        }
     </style>
 </head>
 <body>
 
-    <div class="dash-container">
+    <div class="container">
         
-        <div id="view-mode">
+        <div id="view-profile" class="card">
+            <a href="index.html" class="back-home"><i class="fa-solid fa-arrow-left"></i> Back to Home</a>
+            
             <div class="profile-header">
-                <img id="userAvatar" src="" class="profile-pic">
+                <div class="pic-wrapper" onclick="document.getElementById('profilePicInput').click()" title="Change Profile Photo">
+                    <img id="display-pic" src="" alt="Profile">
+                    <div class="edit-pic-badge"><i class="fa-solid fa-pencil"></i></div>
+                    <input type="file" id="profilePicInput" hidden accept="image/*" onchange="uploadNewPic(this)">
+                </div>
+                
                 <div class="profile-info">
-                    <h2 id="dispName">Loading...</h2>
+                    <h2 id="display-name">Loading...</h2>
                     <p>Student Account</p>
                 </div>
             </div>
             
-            <div class="info-group">
-                <div class="info-label">Email Address</div>
-                <div class="info-val" id="dispEmail"></div>
+            <hr>
+            
+            <div class="detail-group">
+                <label>EMAIL ADDRESS</label>
+                <p id="display-email">loading...</p>
             </div>
-            <div class="info-group">
-                <div class="info-label">WhatsApp Number</div>
-                <div class="info-val" id="dispWa"></div>
+            
+            <div class="detail-group">
+                <label>WHATSAPP NUMBER</label>
+                <p id="display-phone">loading...</p>
             </div>
-
-            <div class="btn-group">
-                <button class="btn btn-primary" onclick="toggleEditMode(true)"><i class="fa-solid fa-pen"></i> Edit Profile</button>
-                <button class="btn btn-danger" onclick="switchAccount()"><i class="fa-solid fa-right-from-bracket"></i> Switch Account</button>
+            
+            <div class="btn-row">
+                <button class="btn btn-blue" onclick="toggleEditMode(true)">
+                    <i class="fa-solid fa-pencil"></i> Edit Profile
+                </button>
+                <button class="btn btn-red-light" onclick="switchAccount()">
+                    <i class="fa-solid fa-users"></i> Switch Account
+                </button>
             </div>
+            
+            <button class="btn btn-solid-red" onclick="handleLogout()">
+                <i class="fa-solid fa-power-off"></i> Log Out
+            </button>
         </div>
 
-        <div id="edit-mode" class="hidden">
-            <h2 style="font-family:'Poppins'; color:#0f172a; margin-top:0;">Edit Profile</h2>
-            <form id="editForm">
-                <div class="info-group">
-                    <div class="info-label">Full Name</div>
-                    <input type="text" id="editName" class="input-field" required>
-                </div>
-                <div class="info-group">
-                    <div class="info-label">Email Address (Cannot be changed)</div>
-                    <input type="email" id="editEmail" class="input-field" disabled style="background:#f8fafc;">
-                </div>
-                <div class="info-group">
-                    <div class="info-label">WhatsApp Number</div>
-                    <input type="text" id="editWa" class="input-field">
-                </div>
-                
-                <div class="btn-group">
-                    <button type="button" class="btn btn-secondary" onclick="toggleEditMode(false)">Cancel</button>
-                    <button type="submit" class="btn btn-primary">Save Changes</button>
-                </div>
-            </form>
+        <div id="edit-profile" class="card hidden">
+            <h2 style="font-family: 'Poppins'; color: #0f172a; margin-top: 0; margin-bottom: 25px;">Edit Profile</h2>
+            
+            <div class="detail-group">
+                <label>FULL NAME</label>
+                <input type="text" id="edit-name" class="input-field">
+            </div>
+            
+            <div class="detail-group">
+                <label>EMAIL ADDRESS (CANNOT BE CHANGED)</label>
+                <input type="text" id="edit-email" class="input-field input-readonly" readonly>
+            </div>
+            
+            <div class="detail-group">
+                <label>WHATSAPP NUMBER</label>
+                <input type="text" id="edit-phone" class="input-field">
+            </div>
+            
+            <div class="btn-row" style="margin-top: 30px;">
+                <button class="btn btn-gray" onclick="toggleEditMode(false)">Cancel</button>
+                <button class="btn btn-blue" onclick="saveProfileChanges()">Save Changes</button>
+            </div>
         </div>
 
     </div>
 
     <script>
-        // Check if user is logged in
-        const userStr = localStorage.getItem('xg_user');
-        if (!userStr) {
-            window.location.href = "login.html"; // Redirect if not logged in
-        }
+        window.onload = function() {
+            const userStr = localStorage.getItem('xg_user');
+            if(!userStr) { 
+                window.location.href = "login.html"; 
+                return; 
+            }
+            populateData(JSON.parse(userStr));
+        };
 
-        let currentUser = JSON.parse(userStr);
-
-        // Load Data to UI
-        function loadUserData() {
-            document.getElementById('dispName').innerText = currentUser.name;
-            document.getElementById('dispEmail').innerText = currentUser.email;
-            document.getElementById('dispWa').innerText = currentUser.whatsapp;
-            document.getElementById('userAvatar').src = `https://ui-avatars.com/api/?name=${currentUser.name}&background=000080&color=fff`;
+        function populateData(user) {
+            document.getElementById('display-name').innerText = user.name;
+            document.getElementById('display-email').innerText = user.email;
+            document.getElementById('display-phone').innerText = user.whatsapp && user.whatsapp !== "" ? user.whatsapp : "N/A";
             
-            // Pre-fill Edit form
-            document.getElementById('editName').value = currentUser.name;
-            document.getElementById('editEmail').value = currentUser.email;
-            document.getElementById('editWa').value = (currentUser.whatsapp === "N/A") ? "" : currentUser.whatsapp;
-        }
+            const picImg = document.getElementById('display-pic');
+            if(user.pic && user.pic !== "") {
+                picImg.src = user.pic;
+            } else {
+                picImg.src = `https://ui-avatars.com/api/?name=${user.name}&background=000080&color=fff&size=128`;
+            }
 
-        loadUserData();
+            document.getElementById('edit-name').value = user.name;
+            document.getElementById('edit-email').value = user.email;
+            document.getElementById('edit-phone').value = user.whatsapp === "N/A" ? "" : user.whatsapp;
+        }
 
         function toggleEditMode(showEdit) {
             if(showEdit) {
-                document.getElementById('view-mode').classList.add('hidden');
-                document.getElementById('edit-mode').classList.remove('hidden');
+                document.getElementById('view-profile').classList.add('hidden');
+                document.getElementById('edit-profile').classList.remove('hidden');
             } else {
-                document.getElementById('edit-mode').classList.add('hidden');
-                document.getElementById('view-mode').classList.remove('hidden');
+                populateData(JSON.parse(localStorage.getItem('xg_user')));
+                document.getElementById('edit-profile').classList.add('hidden');
+                document.getElementById('view-profile').classList.remove('hidden');
             }
         }
 
-        // Handle Profile Update
-        document.getElementById('editForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const newName = document.getElementById('editName').value;
-            const newWa = document.getElementById('editWa').value || "N/A";
-            
-            // Update Active Session
-            currentUser.name = newName;
-            currentUser.whatsapp = newWa;
-            localStorage.setItem('xg_user', JSON.stringify(currentUser));
-            
-            // Update Mock DB
+        function saveProfileChanges() {
+            const newName = document.getElementById('edit-name').value.trim();
+            const newPhone = document.getElementById('edit-phone').value.trim();
+
+            if(newName === "") { alert("Name cannot be empty."); return; }
+            if(newPhone !== "" && !/^[6-9]\d{9}$/.test(newPhone)) { alert("Please enter a valid 10-digit mobile number or leave blank."); return; }
+
+            let user = JSON.parse(localStorage.getItem('xg_user'));
+            user.name = newName;
+            user.whatsapp = newPhone || "N/A";
+
+            localStorage.setItem('xg_user', JSON.stringify(user));
+
             let usersDB = JSON.parse(localStorage.getItem('xg_users_db')) || [];
-            const userIndex = usersDB.findIndex(u => u.email === currentUser.email);
-            if(userIndex > -1) {
-                usersDB[userIndex].name = newName;
-                usersDB[userIndex].whatsapp = newWa;
+            let index = usersDB.findIndex(u => u.email === user.email);
+            if(index > -1) {
+                usersDB[index].name = user.name;
+                usersDB[index].whatsapp = user.whatsapp;
                 localStorage.setItem('xg_users_db', JSON.stringify(usersDB));
             }
 
-            // ADMIN NOTIFICATION (Sync to Sheet)
-            if(window.syncToSheet) {
-                window.syncToSheet({...currentUser, interest: "Profile Updated"});
-            }
+            if(window.syncToSheet) window.syncToSheet({...user, interest: "Profile Updated"});
 
-            loadUserData();
+            populateData(user);
             toggleEditMode(false);
-            alert("Profile updated successfully!");
-        });
+            
+            location.reload();
+        }
 
-        // Handle Switch Account (Logout)
+        function uploadNewPic(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const base64Image = e.target.result;
+                    
+                    document.getElementById('display-pic').src = base64Image;
+                    
+                    let user = JSON.parse(localStorage.getItem('xg_user'));
+                    user.pic = base64Image;
+                    localStorage.setItem('xg_user', JSON.stringify(user));
+
+                    let usersDB = JSON.parse(localStorage.getItem('xg_users_db')) || [];
+                    let index = usersDB.findIndex(u => u.email === user.email);
+                    if(index > -1) {
+                        usersDB[index].pic = base64Image;
+                        localStorage.setItem('xg_users_db', JSON.stringify(usersDB));
+                    }
+                    
+                    location.reload(); 
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
         function switchAccount() {
-            if(confirm("Are you sure you want to switch accounts? You will be logged out.")) {
-                // ADMIN NOTIFICATION (Sync to Sheet)
-                if(window.syncToSheet) {
-                    window.syncToSheet({...currentUser, interest: "Account Switched (Logout)"});
-                }
-                
-                // Clear active session and redirect
+            localStorage.removeItem('xg_user');
+            window.location.href = "login.html";
+        }
+
+        function handleLogout() {
+            if(confirm("Are you sure you want to log out of Xplainer Guru?")) {
                 localStorage.removeItem('xg_user');
                 window.location.href = "login.html";
             }

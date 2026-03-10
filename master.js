@@ -127,7 +127,7 @@ document.addEventListener("DOMContentLoaded", () => {
             </div>
         </div>
         <div class="credits">
-            Designed and Developed with ❤️ by <a href="${CONFIG.developer.ig}" target="_blank" style="color:#fff; font-weight:700; text-decoration:underline;">Ashutosh Kaushal</a> | &copy; 2026
+            Designed and Developed with ❤️ by <a href="${CONFIG.developer.ig}" target="_blank" style="color:#fff; font-weight:700; text-decoration:underline;">Ashutosh Kaushal</a> | &copy; 2025
         </div>
     </footer>
     `;
