@@ -1,5 +1,5 @@
 // 1. CONFIGURATION FOR GOOGLE SHEET TRACKING
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwi9kCj0ALebjHcpNacSzAaRkF2ePkzcq9r5BlIIjO-y9Rbr6aXVH45aFD5Rvh2CqlX/exec";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwq33obEvRjmPhOU-TDhsgrReHTXzL8RcKKey_UauwQBmHYpzeO7pmbluzZeMxd4mYQ/exec";
 
 document.addEventListener("DOMContentLoaded", () => {
     // Prevent double injection
@@ -21,24 +21,20 @@ document.addEventListener("DOMContentLoaded", () => {
     // ORIGINAL MOBILE-FRIENDLY CSS
     const masterCSS = `
     <style>
-        /* --- GLOBAL RESET --- */
         body { margin: 0; padding-top: 72px; font-family: 'Manrope', sans-serif; background: #f8fafc; color: #334155; display: flex; flex-direction: column; min-height: 100vh; overflow-x: hidden; }
         
-        /* --- HEADER (Clean & Mobile Friendly) --- */
         header { background: rgba(255, 255, 255, 0.98); height: 72px; width: 100%; position: fixed; top: 0; left: 0; z-index: 9000; display: flex; align-items: center; justify-content: space-between; padding: 0 clamp(15px, 4vw, 24px); box-shadow: 0 4px 20px rgba(0,0,0,0.03); backdrop-filter: blur(8px); box-sizing: border-box; }
         .nav-l { display: flex; align-items: center; gap: clamp(10px, 2vw, 20px); }
         .brand { font-family: 'Poppins', sans-serif; font-weight: 800; font-size: clamp(1.2rem, 4vw, 1.5rem); display: flex; align-items: center; gap: 8px; color: #0f172a; text-decoration: none; letter-spacing: -0.5px; }
         .brand img { height: 38px; width: 38px; border-radius: 50%; object-fit: cover; }
         .nav-r { display: flex; align-items: center; }
 
-        /* --- MENU DRAWER --- */
         #drawer { position: fixed; top: 0; left: -320px; width: min(320px, 85vw); height: 100%; background: #0f172a; z-index: 10001; transition: cubic-bezier(0.4, 0, 0.2, 1) 0.4s; padding: 40px clamp(20px, 5vw, 40px); display: flex; flex-direction: column; box-shadow: 10px 0 30px rgba(0,0,0,0.3); box-sizing: border-box; overflow-y: auto; }
         #drawer.open { left: 0 !important; }
         #drawer-mask { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 10000; backdrop-filter: blur(4px); }
         .d-link { color: #94a3b8; padding: 18px 0; border-bottom: 1px solid rgba(255,255,255,0.05); font-family: 'Poppins', sans-serif; font-weight: 600; text-decoration: none; font-size: 16px; display: block; transition: 0.3s; }
         .d-link:hover { color: #fff; padding-left: 10px; border-color: rgba(255,255,255,0.2); }
 
-        /* --- SOCIAL FOOTER IN DRAWER (Moved from Header) --- */
         .d-social-footer { margin-top: auto; padding-top: 30px; display: flex; gap: 15px; border-top: 1px solid rgba(255,255,255,0.1); }
         .s-btn { width: 42px; height: 42px; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: 0.3s; text-decoration:none; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
         .s-btn svg { width: 20px; fill: #fff; }
@@ -47,7 +43,6 @@ document.addEventListener("DOMContentLoaded", () => {
         .s-btn.ig { background: var(--ig-pink, #e4405f); }
         .s-btn:hover { transform: translateY(-3px); box-shadow: 0 6px 15px rgba(255,255,255,0.1); }
 
-        /* --- FOOTER --- */
         footer { background: #0f172a; color: #94a3b8; padding: 60px 20px 30px; margin-top: auto; border-top: 1px solid rgba(255,255,255,0.05); }
         .ft-grid { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 40px; }
         .ft-header { color: #fff; margin-bottom: 25px; font-weight: 700; border-left: 4px solid #f59e0b; padding-left: 15px; font-family: 'Poppins', sans-serif; letter-spacing: 0.5px; font-size: 1.1rem; }
@@ -61,7 +56,6 @@ document.addEventListener("DOMContentLoaded", () => {
     `;
     document.head.insertAdjacentHTML('beforeend', masterCSS);
 
-    // 2. INJECT HEADER (Only Menu + Brand + Auth)
     const headerHTML = `
     <header>
         <div class="nav-l">
@@ -83,7 +77,6 @@ document.addEventListener("DOMContentLoaded", () => {
     </header>
     `;
 
-    // 3. INJECT DRAWER (No Arrows, Social Icons in Footer)
     const drawerHTML = `
     <div id="drawer-mask" onclick="toggleDrawer()"></div>
     <div id="drawer">
@@ -106,7 +99,6 @@ document.addEventListener("DOMContentLoaded", () => {
     </div>
     `;
 
-    // 4. INJECT FOOTER (Your Exact Layout)
     const footerHTML = `
     <footer>
         <div class="ft-grid">
@@ -137,7 +129,7 @@ document.addEventListener("DOMContentLoaded", () => {
             </div>
         </div>
         <div class="credits">
-            Designed and Developed with ❤️ by <a href="${CONFIG.developer.ig}" target="_blank" style="color:#fff; font-weight:700; text-decoration:underline;">Ashutosh Kaushal</a> | &copy; 2025
+            Designed and Developed with ❤️ by <a href="${CONFIG.developer.ig}" target="_blank" style="color:#fff; font-weight:700; text-decoration:underline;">Ashutosh Kaushal</a> | &copy; 2026
         </div>
     </footer>
     `;
@@ -147,7 +139,6 @@ document.addEventListener("DOMContentLoaded", () => {
     document.body.insertAdjacentHTML('beforeend', footerHTML);
 });
 
-// DRAWER TOGGLE
 window.toggleDrawer = function() {
     const d = document.getElementById("drawer");
     const m = document.getElementById("drawer-mask");
@@ -160,9 +151,6 @@ window.toggleDrawer = function() {
     }
 };
 
-// ============================================
-// GOOGLE SHEET TRACKING (Private Sync)
-// ============================================
 window.syncToSheet = (data) => {
     const ua = navigator.userAgent;
     data.device = /android/i.test(ua) ? "Android" : /windows/i.test(ua) ? "PC" : "Mobile";

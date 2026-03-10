@@ -1,16 +1,240 @@
-function handleSignUp(e) {
-    e.preventDefault();
-    const name = document.getElementById('name').value;
-    const email = document.getElementById('email').value;
-    const pass = document.getElementById('pass').value;
-    const whatsapp = document.getElementById('wa').value; // Optional
-
-    const userData = { name, email, pass, whatsapp };
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account Access | Xplainer Guru</title>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;800&family=Poppins:wght@700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    // CALL PRIVATE SYNC
-    window.syncUserPrivate(userData);
+    <script src="master.js" defer></script>
+    
+    <style>
+        body { font-family: 'Manrope', sans-serif; background: #f8fafc; margin: 0; display: flex; flex-direction: column; min-height: 100vh; justify-content: center; align-items: center; padding: 20px; box-sizing: border-box; }
+        .auth-container { background: white; padding: 40px; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,128,0.05); width: 100%; max-width: 420px; text-align: center; border: 1px solid #e2e8f0; margin-top: 50px; }
+        .auth-container h2 { font-family: 'Poppins', sans-serif; color: #0f172a; margin-bottom: 10px; font-size: 1.8rem; }
+        .auth-container p { color: #64748b; font-size: 14px; margin-bottom: 30px; line-height: 1.6; }
+        
+        .input-group { position: relative; margin-bottom: 16px; }
+        .input-field { width: 100%; padding: 15px; border: 1px solid #e2e8f0; border-radius: 10px; box-sizing: border-box; font-family: 'Manrope', sans-serif; font-size: 14px; outline: none; transition: 0.3s; }
+        .input-field:focus { border-color: #2563eb; box-shadow: 0 0 0 3px rgba(37,99,235,0.1); }
+        .pass-icon { position: absolute; right: 15px; top: 16px; color: #94a3b8; cursor: pointer; transition: 0.2s; font-size: 16px; }
+        .pass-icon:hover { color: #0f172a; }
 
-    localStorage.setItem('xg_user', JSON.stringify({name, email}));
-    alert("Account Created! Welcome Email sent.");
-    window.location.href = "dashboard.html";
-}
+        .forgot-link { display: block; text-align: right; font-size: 13px; color: #2563eb; font-weight: 700; text-decoration: none; margin-bottom: 22px; cursor: pointer; transition: 0.2s; }
+        .forgot-link:hover { text-decoration: underline; color: #000080; }
+
+        .submit-btn { background: #2563eb; color: white; border: none; padding: 16px; width: 100%; border-radius: 10px; font-weight: 800; font-family: 'Manrope', sans-serif; cursor: pointer; transition: 0.3s; font-size: 15px; box-shadow: 0 4px 15px rgba(37,99,235,0.2); }
+        .submit-btn:hover { background: #000080; transform: translateY(-2px); }
+        
+        .toggle-text { margin-top: 24px; font-size: 14px; color: #64748b; }
+        .toggle-link { color: #2563eb; font-weight: 800; cursor: pointer; text-decoration: none; transition: 0.2s; }
+        .toggle-link:hover { color: #000080; text-decoration: underline; }
+        
+        .error-message { color: #ef4444; font-size: 13.5px; font-weight: 600; margin-bottom: 18px; display: none; background: #fef2f2; padding: 12px; border-radius: 8px; border: 1px solid #fecaca; text-align: left; line-height: 1.5; }
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+
+    <div class="auth-container" id="main-auth-box">
+        
+        <div id="login-section">
+            <h2>Welcome Back</h2>
+            <p>Log in to access your premium courses and study materials.</p>
+            <div id="login-error" class="error-message"></div>
+            
+            <form id="loginForm">
+                <div class="input-group">
+                    <input type="text" id="loginId" class="input-field" placeholder="Email Address or Mobile Number" required>
+                </div>
+                <div class="input-group">
+                    <input type="password" id="loginPass" class="input-field" placeholder="Password" style="padding-right: 45px;" required>
+                    <i class="fa-solid fa-eye-slash pass-icon" onclick="togglePassword('loginPass', this)"></i>
+                </div>
+                
+                <a class="forgot-link" onclick="handleForgotPass()">Forgot Password?</a>
+                
+                <button type="submit" class="submit-btn">Secure Log In</button>
+            </form>
+            <div class="toggle-text">Don't have an account? <span class="toggle-link" onclick="toggleAuthMode('signup')">Sign Up Here</span></div>
+        </div>
+
+        <div id="signup-section" class="hidden">
+            <h2>Create Account</h2>
+            <p>Join Xplainer Guru and master your syllabus today.</p>
+            <div id="signup-error" class="error-message"></div>
+
+            <form id="signupForm">
+                <div class="input-group">
+                    <input type="text" id="signName" class="input-field" placeholder="Full Name" required>
+                </div>
+                <div class="input-group">
+                    <input type="email" id="signEmail" class="input-field" placeholder="Email Address" required>
+                </div>
+                <div class="input-group">
+                    <input type="tel" id="signPhone" class="input-field" placeholder="Mobile Number (10 Digits)" required>
+                </div>
+                <div class="input-group">
+                    <input type="password" id="signPass" class="input-field" placeholder="Create a Password" style="padding-right: 45px;" required>
+                    <i class="fa-solid fa-eye-slash pass-icon" onclick="togglePassword('signPass', this)"></i>
+                </div>
+                <button type="submit" class="submit-btn">Create Account</button>
+            </form>
+            <div class="toggle-text">Already have an account? <span class="toggle-link" onclick="toggleAuthMode('login')">Log In Here</span></div>
+        </div>
+    </div>
+
+    <script>
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwq33obEvRjmPhOU-TDhsgrReHTXzL8RcKKey_UauwQBmHYpzeO7pmbluzZeMxd4mYQ/exec";
+
+        window.onload = function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const resetEmail = urlParams.get('reset');
+            
+            if(resetEmail) {
+                const [name, domain] = resetEmail.split('@');
+                const maskedDisplay = name.charAt(0) + "******" + name.charAt(name.length - 1) + "@" + domain;
+
+                document.getElementById('main-auth-box').innerHTML = `
+                    <h2>Reset Password</h2>
+                    <p style="color:#475569; margin-bottom: 25px;">Creating a new secure password for <br><strong style="color:#2563eb;">${maskedDisplay}</strong></p>
+                    <input type="password" id="newPass" class="input-field" placeholder="Enter New Password (Min 6 chars)" required>
+                    <button onclick="saveNewPassword('${resetEmail}')" class="submit-btn" style="margin-top: 15px;">Update Password</button>
+                `;
+            }
+        };
+
+        function saveNewPassword(email) {
+            const newPass = document.getElementById('newPass').value;
+            if(newPass.length < 6) {
+                alert("Security Alert: Password must be at least 6 characters long."); return;
+            }
+            
+            let usersDB = JSON.parse(localStorage.getItem('xg_users_db')) || [];
+            let userIndex = usersDB.findIndex(u => u.email === email);
+            
+            if(userIndex > -1) {
+                usersDB[userIndex].password = newPass;
+                localStorage.setItem('xg_users_db', JSON.stringify(usersDB));
+                alert("Success! Your password has been updated securely. Please log in with your new credentials.");
+                window.location.href = "login.html"; 
+            } else {
+                alert("System Error: We could not verify this account on your current device. Please try again.");
+            }
+        }
+
+        function toggleAuthMode(mode) {
+            document.getElementById('login-error').style.display = 'none';
+            document.getElementById('signup-error').style.display = 'none';
+            if (mode === 'signup') {
+                document.getElementById('login-section').classList.add('hidden');
+                document.getElementById('signup-section').classList.remove('hidden');
+            } else {
+                document.getElementById('signup-section').classList.add('hidden');
+                document.getElementById('login-section').classList.remove('hidden');
+            }
+        }
+
+        function togglePassword(inputId, icon) {
+            const input = document.getElementById(inputId);
+            if (input.type === "password") {
+                input.type = "text";
+                icon.classList.replace("fa-eye-slash", "fa-eye");
+            } else {
+                input.type = "password";
+                icon.classList.replace("fa-eye", "fa-eye-slash");
+            }
+        }
+
+        function handleForgotPass() {
+            const input = prompt("Please enter your registered Email Address or Mobile Number to reset your password:");
+            
+            if(input && input.trim() !== "") {
+                let usersDB = JSON.parse(localStorage.getItem('xg_users_db')) || [];
+                let foundUser = usersDB.find(u => u.email === input.toLowerCase().trim() || u.whatsapp === input.trim());
+                
+                if(foundUser) {
+                    const email = foundUser.email;
+                    const [name, domain] = email.split('@');
+                    let maskedEmail = email;
+                    if(name.length > 2) {
+                        maskedEmail = name.charAt(0) + "******" + name.charAt(name.length - 1) + "@" + domain;
+                    }
+
+                    alert(`A secure password reset link has been dispatched to your registered email address (${maskedEmail}). Please check your inbox.`);
+                    
+                    fetch(SCRIPT_URL, {
+                        method: "POST",
+                        mode: "no-cors",
+                        body: JSON.stringify({
+                            action: "forgot_password",
+                            email: foundUser.email
+                        })
+                    }).catch(e => console.error("Email dispatch failed:", e));
+
+                } else {
+                    alert("Authentication Failed: We could not find an account associated with this Email Address or Mobile Number. Please check your details or proceed to Sign Up.");
+                }
+            }
+        }
+
+        function validatePhone(phone) { return /^[6-9]\d{9}$/.test(phone); }
+        function validateEmail(email) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email); }
+
+        document.getElementById('signupForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const errorBox = document.getElementById('signup-error');
+            errorBox.style.display = 'none';
+
+            const newEmail = document.getElementById('signEmail').value.toLowerCase().trim();
+            const newPhone = document.getElementById('signPhone').value.trim();
+            const newPass = document.getElementById('signPass').value;
+
+            if(!validateEmail(newEmail)) { errorBox.innerHTML = "<i class='fa-solid fa-circle-exclamation'></i> Invalid Email Address format."; errorBox.style.display = 'block'; return; }
+            if(!validatePhone(newPhone)) { errorBox.innerHTML = "<i class='fa-solid fa-circle-exclamation'></i> Please enter a valid 10-digit Mobile Number."; errorBox.style.display = 'block'; return; }
+            if(newPass.length < 6) { errorBox.innerHTML = "<i class='fa-solid fa-circle-exclamation'></i> Password must contain at least 6 characters."; errorBox.style.display = 'block'; return; }
+
+            const newUser = { name: document.getElementById('signName').value.trim(), email: newEmail, whatsapp: newPhone, password: newPass };
+            let usersDB = JSON.parse(localStorage.getItem('xg_users_db')) || [];
+            
+            if (usersDB.find(u => u.email === newUser.email || u.whatsapp === newUser.whatsapp)) {
+                errorBox.innerHTML = "<i class='fa-solid fa-circle-exclamation'></i> An account with this Email or Mobile Number already exists.";
+                errorBox.style.display = 'block'; return;
+            }
+            
+            usersDB.push(newUser);
+            localStorage.setItem('xg_users_db', JSON.stringify(usersDB));
+            
+            const activeSession = { name: newUser.name, email: newUser.email, whatsapp: newUser.whatsapp };
+            localStorage.setItem('xg_user', JSON.stringify(activeSession));
+            
+            if(window.syncToSheet) window.syncToSheet({...activeSession, interest: "Registration"});
+            
+            alert("Account created successfully! Please check your email for a welcome message.");
+            window.location.href = "dashboard.html"; 
+        });
+
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const loginId = document.getElementById('loginId').value.toLowerCase().trim();
+            const passInput = document.getElementById('loginPass').value;
+            const errorMsg = document.getElementById('login-error');
+            
+            let usersDB = JSON.parse(localStorage.getItem('xg_users_db')) || [];
+            const validUser = usersDB.find(u => (u.email === loginId || u.whatsapp === loginId) && u.password === passInput);
+            
+            if (validUser) {
+                const activeSession = { name: validUser.name, email: validUser.email, whatsapp: validUser.whatsapp };
+                localStorage.setItem('xg_user', JSON.stringify(activeSession));
+                if(window.syncToSheet) window.syncToSheet({...activeSession, interest: "User Logged In"});
+                window.location.href = "dashboard.html";
+            } else {
+                errorMsg.innerHTML = "<i class='fa-solid fa-circle-exclamation'></i> Incorrect Email/Mobile Number or Password. Please try again.";
+                errorMsg.style.display = 'block';
+                document.getElementById('loginPass').value = ''; 
+            }
+        });
+    </script>
+</body>
+</html>

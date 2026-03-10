@@ -4,24 +4,45 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mock Tests | Xplainer Guru</title>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;800&family=Poppins:wght@700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script src="master.js" defer></script>
+    
     <style>
-        .coming-soon-container { flex: 1; display: flex; align-items: center; justify-content: center; text-align: center; padding: 60px 20px; background: #f4f7ff; }
-        .cs-card { background: white; padding: 50px 30px; border-radius: 24px; box-shadow: 0 20px 50px rgba(0,0,128,0.05); max-width: 500px; width: 100%; }
-        .cs-icon { font-size: 60px; color: #000080; margin-bottom: 20px; animation: bounce 2s infinite; }
-        h1 { font-family: 'Poppins', sans-serif; color: #0f172a; margin-bottom: 15px; }
-        .notify-btn { background: #000080; color: white; border: none; padding: 16px 35px; border-radius: 14px; font-weight: 700; cursor: pointer; transition: 0.3s; display: inline-flex; align-items: center; gap: 10px; }
-        .notify-btn:hover { transform: translateY(-3px); background: #2563eb; }
+        .coming-soon-wrapper { 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            min-height: calc(100vh - 72px); 
+            padding: 40px 20px; 
+            box-sizing: border-box;
+        }
+        .cs-card { 
+            background: white; 
+            padding: 50px 30px; 
+            border-radius: 24px; 
+            box-shadow: 0 10px 40px rgba(0,0,128,0.05); 
+            max-width: 450px; 
+            width: 100%; 
+            text-align: center;
+            border: 1px solid #e2e8f0;
+        }
+        .cs-icon { font-size: 55px; color: #000080; margin-bottom: 20px; animation: bounce 2s infinite; }
+        .cs-card h1 { font-family: 'Poppins', sans-serif; color: #0f172a; margin-bottom: 15px; font-size: 2rem; line-height: 1.2; }
+        .cs-card p { color: #64748b; font-family: 'Manrope', sans-serif; margin-bottom: 30px; font-size: 15px; line-height: 1.6; }
+        .notify-btn { background: #000080; color: white; border: none; padding: 15px 35px; border-radius: 12px; font-weight: 700; font-size: 15px; font-family: 'Manrope', sans-serif; cursor: pointer; transition: 0.3s; display: inline-flex; align-items: center; gap: 10px; box-shadow: 0 5px 15px rgba(0,0,128,0.2); }
+        .notify-btn:hover { transform: translateY(-3px); background: #2563eb; box-shadow: 0 8px 20px rgba(37, 99, 235, 0.3); }
         @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
     </style>
 </head>
 <body>
 
-    <div class="coming-soon-container">
+    <div class="coming-soon-wrapper">
         <div class="cs-card">
             <div class="cs-icon"><i class="fa-solid fa-flask-vial"></i></div>
             <h1>Mock Tests <br><span style="color:#2563eb">Coming Soon</span></h1>
-            <p>Waitlist join karein! Jab tests live honge, aapko sabse pehle notification milega.</p>
+            <p>Join the waitlist! You will be the first to receive a notification once the test series goes live.</p>
             
             <button class="notify-btn" onclick="handleNotifyClick()">
                 <i class="fa-solid fa-bell"></i> Notify Me
@@ -29,17 +50,14 @@
         </div>
     </div>
 
-    <script src="master.js"></script>
-
     <script>
         function handleNotifyClick() {
             const userStr = localStorage.getItem('xg_user');
             const user = userStr ? JSON.parse(userStr) : null;
 
             if (user) {
-                // Scenario 1: User Logged In
                 if (!user.whatsapp || user.whatsapp === "N/A") {
-                    const wa = prompt("Aapka WhatsApp number? (Notification ke liye)");
+                    const wa = prompt("Please enter your WhatsApp Number for updates:");
                     if (wa) {
                         user.whatsapp = wa;
                         localStorage.setItem('xg_user', JSON.stringify(user));
@@ -49,10 +67,9 @@
                     syncData(user);
                 }
             } else {
-                // Scenario 2: Guest User (No Login Required)
-                const email = prompt("Aapka Email ID?");
+                const email = prompt("Please enter your Email Address:");
                 if (email && email.includes("@")) {
-                    const wa = prompt("Aapka WhatsApp number? (Optional - Cancel dabayein agar nahi dena)");
+                    const wa = prompt("Please enter your WhatsApp Number (Optional - Click Cancel to skip):");
                     
                     const guestData = {
                         name: "Guest User",
@@ -63,15 +80,17 @@
                     };
                     syncData(guestData);
                 } else if (email !== null) {
-                    alert("Kripya sahi email dalein!");
+                    alert("Invalid input. Please enter a valid email address.");
                 }
             }
         }
 
         function syncData(data) {
-            alert("Success! Humne aapko waitlist mein add kar liya hai.");
             if (window.syncToSheet) {
-                window.syncToSheet(data);
+                window.syncToSheet({...data, interest: "Mock Test Waitlist"});
+                alert("Success! You have been added to the waitlist. We will notify you once the tests are live.");
+            } else {
+                alert("Connection error. Please refresh the page and try again.");
             }
         }
     </script>

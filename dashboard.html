@@ -2,47 +2,167 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
-    <title>Dashboard | Xplainer Guru</title>
-    <link rel="icon" type="image/png" href="logo.png">
-    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700&family=Poppins:wght@700&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Dashboard | Xplainer Guru</title>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;800&family=Poppins:wght@700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="master.js" defer></script>
     <style>
-        .container { max-width: 900px; margin: 30px auto; padding: 0 15px; }
-        .u-card { background: #0f172a; color: #fff; padding: 40px 25px; border-radius: 25px; display: flex; align-items: center; gap: 25px; }
-        .p-box { width: 100px; height: 100px; position: relative; flex-shrink: 0; cursor: pointer; }
-        .p-box img { width: 100%; height: 100%; border-radius: 50%; border: 3px solid #000080; object-fit: cover; }
-        .logout-btn { background: #ef4444; color: #fff; border: none; padding: 12px 25px; border-radius: 12px; font-weight: 700; cursor: pointer; margin-top: 15px; }
-        @media (max-width: 600px) { .u-card { flex-direction: column; text-align: center; } }
+        body { font-family: 'Manrope', sans-serif; background: #f8fafc; margin: 0; padding-top: 100px; display: flex; flex-direction: column; min-height: 100vh; align-items: center; }
+        .dash-container { background: white; padding: 40px; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,128,0.05); width: 100%; max-width: 500px; border: 1px solid #e2e8f0; margin-bottom: 50px; }
+        .profile-header { display: flex; align-items: center; gap: 20px; border-bottom: 1px solid #e2e8f0; padding-bottom: 20px; margin-bottom: 20px; }
+        .profile-pic { width: 80px; height: 80px; border-radius: 50%; border: 3px solid #2563eb; object-fit: cover; }
+        .profile-info h2 { font-family: 'Poppins', sans-serif; margin: 0; color: #0f172a; font-size: 1.5rem; }
+        .profile-info p { margin: 5px 0 0; color: #64748b; font-size: 14px; }
+        
+        .info-group { margin-bottom: 15px; }
+        .info-label { font-size: 12px; font-weight: 800; color: #94a3b8; text-transform: uppercase; }
+        .info-val { font-size: 15px; color: #0f172a; font-weight: 600; margin-top: 5px; }
+        
+        .input-field { width: 100%; padding: 12px; margin-top: 5px; border: 1px solid #e2e8f0; border-radius: 8px; font-family: 'Manrope'; font-size: 14px; outline: none; }
+        
+        .btn-group { display: flex; gap: 10px; margin-top: 30px; }
+        .btn { flex: 1; padding: 12px; border-radius: 10px; font-weight: 800; cursor: pointer; transition: 0.3s; font-family: 'Manrope'; border: none; font-size: 14px; }
+        .btn-primary { background: #2563eb; color: white; }
+        .btn-primary:hover { background: #000080; }
+        .btn-secondary { background: #f1f5f9; color: #0f172a; border: 1px solid #e2e8f0; }
+        .btn-secondary:hover { background: #e2e8f0; }
+        .btn-danger { background: #fee2e2; color: #ef4444; border: 1px solid #fecaca; }
+        .btn-danger:hover { background: #fca5a5; color: #b91c1c; }
+        
+        .hidden { display: none; }
     </style>
 </head>
 <body>
-    <script src="content.js"></script><script src="master.js"></script>
-    <div class="container">
-        <div class="u-card">
-            <div class="p-box" onclick="document.getElementById('file-in').click()">
-                <img id="user-dp" src=""><span style="position:absolute; bottom:0; right:0; background:#2563eb; font-size:10px; padding:4px 8px; border-radius:5px; font-weight:800;">EDIT</span>
-                <input type="file" id="file-in" hidden accept="image/*" onchange="updateDP(event)">
+
+    <div class="dash-container">
+        
+        <div id="view-mode">
+            <div class="profile-header">
+                <img id="userAvatar" src="" class="profile-pic">
+                <div class="profile-info">
+                    <h2 id="dispName">Loading...</h2>
+                    <p>Student Account</p>
+                </div>
             </div>
-            <div>
-                <h1 id="user-name" style="margin:0; font-family:'Poppins';">User!</h1>
-                <p id="user-email" style="opacity:0.7; font-size:14px;"></p>
-                <button class="logout-btn" onclick="logoutUser()">Logout Now</button>
+            
+            <div class="info-group">
+                <div class="info-label">Email Address</div>
+                <div class="info-val" id="dispEmail"></div>
+            </div>
+            <div class="info-group">
+                <div class="info-label">WhatsApp Number</div>
+                <div class="info-val" id="dispWa"></div>
+            </div>
+
+            <div class="btn-group">
+                <button class="btn btn-primary" onclick="toggleEditMode(true)"><i class="fa-solid fa-pen"></i> Edit Profile</button>
+                <button class="btn btn-danger" onclick="switchAccount()"><i class="fa-solid fa-right-from-bracket"></i> Switch Account</button>
             </div>
         </div>
+
+        <div id="edit-mode" class="hidden">
+            <h2 style="font-family:'Poppins'; color:#0f172a; margin-top:0;">Edit Profile</h2>
+            <form id="editForm">
+                <div class="info-group">
+                    <div class="info-label">Full Name</div>
+                    <input type="text" id="editName" class="input-field" required>
+                </div>
+                <div class="info-group">
+                    <div class="info-label">Email Address (Cannot be changed)</div>
+                    <input type="email" id="editEmail" class="input-field" disabled style="background:#f8fafc;">
+                </div>
+                <div class="info-group">
+                    <div class="info-label">WhatsApp Number</div>
+                    <input type="text" id="editWa" class="input-field">
+                </div>
+                
+                <div class="btn-group">
+                    <button type="button" class="btn btn-secondary" onclick="toggleEditMode(false)">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                </div>
+            </form>
+        </div>
+
     </div>
+
     <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            const u = JSON.parse(localStorage.getItem('xg_user'));
-            if(!u) window.location.href="login.html";
-            document.getElementById('user-name').innerText = `Hi, ${u.name}!`;
-            document.getElementById('user-email').innerText = u.email;
-            document.getElementById('user-dp').src = u.pic || `https://ui-avatars.com/api/?name=${u.name}&background=000080&color=fff`;
+        // Check if user is logged in
+        const userStr = localStorage.getItem('xg_user');
+        if (!userStr) {
+            window.location.href = "login.html"; // Redirect if not logged in
+        }
+
+        let currentUser = JSON.parse(userStr);
+
+        // Load Data to UI
+        function loadUserData() {
+            document.getElementById('dispName').innerText = currentUser.name;
+            document.getElementById('dispEmail').innerText = currentUser.email;
+            document.getElementById('dispWa').innerText = currentUser.whatsapp;
+            document.getElementById('userAvatar').src = `https://ui-avatars.com/api/?name=${currentUser.name}&background=000080&color=fff`;
+            
+            // Pre-fill Edit form
+            document.getElementById('editName').value = currentUser.name;
+            document.getElementById('editEmail').value = currentUser.email;
+            document.getElementById('editWa').value = (currentUser.whatsapp === "N/A") ? "" : currentUser.whatsapp;
+        }
+
+        loadUserData();
+
+        function toggleEditMode(showEdit) {
+            if(showEdit) {
+                document.getElementById('view-mode').classList.add('hidden');
+                document.getElementById('edit-mode').classList.remove('hidden');
+            } else {
+                document.getElementById('edit-mode').classList.add('hidden');
+                document.getElementById('view-mode').classList.remove('hidden');
+            }
+        }
+
+        // Handle Profile Update
+        document.getElementById('editForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const newName = document.getElementById('editName').value;
+            const newWa = document.getElementById('editWa').value || "N/A";
+            
+            // Update Active Session
+            currentUser.name = newName;
+            currentUser.whatsapp = newWa;
+            localStorage.setItem('xg_user', JSON.stringify(currentUser));
+            
+            // Update Mock DB
+            let usersDB = JSON.parse(localStorage.getItem('xg_users_db')) || [];
+            const userIndex = usersDB.findIndex(u => u.email === currentUser.email);
+            if(userIndex > -1) {
+                usersDB[userIndex].name = newName;
+                usersDB[userIndex].whatsapp = newWa;
+                localStorage.setItem('xg_users_db', JSON.stringify(usersDB));
+            }
+
+            // ADMIN NOTIFICATION (Sync to Sheet)
+            if(window.syncToSheet) {
+                window.syncToSheet({...currentUser, interest: "Profile Updated"});
+            }
+
+            loadUserData();
+            toggleEditMode(false);
+            alert("Profile updated successfully!");
         });
-        function updateDP(e) {
-            const r = new FileReader(); r.onload = () => {
-                const u = JSON.parse(localStorage.getItem('xg_user')); u.pic = r.result;
-                localStorage.setItem('xg_user', JSON.stringify(u)); window.location.reload(); 
-            }; r.readAsDataURL(e.target.files[0]);
+
+        // Handle Switch Account (Logout)
+        function switchAccount() {
+            if(confirm("Are you sure you want to switch accounts? You will be logged out.")) {
+                // ADMIN NOTIFICATION (Sync to Sheet)
+                if(window.syncToSheet) {
+                    window.syncToSheet({...currentUser, interest: "Account Switched (Logout)"});
+                }
+                
+                // Clear active session and redirect
+                localStorage.removeItem('xg_user');
+                window.location.href = "login.html";
+            }
         }
     </script>
 </body>

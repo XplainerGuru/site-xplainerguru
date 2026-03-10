@@ -51,9 +51,9 @@
                         <th>Date</th>
                         <th>Name</th>
                         <th>Email</th>
-                        <th>WhatsApp</th>
+                        <th>Mobile</th>
                         <th>Device</th>
-                        <th>Source</th>
+                        <th>Action/Interest</th>
                         <th>Location (Map)</th>
                     </tr>
                 </thead>
@@ -65,25 +65,21 @@
     </div>
 
     <script>
-        // ADMIN PASSWORD (Change this if you want)
-        const ADMIN_PASS = "admin123"; 
-        
-        // PASTE YOUR WEB APP URL HERE (The one with /exec at the end)
-        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyNi_NMnULVOfuZFkVj62clNjv8bbQBhdfWv0G4S_mVbxKffMRyDQ5lTPsLNXRIW6l7/exec";
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwq33obEvRjmPhOU-TDhsgrReHTXzL8RcKKey_UauwQBmHYpzeO7pmbluzZeMxd4mYQ/exec";
 
         window.onload = () => {
             const auth = sessionStorage.getItem('xg_admin_auth');
-            if (auth === ADMIN_PASS) {
+            if (auth) {
                 document.body.style.display = 'block';
-                fetchData();
+                fetchData(auth);
             } else {
                 const pass = prompt("Admin Security: Enter Password");
-                if (pass === ADMIN_PASS) {
+                if (pass) {
                     sessionStorage.setItem('xg_admin_auth', pass);
                     document.body.style.display = 'block';
-                    fetchData();
+                    fetchData(pass);
                 } else {
-                    alert("Incorrect Password. Access Denied.");
+                    alert("Password Required!");
                     window.location.href = "index.html";
                 }
             }
@@ -94,14 +90,20 @@
             window.location.reload();
         }
 
-        function fetchData() {
-            fetch(SCRIPT_URL)
+        function fetchData(password) {
+            fetch(SCRIPT_URL + "?pass=" + encodeURIComponent(password))
                 .then(res => res.json())
                 .then(data => {
+                    if(data.error) {
+                        alert("Access Denied: Incorrect Password.");
+                        logout();
+                        return;
+                    }
+
                     document.getElementById('loader').style.display = 'none';
                     const tbody = document.getElementById('user-data');
                     
-                    if(!data || data.length === 0) {
+                    if(!data || data.length <= 1) {
                         tbody.innerHTML = "<tr><td colspan='7' style='text-align:center;'>No user data found yet.</td></tr>";
                         return;
                     }
@@ -110,10 +112,9 @@
                     let pcCount = 0;
                     let validUsers = 0;
 
-                    // Skip the first row (Headers) if present, or start from 1
                     for(let i = 1; i < data.length; i++) {
                         let row = data[i];
-                        if(!row[1]) continue; // Skip empty rows
+                        if(!row[1]) continue; 
 
                         validUsers++;
 
@@ -121,9 +122,7 @@
                         let email = row[1] || "N/A";
                         let wa = row[2] || "N/A";
                         let device = row[3] || "N/A";
-                        let source = row[4] || "Direct";
                         
-                        // Handle Date format safely
                         let date = "Unknown";
                         if(row[5]) {
                             let d = new Date(row[5]);
@@ -132,26 +131,22 @@
                         
                         let lat = row[6];
                         let lng = row[7];
+                        let action = row[8] || "Direct"; // Interest/Action column
 
-                        // Device Stats
                         if(device.toLowerCase() === 'pc' || device.toLowerCase() === 'windows') {
                             pcCount++;
                         } else if(device.toLowerCase() !== 'n/a') {
                             mobileCount++;
                         }
 
-                        // Map Logic Fix
                         let mapHTML = "";
-                        if(lat && lat !== "Denied" && lat !== "" && lng && lng !== "Denied" && lng !== "") {
-                            // Fixed map URL format
+                        if(lat && lat !== "Denied" && lng && lng !== "Denied") {
                             mapHTML = `<a href="https://www.google.com/maps?q=${lat},${lng}" target="_blank" class="map-btn"><i class="fa-solid fa-location-dot"></i> View Map</a>`;
                         } else {
-                            mapHTML = `<span class="map-btn denied">Denied / Unknown</span>`;
+                            mapHTML = `<span class="map-btn denied">Denied</span>`;
                         }
 
-                        // Device Icon Logic
-                        let deviceIcon = "fa-mobile-screen";
-                        if(device.toLowerCase() === 'pc' || device.toLowerCase() === 'windows') deviceIcon = "fa-desktop";
+                        let deviceIcon = (device.toLowerCase() === 'pc' || device.toLowerCase() === 'windows') ? "fa-desktop" : "fa-mobile-screen";
 
                         let tr = `<tr>
                             <td>${date}</td>
@@ -159,21 +154,19 @@
                             <td>${email}</td>
                             <td>${wa}</td>
                             <td><i class="fa-solid ${deviceIcon}"></i> ${device}</td>
-                            <td>${source}</td>
+                            <td><span style="background:rgba(255,255,255,0.1); padding:4px 8px; border-radius:4px; font-size:12px;">${action}</span></td>
                             <td>${mapHTML}</td>
                         </tr>`;
                         
-                        // Add row to the top of the table
                         tbody.insertAdjacentHTML('afterbegin', tr);
                     }
 
-                    // Update Stats Cards
                     document.getElementById('total-users').innerText = validUsers;
                     document.getElementById('mobile-users').innerText = mobileCount;
                     document.getElementById('pc-users').innerText = pcCount;
                 })
                 .catch(err => {
-                    document.getElementById('loader').innerHTML = `<div class='error-msg'>Failed to fetch data. Make sure Apps Script 'doGet' function is deployed correctly. Error: ${err.message}</div>`;
+                    document.getElementById('loader').innerHTML = "<div class='error-msg'>Connection Failed. Check URL.</div>";
                     console.error("Fetch Error: ", err);
                 });
         }
