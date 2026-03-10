@@ -73,7 +73,7 @@
                     <input type="email" id="signEmail" class="input-field" placeholder="Email Address" required>
                 </div>
                 <div class="input-group">
-                    <input type="tel" id="signPhone" class="input-field" placeholder="Mobile Number (10 Digits)" required>
+                    <input type="tel" id="signPhone" class="input-field" placeholder="Mobile Number (Optional)">
                 </div>
                 <div class="input-group">
                     <input type="password" id="signPass" class="input-field" placeholder="Create a Password" style="padding-right: 45px;" required>
@@ -86,6 +86,7 @@
     </div>
 
     <script>
+        // ⚠️ AAPKA FINAL APPS SCRIPT URL
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwq33obEvRjmPhOU-TDhsgrReHTXzL8RcKKey_UauwQBmHYpzeO7pmbluzZeMxd4mYQ/exec";
 
         window.onload = function() {
@@ -152,7 +153,8 @@
             
             if(input && input.trim() !== "") {
                 let usersDB = JSON.parse(localStorage.getItem('xg_users_db')) || [];
-                let foundUser = usersDB.find(u => u.email === input.toLowerCase().trim() || u.whatsapp === input.trim());
+                // N/A wale logic ko secure kiya
+                let foundUser = usersDB.find(u => u.email === input.toLowerCase().trim() || (u.whatsapp !== "N/A" && u.whatsapp === input.trim()));
                 
                 if(foundUser) {
                     const email = foundUser.email;
@@ -167,10 +169,7 @@
                     fetch(SCRIPT_URL, {
                         method: "POST",
                         mode: "no-cors",
-                        body: JSON.stringify({
-                            action: "forgot_password",
-                            email: foundUser.email
-                        })
+                        body: JSON.stringify({ action: "forgot_password", email: foundUser.email })
                     }).catch(e => console.error("Email dispatch failed:", e));
 
                 } else {
@@ -191,15 +190,41 @@
             const newPhone = document.getElementById('signPhone').value.trim();
             const newPass = document.getElementById('signPass').value;
 
-            if(!validateEmail(newEmail)) { errorBox.innerHTML = "<i class='fa-solid fa-circle-exclamation'></i> Invalid Email Address format."; errorBox.style.display = 'block'; return; }
-            if(!validatePhone(newPhone)) { errorBox.innerHTML = "<i class='fa-solid fa-circle-exclamation'></i> Please enter a valid 10-digit Mobile Number."; errorBox.style.display = 'block'; return; }
-            if(newPass.length < 6) { errorBox.innerHTML = "<i class='fa-solid fa-circle-exclamation'></i> Password must contain at least 6 characters."; errorBox.style.display = 'block'; return; }
+            if(!validateEmail(newEmail)) { 
+                errorBox.innerHTML = "<i class='fa-solid fa-circle-exclamation'></i> Invalid Email Address format."; 
+                errorBox.style.display = 'block'; return; 
+            }
+            
+            // FIX: Validate ONLY IF the user has entered something
+            if(newPhone !== "" && !validatePhone(newPhone)) { 
+                errorBox.innerHTML = "<i class='fa-solid fa-circle-exclamation'></i> Please enter a valid 10-digit Mobile Number or leave it blank."; 
+                errorBox.style.display = 'block'; return; 
+            }
+            
+            if(newPass.length < 6) { 
+                errorBox.innerHTML = "<i class='fa-solid fa-circle-exclamation'></i> Password must contain at least 6 characters."; 
+                errorBox.style.display = 'block'; return; 
+            }
 
-            const newUser = { name: document.getElementById('signName').value.trim(), email: newEmail, whatsapp: newPhone, password: newPass };
+            const newUser = { 
+                name: document.getElementById('signName').value.trim(), 
+                email: newEmail, 
+                whatsapp: newPhone || "N/A", // Sets to "N/A" if left blank
+                password: newPass 
+            };
+            
             let usersDB = JSON.parse(localStorage.getItem('xg_users_db')) || [];
             
-            if (usersDB.find(u => u.email === newUser.email || u.whatsapp === newUser.whatsapp)) {
-                errorBox.innerHTML = "<i class='fa-solid fa-circle-exclamation'></i> An account with this Email or Mobile Number already exists.";
+            // FIX: Ensure it doesn't match two empty numbers (N/A)
+            const duplicateEmail = usersDB.find(u => u.email === newUser.email);
+            const duplicatePhone = newUser.whatsapp !== "N/A" ? usersDB.find(u => u.whatsapp === newUser.whatsapp) : null;
+
+            if (duplicateEmail) {
+                errorBox.innerHTML = "<i class='fa-solid fa-circle-exclamation'></i> An account with this Email already exists.";
+                errorBox.style.display = 'block'; return;
+            }
+            if (duplicatePhone) {
+                errorBox.innerHTML = "<i class='fa-solid fa-circle-exclamation'></i> This Mobile Number is already registered.";
                 errorBox.style.display = 'block'; return;
             }
             
@@ -222,7 +247,12 @@
             const errorMsg = document.getElementById('login-error');
             
             let usersDB = JSON.parse(localStorage.getItem('xg_users_db')) || [];
-            const validUser = usersDB.find(u => (u.email === loginId || u.whatsapp === loginId) && u.password === passInput);
+            
+            // FIX: Ensure N/A doesn't match
+            const validUser = usersDB.find(u => 
+                (u.email === loginId || (u.whatsapp !== "N/A" && u.whatsapp === loginId)) 
+                && u.password === passInput
+            );
             
             if (validUser) {
                 const activeSession = { name: validUser.name, email: validUser.email, whatsapp: validUser.whatsapp };

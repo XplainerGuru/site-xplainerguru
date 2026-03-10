@@ -56,31 +56,32 @@
             const user = userStr ? JSON.parse(userStr) : null;
 
             if (user) {
+                // User is logged in but doesn't have a number yet
                 if (!user.whatsapp || user.whatsapp === "N/A") {
-                    const wa = prompt("Please enter your WhatsApp Number for updates:");
-                    if (wa) {
-                        user.whatsapp = wa;
+                    const wa = prompt("Please enter your Mobile Number for SMS updates (Optional - Leave blank to skip):");
+                    
+                    if (wa !== null) { // if user didn't click cancel
+                        user.whatsapp = wa.trim() !== "" ? wa.trim() : "N/A";
                         localStorage.setItem('xg_user', JSON.stringify(user));
-                        syncData(user);
                     }
-                } else {
-                    syncData(user);
                 }
+                syncData(user);
             } else {
+                // Guest User Flow
                 const email = prompt("Please enter your Email Address:");
                 if (email && email.includes("@")) {
-                    const wa = prompt("Please enter your WhatsApp Number (Optional - Click Cancel to skip):");
+                    const wa = prompt("Please enter your Mobile Number (Optional - Click Cancel or leave blank to skip):");
                     
                     const guestData = {
                         name: "Guest User",
-                        email: email,
-                        whatsapp: wa || "N/A",
+                        email: email.toLowerCase().trim(),
+                        whatsapp: (wa && wa.trim() !== "") ? wa.trim() : "N/A",
                         interest: "Waitlist Guest",
                         source: "Test Page Notify"
                     };
                     syncData(guestData);
                 } else if (email !== null) {
-                    alert("Invalid input. Please enter a valid email address.");
+                    alert("Authentication Failed: Please enter a valid email address.");
                 }
             }
         }
@@ -88,9 +89,9 @@
         function syncData(data) {
             if (window.syncToSheet) {
                 window.syncToSheet({...data, interest: "Mock Test Waitlist"});
-                alert("Success! You have been added to the waitlist. We will notify you once the tests are live.");
+                alert("Success! You have been securely added to the waitlist. We will notify you once the tests are live.");
             } else {
-                alert("Connection error. Please refresh the page and try again.");
+                alert("System Error: Connection failed. Please refresh the page and try again.");
             }
         }
     </script>

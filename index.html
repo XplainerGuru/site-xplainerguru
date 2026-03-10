@@ -5,47 +5,149 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
     <title>Xplainer Guru | Home</title>
     <link rel="icon" type="image/png" href="logo.png">
-    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700&family=Poppins:wght@800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://paulirish.github.io/lite-youtube-embed/src/lite-yt-embed.css" />
+    
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700&family=Poppins:wght@600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script src="master.js" defer></script>
+    
     <style>
-        .banner-link { width: 100%; display: block; margin: 5px 0 25px; text-decoration: none; }
-        .banner-link img { width: 100%; height: auto; display: block; object-fit: contain; }
-        .wa-box { max-width: 900px; margin: 0 auto 30px; padding: 25px; background: #f0fdf4; border-radius: 20px; border: 1px solid #dcfce7; text-align: center; }
-        .slider-wrapper { position: relative; width: 100%; max-width: 1000px; margin: 0 auto 40px; overflow: hidden; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); background: #fff; }
-        .slider-track { display: flex; transition: transform 0.6s ease; width: 100%; }
-        .slide { min-width: 100%; width: 100%; }
-        lite-youtube { width: 100% !important; max-width: 100% !important; aspect-ratio: 16/9; display: block; }
-        .nav-btn { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(0,0,128,0.7); color: #fff; border: none; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; z-index: 100; font-size: 20px; }
+        body { background: #f8fafc; margin: 0; padding-top: 72px; font-family: 'Manrope', sans-serif; overflow-x: hidden; }
+        
+        .banner-link { width: 100%; display: block; margin: 5px 0 20px; text-decoration: none; }
+        .banner-link img { width: 100%; height: auto; display: block; border-radius: 0; }
+        .wa-box { max-width: 940px; margin: 0 auto 30px; padding: 20px; background: #f0fdf4; border-radius: 15px; border: 1px solid #dcfce7; text-align: center; }
+
+        .slider-wrapper { position: relative; width: 100%; max-width: 1000px; margin: 0 auto 40px; overflow: hidden; border-radius: 20px; background: #000; box-shadow: 0 10px 30px rgba(0,0,0,0.15); }
+        .slider-track { display: flex; transition: transform 0.5s ease-in-out; width: 100%; }
+        .slide { min-width: 100%; position: relative; cursor: pointer; }
+        .slide img { width: 100%; display: block; aspect-ratio: 16/9; object-fit: cover; opacity: 0.8; transition: 0.4s; }
+        .slide:hover img { opacity: 1; transform: scale(1.02); }
+        
+        .play-btn-overlay { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; z-index: 5; }
+        .play-btn-overlay i { color: #fff; font-size: 60px; filter: drop-shadow(0 4px 10px rgba(0,0,0,0.5)); transition: 0.3s; }
+        .slide:hover .play-btn-overlay i { transform: scale(1.2); color: #ff0000; }
+
+        .slide-info { position: absolute; bottom: 0; left: 0; right: 0; padding: 20px; background: linear-gradient(transparent, rgba(0,0,0,0.8)); color: #fff; }
+        .slide-info h4 { margin: 5px 0 0; font-family: 'Poppins'; font-size: 18px; }
+
+        .nav-btn { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.5); color: #fff; border: none; width: 45px; height: 45px; border-radius: 50%; cursor: pointer; z-index: 10; font-size: 18px; }
+        .nav-btn:hover { background: #2563eb; }
+
+        .main-player-section { max-width: 1000px; margin: 0 auto 40px; padding: 0 15px; display: none; }
+        .player-container { background: #0f172a; padding: 20px; border-radius: 20px; }
+        .video-box { position: relative; padding-bottom: 56.25%; height: 0; border-radius: 12px; overflow: hidden; background: #000; }
+        .video-box iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
+        .now-playing-title { color: #fff; font-family: 'Poppins'; margin-bottom: 15px; font-size: 1.2rem; display: flex; align-items: center; gap: 10px; }
+
+        /* FIXED 2-2 GRID SYSTEM */
+        .container { max-width: 1000px; margin: 0 auto; padding: 0 15px 50px; }
+        .grid { 
+            display: grid; 
+            grid-template-columns: repeat(2, 1fr); 
+            gap: 15px; 
+        }
+        .card { background: #fff; border-radius: 12px; overflow: hidden; border: 1px solid #e2e8f0; cursor: pointer; transition: 0.3s; }
+        .card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+        .thumb { position: relative; padding-bottom: 56.25%; background: #000; }
+        .thumb img { position: absolute; width: 100%; height: 100%; object-fit: cover; }
+        .card-body { padding: 12px; }
+        .card-body h4 { margin: 0; font-size: 13px; font-family: 'Poppins'; color: #0f172a; line-height: 1.4; }
+
+        @media (max-width: 600px) {
+            .slide-info h4 { font-size: 14px; }
+            .nav-btn { width: 35px; height: 35px; font-size: 14px; }
+            .grid { gap: 10px; } 
+            .card-body h4 { font-size: 12px; }
+        }
     </style>
 </head>
 <body>
-    <a href="https://whatsapp.com/channel/0029Vb7p4QV0QeadmOIpgx36" class="banner-link" target="_blank"><img src="banner.jpg"></a>
+
+    <a href="https://whatsapp.com/channel/0029Vb7p4QV0QeadmOIpgx36" class="banner-link" target="_blank">
+        <img src="banner.jpg" alt="Join Channel">
+    </a>
 
     <div class="wa-box">
-        <h3 style="margin:0; font-family:'Poppins'; color:#166534;">Join Our Channel</h3>
-        <a href="https://whatsapp.com/channel/0029Vb7p4QV0QeadmOIpgx36" style="color:#25d366; font-weight:800; text-decoration:none; display:block; margin-top:10px;" target="_blank">Follow WhatsApp Channel &rarr;</a>
+        <h3 style="margin:0; font-family:'Poppins'; color:#166534; font-size:18px;">Official WhatsApp Channel</h3>
+        <a href="https://whatsapp.com/channel/0029Vb7p4QV0QeadmOIpgx36" style="color:#25d366; font-weight:800; text-decoration:none; display:block; margin-top:8px;" target="_blank">Click to Follow &rarr;</a>
     </div>
 
     <div class="slider-wrapper">
-        <button class="nav-btn" style="left:15px;" onclick="manual(-1)">&lt;</button>
-        <button class="nav-btn" style="right:15px;" onclick="manual(1)">&gt;</button>
-        <div class="slider-track" id="track"></div>
+        <button class="nav-btn" style="left:10px;" onclick="move(-1)"><i class="fa-solid fa-chevron-left"></i></button>
+        <button class="nav-btn" style="right:10px;" onclick="move(1)"><i class="fa-solid fa-chevron-right"></i></button>
+        <div class="slider-track" id="sliderTrack"></div>
+    </div>
+
+    <div class="main-player-section" id="playerView">
+        <div class="player-container">
+            <div class="now-playing-title"><i class="fa-solid fa-circle-play" style="color:#ff0000;"></i> <span id="playingTitle">Lecture</span></div>
+            <div class="video-box" id="mainVideoBox">
+                </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <h2 style="font-family:'Poppins'; font-size:22px; margin-bottom:20px; color:#0f172a;">All Classes</h2>
+        <div class="grid" id="videoGrid"></div>
     </div>
 
     <script src="content.js"></script>
-    <script src="master.js"></script>
-    <script src="https://paulirish.github.io/lite-youtube-embed/src/lite-yt-embed.js"></script>
     <script>
-        const track = document.getElementById('track');
-        contentDatabase.forEach(item => {
-            const slide = document.createElement('div'); slide.className = 'slide';
-            slide.innerHTML = `<lite-youtube videoid="${item.id}"></lite-youtube><div style="padding:15px;"><h4 style="margin:0; font-family:'Poppins';">${item.title}</h4></div>`;
+        const track = document.getElementById('sliderTrack');
+        const vGrid = document.getElementById('videoGrid');
+        const latest = contentDatabase.slice(0, 5); // 5 Latest for slider
+
+        latest.forEach(item => {
+            const slide = document.createElement('div');
+            slide.className = 'slide';
+            slide.onclick = () => play(item.id, item.title);
+            slide.innerHTML = `
+                <img src="https://img.youtube.com/vi/${item.id}/maxresdefault.jpg" onerror="this.src='https://img.youtube.com/vi/${item.id}/hqdefault.jpg'">
+                <div class="play-btn-overlay"><i class="fa-solid fa-circle-play"></i></div>
+                <div class="slide-info">
+                    <span style="background:#2563eb; padding:3px 8px; border-radius:5px; font-size:10px; font-weight:bold;">LATEST</span>
+                    <h4>${item.title}</h4>
+                </div>
+            `;
             track.appendChild(slide);
         });
-        let index = 0;
-        function update() { track.style.transform = `translateX(-${index * 100}%)`; }
-        function manual(step) { clearInterval(auto); index = (index + step + contentDatabase.length) % contentDatabase.length; update(); auto = setInterval(() => { index = (index + 1) % contentDatabase.length; update(); }, 5000); }
-        let auto = setInterval(() => { index = (index + 1) % contentDatabase.length; update(); }, 5000);
+
+        let idx = 0;
+        function update() { track.style.transform = `translateX(-${idx * 100}%)`; }
+        function move(s) { idx = (idx + s + latest.length) % latest.length; update(); }
+        let auto = setInterval(() => move(1), 5000);
+
+        contentDatabase.forEach(item => {
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.onclick = () => play(item.id, item.title);
+            card.innerHTML = `
+                <div class="thumb">
+                    <img src="https://img.youtube.com/vi/${item.id}/hqdefault.jpg">
+                </div>
+                <div class="card-body">
+                    <h4>${item.title}</h4>
+                </div>
+            `;
+            vGrid.appendChild(card);
+        });
+
+        // FIXED PLAY FUNCTION - 0% Error 153 Chance
+        function play(id, title) {
+            clearInterval(auto); // Stop slider when watching
+            const view = document.getElementById('playerView');
+            const videoBox = document.getElementById('mainVideoBox');
+            
+            document.getElementById('playingTitle').innerText = title;
+            view.style.display = 'block';
+            
+            // Iframe ko completely destroy karke naya banana (Error 153 ka permanent solution)
+            // playsinline=1 add kiya gaya hai taaki mobile me issue na aaye
+            videoBox.innerHTML = `<iframe src="https://www.youtube.com/embed/${id}?autoplay=1&rel=0&playsinline=1&modestbranding=1" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
+            
+            view.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
     </script>
 </body>
 </html>

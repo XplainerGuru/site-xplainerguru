@@ -3,26 +3,122 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
-    <title>Handwritten Notes | Xplainer Guru</title>
+    <title>Premium Notes | Xplainer Guru</title>
     <link rel="icon" type="image/png" href="logo.png">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700&family=Poppins:wght@600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script src="master.js" defer></script>
+    
     <style>
+        body { background: #f8fafc; margin: 0; padding-top: 72px; font-family: 'Manrope', sans-serif; }
         .container { max-width: 1000px; margin: 40px auto; padding: 0 15px; }
-        .note-card { background: #fff; padding: 25px; border-radius: 20px; border: 1px solid #e2e8f0; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
-        .dl-btn { background: #000080; color: #fff; border: none; padding: 12px; width: 100%; border-radius: 10px; font-weight: 700; cursor: pointer; margin-top: 15px; }
+        .page-header { text-align: center; margin-bottom: 40px; }
+        .page-header h1 { font-family: 'Poppins'; color: #0f172a; font-size: 2rem; }
+
+        /* FIXED 2-2 GRID SYSTEM FOR NOTES */
+        .notes-grid { 
+            display: grid; 
+            grid-template-columns: repeat(2, 1fr); /* Force 2 columns */
+            gap: 15px; 
+        }
+        .note-card { background: #fff; border-radius: 15px; padding: 15px; border: 1px solid #e2e8f0; transition: 0.3s; position: relative; display: flex; flex-direction: column; align-items: center; text-align: center; }
+        .note-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,128,0.06); }
+        .note-icon { width: 40px; height: 40px; background: #eff6ff; color: #2563eb; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; margin-bottom: 12px; }
+        .note-title { font-family: 'Poppins'; font-size: 13px; color: #0f172a; margin-bottom: 10px; line-height: 1.4; flex-grow: 1; }
+        
+        .download-btn { 
+            width: 100%; margin-top: 10px; padding: 10px; border-radius: 8px; border: none;
+            background: #000080; color: #fff; font-weight: 700; cursor: pointer; transition: 0.3s;
+            display: flex; align-items: center; justify-content: center; gap: 8px; font-family: 'Manrope'; font-size: 12px;
+        }
+
+        #auth-modal {
+            display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.8);
+            z-index: 99999; backdrop-filter: blur(8px); align-items: center; justify-content: center; padding: 20px;
+        }
+        .modal-content {
+            background: #fff; padding: 30px 20px; border-radius: 20px; max-width: 350px; width: 100%;
+            text-align: center; box-shadow: 0 25px 50px rgba(0,0,0,0.2); animation: popIn 0.4s ease;
+        }
+        @keyframes popIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
+        
+        .modal-content h2 { font-family: 'Poppins'; color: #0f172a; margin-bottom: 10px; font-size: 1.5rem; }
+        .modal-content p { color: #64748b; font-size: 13px; margin-bottom: 25px; line-height: 1.5; }
+        .modal-btn { 
+            display: block; width: 100%; padding: 12px; border-radius: 10px; font-weight: 800;
+            text-decoration: none; margin-bottom: 10px; font-size: 13px; transition: 0.3s;
+        }
+        .btn-login { background: #2563eb; color: #fff; }
+        .btn-signup { background: #f1f5f9; color: #0f172a; border: 1px solid #e2e8f0; }
+
+        @media (max-width: 600px) {
+            .notes-grid { gap: 10px; }
+            .note-card { padding: 12px; }
+            .note-title { font-size: 12px; }
+            .download-btn { padding: 8px; font-size: 11px; }
+        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1 style="font-family:'Poppins';">Study Notes</h1>
-        <p style="color:#64748b; margin-bottom:40px;">Get premium notes for your exam preparation.</p>
-        <div class="note-card">
-            <h3 style="font-family:'Poppins';">Trade to Territory</h3>
-            <p style="font-size:14px; color:#64748b;">Complete Chapter 1 notes.</p>
-            <button class="dl-btn" onclick="checkAuth('Download PDF')">Download PDF</button>
+
+    <div id="auth-modal">
+        <div class="modal-content">
+            <div style="font-size: 30px; color: #2563eb; margin-bottom: 10px;"><i class="fa-solid fa-circle-user"></i></div>
+            <h2>Join Xplainer Guru</h2>
+            <p>To continue reading and downloading premium notes, please create an account or log in.</p>
+            <a href="login.html" class="modal-btn btn-login">Log In Now</a>
+            <a href="login.html" class="modal-btn btn-signup">Create Free Account</a>
+            <p style="font-size: 11px; margin-top: 10px; cursor: pointer; text-decoration: underline;" onclick="closeModal()">Maybe Later</p>
         </div>
     </div>
+
+    <div class="container">
+        <div class="page-header">
+            <h1>Premium Study Notes</h1>
+            <p>Access high-quality PDFs curated by our expert team.</p>
+        </div>
+        <div class="notes-grid" id="notesGrid"></div>
+    </div>
+
     <script src="content.js"></script>
-    <script src="master.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const grid = document.getElementById('notesGrid');
+            if (typeof studyNotes !== 'undefined') {
+                studyNotes.forEach(note => {
+                    const card = document.createElement('div');
+                    card.className = 'note-card';
+                    card.innerHTML = `
+                        <div class="note-icon"><i class="fa-solid fa-file-pdf"></i></div>
+                        <h3 class="note-title">${note.title}</h3>
+                        <div style="font-size: 11px; color: #94a3b8;">Format: ${note.size || 'PDF'}</div>
+                        <button class="download-btn" onclick="startHook('${note.file}')">
+                            <i class="fa-solid fa-eye"></i> View & Download
+                        </button>
+                    `;
+                    grid.appendChild(card);
+                });
+            }
+        });
+
+        function startHook(url) {
+            window.open(url, '_blank');
+            const user = localStorage.getItem('xg_user');
+            if (!user) {
+                setTimeout(() => {
+                    document.getElementById('auth-modal').style.display = 'flex';
+                }, 7000);
+            }
+            if(window.syncToSheet && user) {
+                const userData = JSON.parse(user);
+                window.syncToSheet({...userData, interest: "Viewed Notes"});
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('auth-modal').style.display = 'none';
+        }
+    </script>
 </body>
 </html>

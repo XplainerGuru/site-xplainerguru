@@ -3,60 +3,95 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
-    <title>Our Team | Xplainer Guru</title>
+    <title>Our Founders | Xplainer Guru</title>
     <link rel="icon" type="image/png" href="logo.png">
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;700&family=Poppins:wght@700;800&display=swap" rel="stylesheet">
     <style>
+        :root { --xg-blue: #2563eb; --xg-dark: #0f172a; }
+        body { background: #f8fafc; margin: 0; padding-top: 20px; font-family: 'Manrope', sans-serif; }
         .container { max-width: 900px; margin: 40px auto; padding: 0 15px; }
+        
+        .section-title { text-align: center; margin-bottom: 50px; font-family: 'Poppins'; color: var(--xg-dark); font-size: 2.2rem; position: relative; }
+        .section-title::after { content: ''; width: 60px; height: 4px; background: var(--xg-blue); display: block; margin: 12px auto; border-radius: 2px; }
+
         .team-card { 
-            background: #0f172a; color: #fff; padding: 40px; border-radius: 30px; 
-            margin-bottom: 30px; position: relative; overflow: hidden; 
-            scroll-margin-top: 100px; /* Header space fix */
-            box-shadow: 0 15px 35px rgba(0,0,0,0.1); 
+            background: var(--xg-dark); color: #fff; padding: 45px; border-radius: 35px; 
+            margin-bottom: 40px; position: relative; overflow: hidden; 
+            box-shadow: 0 20px 40px rgba(15, 23, 42, 0.15); 
+            display: flex; align-items: center; gap: 30px;
+            transition: transform 0.3s ease;
+            /* FIX: Link pe click karne par header ke niche sahi jagah dikhega */
+            scroll-margin-top: 100px; 
         }
-        .badge { background: #f59e0b; color: #0f172a; padding: 6px 15px; border-radius: 50px; font-size: 11px; font-weight: 800; text-transform: uppercase; display: inline-block; }
-        .d-btn { padding: 12px 24px; border-radius: 10px; background: rgba(255,255,255,0.1); color: #fff; font-weight: 600; text-decoration: none; display: inline-block; margin-top: 20px; font-size: 14px; transition: 0.3s; }
-        .d-btn:hover { background: var(--xg-highlight); }
-        .bg-logo { height: 150px; filter: grayscale(1) invert(1); opacity: 0.05; position: absolute; right: -10px; bottom: -10px; }
-        @media (max-width: 600px) { .team-card { padding: 30px; text-align: center; } }
+        .team-card:hover { transform: translateY(-5px); }
+
+        .profile-img { width: 140px; height: 140px; border-radius: 50%; border: 4px solid rgba(255,255,255,0.1); object-fit: cover; background: #1e293b; z-index: 2; flex-shrink: 0; }
+
+        .badge { background: #f59e0b; color: #0f172a; padding: 6px 16px; border-radius: 50px; font-size: 11px; font-weight: 800; text-transform: uppercase; display: inline-block; letter-spacing: 1px; }
+        .content-box { position: relative; z-index: 2; flex: 1; }
+        .d-btn { padding: 12px 24px; border-radius: 12px; background: rgba(255,255,255,0.08); color: #fff; font-weight: 600; text-decoration: none; display: inline-block; margin-top: 20px; font-size: 14px; transition: 0.3s; border: 1px solid rgba(255,255,255,0.1); }
+        .d-btn:hover { background: var(--xg-blue); border-color: var(--xg-blue); }
+        
+        .bg-logo { height: 180px; filter: grayscale(1) invert(1); opacity: 0.04; position: absolute; right: -20px; bottom: -20px; transform: rotate(-15deg); pointer-events: none; }
+
+        @media (max-width: 768px) { 
+            .team-card { flex-direction: column; text-align: center; padding: 35px 20px; } 
+            .profile-img { width: 120px; height: 120px; }
+            .content-box { display: flex; flex-direction: column; align-items: center; }
+            .d-btn { width: 100%; text-align: center; box-sizing: border-box; }
+        }
     </style>
 </head>
 <body>
-    <script src="content.js"></script><script src="master.js"></script>
+    <script src="content.js"></script>
+    <script src="master.js"></script>
+
     <div class="container">
-        <h2 style="text-align:center; margin-bottom:40px; font-family:'Poppins'; color:#0f172a;">Academic Leadership</h2>
+        <h2 class="section-title">Leadership Board</h2>
         
         <div class="team-card" id="mentor">
-            <div style="position: relative; z-index: 2;">
-                <div class="badge" style="background:#2563eb; color:#fff;">Chief Mentor</div>
-                <h2 style="margin-top:15px; font-family:'Poppins'; font-size: 1.8rem;">Shiwendu Kaushal</h2>
-                <p style="opacity:0.8; line-height: 1.6;">Simplifying academic concepts and guiding students toward excellence.</p>
-                <a id="m-ig" href="#" target="_blank" class="d-btn">Instagram Profile</a>
+            <img id="ceo-img" src="logo.png" class="profile-img" alt="Shiwendu Kaushal">
+            <div class="content-box">
+                <div class="badge" style="background: var(--xg-blue); color: #fff;">Co-Founder & CEO</div>
+                <h2 style="margin:15px 0 10px; font-family:'Poppins'; font-size: 2rem; color: #fff;">Shiwendu Kaushal</h2>
+                <p style="opacity:0.8; line-height: 1.7; font-size: 15px;">Chief Educator and visionary leading the academic excellence and pedagogical strategy of Xplainer Guru.</p>
+                <a id="m-ig" href="#" target="_blank" class="d-btn"><i class="fab fa-instagram"></i> Instagram</a>
             </div>
             <img src="logo.png" class="bg-logo">
         </div>
 
-        <h2 style="text-align:center; margin-bottom:40px; margin-top:60px; font-family:'Poppins'; color:#0f172a;">Platform Foundation</h2>
-        
         <div class="team-card" id="foundation">
-            <div style="position: relative; z-index: 2;">
-                <div class="badge">Lead Architect</div>
-                <h2 style="margin-top:15px; font-family:'Poppins'; font-size: 1.8rem;" id="dev-name">Ashutosh Kaushal</h2>
-                <p style="opacity:0.8; line-height: 1.6;" id="dev-bio">Loading...</p>
-                <div style="display:flex; gap:10px; justify-content: inherit;">
-                    <a id="dev-ig" href="#" target="_blank" class="d-btn">Instagram</a>
-                    <a id="dev-li" href="#" target="_blank" class="d-btn">LinkedIn</a>
+            <img id="md-img" src="logo.png" class="profile-img" alt="Ashutosh Kaushal">
+            <div class="content-box">
+                <div class="badge">Co-Founder & Managing Director(MD)</div>
+                <h2 style="margin:15px 0 10px; font-family:'Poppins'; font-size: 2rem; color: #fff;" id="dev-name">Ashutosh Kaushal</h2>
+                <p style="opacity:0.8; line-height: 1.7; font-size: 15px;" id="dev-bio">Overseeing platform infrastructure, digital growth, and the technical foundation of Xplainer Guru's ecosystem.</p>
+                
+                <div style="display:flex; gap:12px; flex-wrap: wrap;">
+                    <a id="dev-ig" href="#" target="_blank" class="d-btn"><i class="fab fa-instagram"></i> Instagram</a>
+                    <a id="dev-li" href="#" target="_blank" class="d-btn"><i class="fab fa-linkedin"></i> LinkedIn</a>
                 </div>
             </div>
             <img src="logo.png" class="bg-logo">
         </div>
     </div>
+
     <script>
-        document.getElementById('m-ig').href = CONFIG.mentor.ig;
-        document.getElementById('dev-name').innerText = CONFIG.developer.name;
-        document.getElementById('dev-bio').innerText = CONFIG.developer.bio;
-        document.getElementById('dev-ig').href = CONFIG.developer.ig;
-        document.getElementById('dev-li').href = CONFIG.developer.li;
+        if (typeof CONFIG !== 'undefined') {
+            document.getElementById('m-ig').href = CONFIG.mentor.ig;
+            document.getElementById('dev-name').innerText = CONFIG.developer.name;
+            document.getElementById('dev-ig').href = CONFIG.developer.ig;
+            document.getElementById('dev-li').href = CONFIG.developer.li;
+
+            const isValid = (url) => url && url.includes('http') && !url.includes('photo link');
+            const ceoPic = isValid(CONFIG.mentor.pic) ? CONFIG.mentor.pic : `https://ui-avatars.com/api/?name=Shiwendu+Kaushal&background=000080&color=fff&size=128`;
+            const mdPic = isValid(CONFIG.developer.pic) ? CONFIG.developer.pic : `https://ui-avatars.com/api/?name=Ashutosh+Kaushal&background=000080&color=fff&size=128`;
+            
+            document.getElementById('ceo-img').src = ceoPic;
+            document.getElementById('md-img').src = mdPic;
+        }
     </script>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
 </body>
 </html>
