@@ -111,21 +111,19 @@ document.addEventListener("DOMContentLoaded", () => {
                 <a href="index.html" class="ft-link">Home Page</a>
                 <a href="test.html" class="ft-link">Mock Tests</a>
                 <a href="notes.html" class="ft-link">Study Notes</a>
-                <a href="about.html" class="ft-link">Our Team</a>
+                <a href="about.html" class="ft-link">Our Founders</a>
             </div>
             <div class="ft-col">
-                <h4 class="ft-header">Meet Mentors</h4>
-                <a href="about.html#mentor" class="ft-link">${CONFIG.mentor.name}</a>
-                <div style="margin-top:25px;">
-                    <h4 class="ft-header" style="margin-bottom:15px;">Meet Developer</h4>
-                    <a href="about.html#foundation" class="ft-link">${CONFIG.developer.name}</a>
-                </div>
+                <h4 class="ft-header">Legal & Policies</h4>
+                <a href="privacy.html" class="ft-link">Privacy Policy</a>
+                <a href="terms.html" class="ft-link">Terms of Service</a>
+                <a href="refund.html" class="ft-link">Refund & Cancellation</a>
             </div>
             <div class="ft-col">
                 <h4 class="ft-header">Contact Us</h4>
                 <a href="mailto:${CONFIG.email}" class="ft-link">Email Support</a>
                 <a href="${CONFIG.ig}" target="_blank" class="ft-link">Official Instagram</a>
-                <a href="https://wa.me/${CONFIG.waNum}" target="_blank" class="ft-link">WhatsApp Chat</a>
+                <a href="${CONFIG.waChannel}" target="_blank" class="ft-link">WhatsApp Channel</a>
             </div>
         </div>
         <div class="credits">
