@@ -9,7 +9,7 @@ const CONFIG = {
         name: "Shiwendu Kaushal",
         role: "Founder & CEO", // Updated Title
         ig: "https://www.instagram.com/shiwendu.kaushal",
-        pic: "" 
+        pic: "team\shiwendu.png" 
     },
     developer: {
         name: "Ashutosh Kaushal",
@@ -17,7 +17,7 @@ const CONFIG = {
         bio: "The technical visionary behind Xplainer Guru. Managing platform infrastructure and digital strategy.",
         ig: "https://instagram.com/ashu7061a",
         li: "https://linkedin.com/in/ashutoshkaushal-1412",
-        pic: "" 
+        pic: "team\ashutosh.jpeg" 
     }
 };
 
