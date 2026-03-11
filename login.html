@@ -12,6 +12,12 @@
     <style>
         body { font-family: 'Manrope', sans-serif; background: #f8fafc; margin: 0; display: flex; flex-direction: column; min-height: 100vh; justify-content: center; align-items: center; padding: 20px; box-sizing: border-box; }
         .auth-container { background: white; padding: 40px; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,128,0.05); width: 100%; max-width: 420px; text-align: center; border: 1px solid #e2e8f0; margin-top: 50px; }
+        
+        /* NEW LOGO STYLES */
+        .auth-brand { display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 25px; text-decoration: none; font-family: 'Poppins', sans-serif; font-weight: 800; font-size: 1.6rem; color: #0f172a; letter-spacing: -0.5px; }
+        .auth-brand img { height: 45px; width: 45px; border-radius: 50%; object-fit: cover; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .auth-brand span { color: #2563eb; }
+
         .auth-container h2 { font-family: 'Poppins', sans-serif; color: #0f172a; margin-bottom: 10px; font-size: 1.8rem; }
         .auth-container p { color: #64748b; font-size: 14px; margin-bottom: 30px; line-height: 1.6; }
         
@@ -34,7 +40,6 @@
         .error-message { color: #ef4444; font-size: 13.5px; font-weight: 600; margin-bottom: 18px; display: none; background: #fef2f2; padding: 12px; border-radius: 8px; border: 1px solid #fecaca; text-align: left; line-height: 1.5; }
         .hidden { display: none; }
 
-        /* PROFILE PIC CSS ADDED */
         .pic-upload-container { position: relative; width: 90px; height: 90px; margin: 0 auto 20px; cursor: pointer; }
         #pic-preview { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 3px solid #e2e8f0; background: #f1f5f9; }
         .edit-badge { position: absolute; bottom: 0; right: 0; background: #2563eb; color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid white; font-size: 12px; }
@@ -45,6 +50,11 @@
     <div class="auth-container" id="main-auth-box">
         
         <div id="login-section">
+            <div class="auth-brand">
+                <img src="logo.png" alt="XG Logo">
+                Xplainer<span>Guru</span>
+            </div>
+
             <h2>Welcome Back</h2>
             <p>Log in to access your premium courses and study materials.</p>
             <div id="login-error" class="error-message"></div>
@@ -66,6 +76,11 @@
         </div>
 
         <div id="signup-section" class="hidden">
+            <div class="auth-brand">
+                <img src="logo.png" alt="XG Logo">
+                Xplainer<span>Guru</span>
+            </div>
+
             <h2>Create Account</h2>
             <p>Join Xplainer Guru and master your syllabus today.</p>
             <div id="signup-error" class="error-message"></div>
@@ -106,7 +121,6 @@
     </div>
 
     <script>
-        // ⚠️ AAPKA FINAL APPS SCRIPT URL
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwq33obEvRjmPhOU-TDhsgrReHTXzL8RcKKey_UauwQBmHYpzeO7pmbluzZeMxd4mYQ/exec";
 
         window.onload = function() {
@@ -118,6 +132,7 @@
                 const maskedDisplay = name.charAt(0) + "******" + name.charAt(name.length - 1) + "@" + domain;
 
                 document.getElementById('main-auth-box').innerHTML = `
+                    <div class="auth-brand"><img src="logo.png" alt="XG Logo">Xplainer<span>Guru</span></div>
                     <h2>Reset Password</h2>
                     <p style="color:#475569; margin-bottom: 25px;">Creating a new secure password for <br><strong style="color:#2563eb;">${maskedDisplay}</strong></p>
                     <input type="password" id="newPass" class="input-field" placeholder="Enter New Password (Min 6 chars)" required>
@@ -126,7 +141,6 @@
             }
         };
 
-        // JS PROFILE PIC LOGIC ADDED
         let base64Pic = "";
         function previewImage(input) {
             if (input.files && input.files[0]) {
@@ -186,7 +200,6 @@
             
             if(input && input.trim() !== "") {
                 let usersDB = JSON.parse(localStorage.getItem('xg_users_db')) || [];
-                // N/A wale logic ko secure kiya
                 let foundUser = usersDB.find(u => u.email === input.toLowerCase().trim() || (u.whatsapp !== "N/A" && u.whatsapp === input.trim()));
                 
                 if(foundUser) {
@@ -228,7 +241,6 @@
                 errorBox.style.display = 'block'; return; 
             }
             
-            // FIX: Validate ONLY IF the user has entered something
             if(newPhone !== "" && !validatePhone(newPhone)) { 
                 errorBox.innerHTML = "<i class='fa-solid fa-circle-exclamation'></i> Please enter a valid 10-digit Mobile Number or leave it blank."; 
                 errorBox.style.display = 'block'; return; 
@@ -242,14 +254,13 @@
             const newUser = { 
                 name: document.getElementById('signName').value.trim(), 
                 email: newEmail, 
-                whatsapp: newPhone || "N/A", // Sets to "N/A" if left blank
-                pic: base64Pic, // PIC ADDED HERE
+                whatsapp: newPhone || "N/A", 
+                pic: base64Pic, 
                 password: newPass 
             };
             
             let usersDB = JSON.parse(localStorage.getItem('xg_users_db')) || [];
             
-            // FIX: Ensure it doesn't match two empty numbers (N/A)
             const duplicateEmail = usersDB.find(u => u.email === newUser.email);
             const duplicatePhone = newUser.whatsapp !== "N/A" ? usersDB.find(u => u.whatsapp === newUser.whatsapp) : null;
 
@@ -265,7 +276,6 @@
             usersDB.push(newUser);
             localStorage.setItem('xg_users_db', JSON.stringify(usersDB));
             
-            // PIC ADDED TO SESSION
             const activeSession = { name: newUser.name, email: newUser.email, whatsapp: newUser.whatsapp, pic: newUser.pic };
             localStorage.setItem('xg_user', JSON.stringify(activeSession));
             
@@ -283,14 +293,12 @@
             
             let usersDB = JSON.parse(localStorage.getItem('xg_users_db')) || [];
             
-            // FIX: Ensure N/A doesn't match
             const validUser = usersDB.find(u => 
                 (u.email === loginId || (u.whatsapp !== "N/A" && u.whatsapp === loginId)) 
                 && u.password === passInput
             );
             
             if (validUser) {
-                // PIC ADDED TO SESSION
                 const activeSession = { name: validUser.name, email: validUser.email, whatsapp: validUser.whatsapp, pic: validUser.pic };
                 localStorage.setItem('xg_user', JSON.stringify(activeSession));
                 if(window.syncToSheet) window.syncToSheet({...activeSession, interest: "User Logged In"});

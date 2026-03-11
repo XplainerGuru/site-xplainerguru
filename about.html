@@ -20,7 +20,6 @@
             box-shadow: 0 20px 40px rgba(15, 23, 42, 0.15); 
             display: flex; align-items: center; gap: 30px;
             transition: transform 0.3s ease;
-            /* FIX: Link pe click karne par header ke niche sahi jagah dikhega */
             scroll-margin-top: 100px; 
         }
         .team-card:hover { transform: translateY(-5px); }
@@ -50,10 +49,10 @@
         <h2 class="section-title">Leadership Board</h2>
         
         <div class="team-card" id="mentor">
-            <img id="ceo-img" src="logo.png" class="profile-img" alt="Shiwendu Kaushal">
+            <img id="ceo-img" class="profile-img" alt="Shiwendu Kaushal" onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=Shiwendu+Kaushal&background=000080&color=fff&size=128';">
             <div class="content-box">
-                <div class="badge" style="background: var(--xg-blue); color: #fff;">Co-Founder & CEO</div>
-                <h2 style="margin:15px 0 10px; font-family:'Poppins'; font-size: 2rem; color: #fff;">Shiwendu Kaushal</h2>
+                <div class="badge" style="background: var(--xg-blue); color: #fff;" id="ceo-role">Loading...</div>
+                <h2 style="margin:15px 0 10px; font-family:'Poppins'; font-size: 2rem; color: #fff;" id="ceo-name">Loading...</h2>
                 <p style="opacity:0.8; line-height: 1.7; font-size: 15px;">Chief Educator and visionary leading the academic excellence and pedagogical strategy of Xplainer Guru.</p>
                 <a id="m-ig" href="#" target="_blank" class="d-btn"><i class="fab fa-instagram"></i> Instagram</a>
             </div>
@@ -61,11 +60,11 @@
         </div>
 
         <div class="team-card" id="foundation">
-            <img id="md-img" src="logo.png" class="profile-img" alt="Ashutosh Kaushal">
+            <img id="md-img" class="profile-img" alt="Ashutosh Kaushal" onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=Ashutosh+Kaushal&background=000080&color=fff&size=128';">
             <div class="content-box">
-                <div class="badge">Co-Founder & Managing Director(MD)</div>
-                <h2 style="margin:15px 0 10px; font-family:'Poppins'; font-size: 2rem; color: #fff;" id="dev-name">Ashutosh Kaushal</h2>
-                <p style="opacity:0.8; line-height: 1.7; font-size: 15px;" id="dev-bio">Overseeing platform infrastructure, digital growth, and the technical foundation of Xplainer Guru's ecosystem.</p>
+                <div class="badge" id="dev-role">Loading...</div>
+                <h2 style="margin:15px 0 10px; font-family:'Poppins'; font-size: 2rem; color: #fff;" id="dev-name">Loading...</h2>
+                <p style="opacity:0.8; line-height: 1.7; font-size: 15px;" id="dev-bio">Loading...</p>
                 
                 <div style="display:flex; gap:12px; flex-wrap: wrap;">
                     <a id="dev-ig" href="#" target="_blank" class="d-btn"><i class="fab fa-instagram"></i> Instagram</a>
@@ -77,19 +76,29 @@
     </div>
 
     <script>
-        if (typeof CONFIG !== 'undefined') {
-            document.getElementById('m-ig').href = CONFIG.mentor.ig;
-            document.getElementById('dev-name').innerText = CONFIG.developer.name;
-            document.getElementById('dev-ig').href = CONFIG.developer.ig;
-            document.getElementById('dev-li').href = CONFIG.developer.li;
+        document.addEventListener("DOMContentLoaded", () => {
+            if (typeof CONFIG !== 'undefined') {
+                // Connecting Shiwendu's Data
+                document.getElementById('ceo-name').innerText = CONFIG.mentor.name;
+                document.getElementById('ceo-role').innerText = CONFIG.mentor.role;
+                document.getElementById('m-ig').href = CONFIG.mentor.ig;
+                
+                if(CONFIG.mentor.pic && CONFIG.mentor.pic !== "") {
+                    document.getElementById('ceo-img').src = CONFIG.mentor.pic;
+                }
 
-            const isValid = (url) => url && url.includes('http') && !url.includes('photo link');
-            const ceoPic = isValid(CONFIG.mentor.pic) ? CONFIG.mentor.pic : `https://ui-avatars.com/api/?name=Shiwendu+Kaushal&background=000080&color=fff&size=128`;
-            const mdPic = isValid(CONFIG.developer.pic) ? CONFIG.developer.pic : `https://ui-avatars.com/api/?name=Ashutosh+Kaushal&background=000080&color=fff&size=128`;
-            
-            document.getElementById('ceo-img').src = ceoPic;
-            document.getElementById('md-img').src = mdPic;
-        }
+                // Connecting Ashutosh's Data
+                document.getElementById('dev-name').innerText = CONFIG.developer.name;
+                document.getElementById('dev-role').innerText = CONFIG.developer.role;
+                document.getElementById('dev-bio').innerText = CONFIG.developer.bio;
+                document.getElementById('dev-ig').href = CONFIG.developer.ig;
+                document.getElementById('dev-li').href = CONFIG.developer.li;
+
+                if(CONFIG.developer.pic && CONFIG.developer.pic !== "") {
+                    document.getElementById('md-img').src = CONFIG.developer.pic;
+                }
+            }
+        });
     </script>
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
