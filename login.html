@@ -6,309 +6,471 @@
     <title>Account Access | Xplainer Guru</title>
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;800&family=Poppins:wght@700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <script src="master.js" defer></script>
-    
+
+    <link rel="stylesheet" href="css/style.css">
+
     <style>
-        body { font-family: 'Manrope', sans-serif; background: #f8fafc; margin: 0; display: flex; flex-direction: column; min-height: 100vh; justify-content: center; align-items: center; padding: 20px; box-sizing: border-box; }
-        .auth-container { background: white; padding: 40px; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,128,0.05); width: 100%; max-width: 420px; text-align: center; border: 1px solid #e2e8f0; margin-top: 50px; }
-        
-        /* NEW LOGO STYLES */
-        .auth-brand { display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 25px; text-decoration: none; font-family: 'Poppins', sans-serif; font-weight: 800; font-size: 1.6rem; color: #0f172a; letter-spacing: -0.5px; }
-        .auth-brand img { height: 45px; width: 45px; border-radius: 50%; object-fit: cover; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-        .auth-brand span { color: #2563eb; }
-
+        .auth-container { background: white; padding: 40px; border-radius: 20px; box-shadow: 0 10px 40px rgba(0, 0, 128, 0.05); width: 100%; max-width: 420px; text-align: center; border: 1px solid #e2e8f0; margin: 50px auto 20px; position: relative;}
         .auth-container h2 { font-family: 'Poppins', sans-serif; color: #0f172a; margin-bottom: 10px; font-size: 1.8rem; }
-        .auth-container p { color: #64748b; font-size: 14px; margin-bottom: 30px; line-height: 1.6; }
-        
-        .input-group { position: relative; margin-bottom: 16px; }
-        .input-field { width: 100%; padding: 15px; border: 1px solid #e2e8f0; border-radius: 10px; box-sizing: border-box; font-family: 'Manrope', sans-serif; font-size: 14px; outline: none; transition: 0.3s; }
-        .input-field:focus { border-color: #2563eb; box-shadow: 0 0 0 3px rgba(37,99,235,0.1); }
-        .pass-icon { position: absolute; right: 15px; top: 16px; color: #94a3b8; cursor: pointer; transition: 0.2s; font-size: 16px; }
+        .auth-container p { color: #64748b; font-size: 14px; margin-bottom: 25px; line-height: 1.6; }
+        .input-group { position: relative; margin-bottom: 16px; text-align: left; }
+        .input-label { display: block; font-size: 11px; font-weight: 800; color: #94a3b8; text-transform: uppercase; margin-bottom: 6px; letter-spacing: 0.5px; }
+        .input-field { width: 100%; padding: 15px; border: 1px solid #e2e8f0; border-radius: 10px; box-sizing: border-box; font-family: 'Manrope', sans-serif; font-size: 14px; outline: none; transition: 0.3s; background: #f8fafc;}
+        .input-field:focus { border-color: #2563eb; background: #fff; box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1); }
+        select.input-field { cursor: pointer; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%2364748b' viewBox='0 0 16 16'%3E%3Cpath d='M8 11.5l-5-5h10l-5 5z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 15px center; }
+        .pass-icon { position: absolute; right: 15px; top: 38px; color: #94a3b8; cursor: pointer; transition: 0.2s; font-size: 16px; }
         .pass-icon:hover { color: #0f172a; }
-
-        .forgot-link { display: block; text-align: right; font-size: 13px; color: #2563eb; font-weight: 700; text-decoration: none; margin-bottom: 22px; cursor: pointer; transition: 0.2s; }
-        .forgot-link:hover { text-decoration: underline; color: #000080; }
-
-        .submit-btn { background: #2563eb; color: white; border: none; padding: 16px; width: 100%; border-radius: 10px; font-weight: 800; font-family: 'Manrope', sans-serif; cursor: pointer; transition: 0.3s; font-size: 15px; box-shadow: 0 4px 15px rgba(37,99,235,0.2); }
-        .submit-btn:hover { background: #000080; transform: translateY(-2px); }
         
+        .forgot-link { display: block; text-align: right; font-size: 13px; color: #2563eb; font-weight: 700; text-decoration: none; margin-bottom: 22px; cursor: pointer; }
+        .submit-btn { background: #2563eb; color: white; border: none; padding: 16px; width: 100%; border-radius: 10px; font-weight: 800; font-family: 'Manrope', sans-serif; cursor: pointer; transition: 0.3s; font-size: 15px; }
+        .submit-btn:hover { background: #1d4ed8; transform: translateY(-2px); }
+        .submit-btn:disabled { background: #94a3b8; cursor: not-allowed; transform: none; }
         .toggle-text { margin-top: 24px; font-size: 14px; color: #64748b; }
-        .toggle-link { color: #2563eb; font-weight: 800; cursor: pointer; text-decoration: none; transition: 0.2s; }
-        .toggle-link:hover { color: #000080; text-decoration: underline; }
+        .toggle-link { color: #2563eb; font-weight: 800; cursor: pointer; text-decoration: none; }
         
-        .error-message { color: #ef4444; font-size: 13.5px; font-weight: 600; margin-bottom: 18px; display: none; background: #fef2f2; padding: 12px; border-radius: 8px; border: 1px solid #fecaca; text-align: left; line-height: 1.5; }
-        .hidden { display: none; }
+        .error-message { color: #ef4444; font-size: 13px; font-weight: 700; margin-bottom: 18px; display: none; background: #fef2f2; padding: 12px; border-radius: 8px; border: 1px solid #fecaca; text-align: left; }
+        .success-message { color: #16a34a; font-size: 13px; font-weight: 700; margin-bottom: 18px; display: none; background: #dcfce7; padding: 12px; border-radius: 8px; border: 1px solid #bbf7d0; text-align: left; }
+        .hidden { display: none !important; }
+        
+        /* MODALS */
+        .modal-overlay { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.7); display: flex; justify-content: center; align-items: center; z-index: 1000; opacity: 0; pointer-events: none; transition: 0.3s; padding: 20px; box-sizing: border-box; backdrop-filter: blur(4px);}
+        .modal-overlay.active { opacity: 1; pointer-events: all; }
+        .modal-box { background: #fff; padding: 30px; border-radius: 16px; max-width: 500px; width: 100%; transform: translateY(20px); transition: 0.3s; position: relative; max-height: 90vh; overflow-y: auto;}
+        .modal-overlay.active .modal-box { transform: translateY(0); }
+        .close-modal { position: absolute; top: 15px; right: 15px; background: none; border: none; font-size: 20px; color: #64748b; cursor: pointer; transition: 0.2s;}
+        .close-modal:hover { color: #ef4444; }
 
-        .pic-upload-container { position: relative; width: 90px; height: 90px; margin: 0 auto 20px; cursor: pointer; }
-        #pic-preview { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 3px solid #e2e8f0; background: #f1f5f9; }
-        .edit-badge { position: absolute; bottom: 0; right: 0; background: #2563eb; color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid white; font-size: 12px; }
+        /* MULTI-COLUMN GROUP */
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        
+        /* TOKEN BOX & BADGE */
+        .token-box { background: #0f172a; color: #38bdf8; font-family: monospace; font-size: 18px; font-weight: 800; padding: 10px; border-radius: 8px; letter-spacing: 2px; margin: 15px 0; border: 2px dashed #475569; text-align: center;}
+        .special-mode-badge { background: #f3e8ff; color: #7e22ce; font-size: 11px; font-weight: 800; padding: 4px 10px; border-radius: 50px; display: inline-block; margin-bottom: 10px; border: 1px solid #d8b4fe;}
+
+        /* CHECKBOX STYLING */
+        .checkbox-group { display: flex; align-items: flex-start; gap: 10px; text-align: left; margin-bottom: 20px; }
+        .checkbox-group input { margin-top: 3px; cursor: pointer; }
+        .checkbox-group label { font-size: 12px; color: #64748b; line-height: 1.5; }
+        .info-link { color: #8b5cf6; font-weight: 800; cursor: pointer; text-decoration: underline; }
+        
+        /* HELPER TEXT LINK */
+        .help-instruction-link { font-size: 13px; color: #64748b; margin-bottom: 20px; display: block; text-decoration: none; transition: 0.2s; }
+        .help-instruction-link:hover { color: #2563eb; text-decoration: underline; }
     </style>
 </head>
+
 <body>
 
     <div class="auth-container" id="main-auth-box">
         
-        <div id="login-section">
-            <div class="auth-brand">
-                <img src="logo.png" alt="XG Logo">
-                Xplainer<span>Guru</span>
-            </div>
+        <a href="#" class="help-instruction-link" onclick="document.getElementById('setupModal').classList.add('active'); return false;">
+            <i class="fa-solid fa-circle-info"></i> Need help creating an account or applying for a role? Click here.
+        </a>
 
+        <div id="login-section">
             <h2>Welcome Back</h2>
-            <p>Log in to access your premium courses and study materials.</p>
+            <p id="dynamic-login-msg">Log in to access your portal and materials.</p>
             <div id="login-error" class="error-message"></div>
-            
+            <div id="login-success" class="success-message"></div>
+
             <form id="loginForm">
                 <div class="input-group">
-                    <input type="text" id="loginId" class="input-field" placeholder="Email Address or Mobile Number" required>
+                    <label class="input-label">Registered Email</label>
+                    <input type="email" id="loginId" class="input-field" placeholder="user@gmail.com" required>
                 </div>
-                <div class="input-group">
-                    <input type="password" id="loginPass" class="input-field" placeholder="Password" style="padding-right: 45px;" required>
+                <div class="input-group" id="passGroup">
+                    <label class="input-label">Password</label>
+                    <input type="password" id="loginPass" class="input-field" placeholder="Enter your password" style="padding-right: 45px;" required>
                     <i class="fa-solid fa-eye-slash pass-icon" onclick="togglePassword('loginPass', this)"></i>
                 </div>
+                <a class="forgot-link" onclick="handleForgotPass()" id="forgotBtn">Forgot Password?</a>
                 
-                <a class="forgot-link" onclick="handleForgotPass()">Forgot Password?</a>
-                
-                <button type="submit" class="submit-btn">Secure Log In</button>
+                <button type="submit" class="submit-btn" id="loginBtn">Secure Log In</button>
             </form>
-            <div class="toggle-text">Don't have an account? <span class="toggle-link" onclick="toggleAuthMode('signup')">Sign Up Here</span></div>
+            <div class="toggle-text">Don't have an account? <span class="toggle-link" onclick="openSignupMode('student')">Sign Up Here</span></div>
         </div>
 
         <div id="signup-section" class="hidden">
-            <div class="auth-brand">
-                <img src="logo.png" alt="XG Logo">
-                Xplainer<span>Guru</span>
-            </div>
-
-            <h2>Create Account</h2>
-            <p>Join Xplainer Guru and master your syllabus today.</p>
+            <div id="special-badge-area" class="hidden"><span class="special-mode-badge"><i class="fa-solid fa-shield-halved"></i> Team / Parent / Writer Application</span></div>
+            <h2 id="signup-title">Create Account</h2>
+            <p id="signup-subtitle">Join Xplainer Guru to start learning.</p>
             <div id="signup-error" class="error-message"></div>
 
             <form id="signupForm">
-                
-                <div class="pic-upload-container" onclick="document.getElementById('signPicInput').click()" title="Add Profile Photo">
-                    <img id="pic-preview" src="https://ui-avatars.com/api/?name=User&background=cbd5e1&color=fff" alt="Profile">
-                    <div class="edit-badge"><i class="fa-solid fa-pencil"></i></div>
-                    <input type="file" id="signPicInput" hidden accept="image/*" onchange="previewImage(this)">
+                <div class="input-group hidden" id="roleSelectionGroup">
+                    <label class="input-label">Select Application Role <span style="color:#ef4444;">*</span></label>
+                    <select id="signRole" class="input-field" style="border-color: #8b5cf6;" onchange="handleRoleUI()">
+                        <option value="" disabled selected>-- Choose Role --</option>
+                        <option value="parent">🛡️ Parent / Guardian</option>
+                        <option value="student_writer">✍️ Student Article Writer</option>
+                        <option value="writer">✍️ Team Article Writer</option>
+                        <option value="mentor">📚 Mentor / Teacher</option>
+                        <option value="support">🎧 Support Team</option>
+                    </select>
                 </div>
 
                 <div class="input-group">
-                    <input type="text" id="signName" class="input-field" placeholder="Full Name" required>
-                </div>
-                <div class="input-group">
-                    <input type="email" id="signEmail" class="input-field" placeholder="Email Address" required>
-                </div>
-                <div class="input-group">
-                    <input type="tel" id="signPhone" class="input-field" placeholder="Mobile Number (Optional)">
-                </div>
-                <div class="input-group">
-                    <input type="password" id="signPass" class="input-field" placeholder="Create a Password" style="padding-right: 45px;" required>
-                    <i class="fa-solid fa-eye-slash pass-icon" onclick="togglePassword('signPass', this)"></i>
+                    <label class="input-label">Full Name</label>
+                    <input type="text" id="signName" class="input-field" placeholder="Enter your name" required>
                 </div>
                 
-                <div class="input-group" style="text-align: left; display: flex; align-items: flex-start; gap: 10px; margin-top: 5px;">
-                    <input type="checkbox" id="termsCheck" required style="margin-top: 4px; cursor: pointer;">
-                    <label for="termsCheck" style="font-size: 12px; color: #64748b; line-height: 1.4; cursor: pointer;">
-                        I agree to the <a href="terms.html" target="_blank" style="color: #2563eb; font-weight: 700;">Terms of Service</a> & <a href="privacy.html" target="_blank" style="color: #2563eb; font-weight: 700;">Privacy Policy</a>.
+                <div class="input-group">
+                    <label class="input-label">Email Address <span style="color:#ef4444;">*</span></label>
+                    <input type="email" id="signEmail" class="input-field" placeholder="Permanent Email (Mandatory)" required>
+                    <small class="form-text" style="color: #ef4444; font-size: 11px; margin-top: 4px; display: block;">* Note: This cannot be changed later without contacting Support.</small>
+                </div>
+                
+                <div class="grid-2">
+                    <div class="input-group">
+                        <label class="input-label">Phone <span id="phone-req-tag" style="color:#94a3b8;">(Opt)</span></label>
+                        <input type="tel" id="signPhone" class="input-field" placeholder="10-digits">
+                        <small class="form-text" style="color: #ef4444; font-size: 11px; margin-top: 4px; display: block;">* Note: This cannot be changed later.</small>
+                    </div>
+                    
+                    <div class="input-group hidden" id="ageBoxGroup">
+                        <label class="input-label">Your Age <span style="color:#ef4444;">*</span></label>
+                        <input type="number" id="signAge" class="input-field" placeholder="Age (15+)" min="10" max="99">
+                    </div>
+                </div>
+
+                <div class="input-group hidden" id="childIdGroup">
+                    <label class="input-label" style="color:#16a34a;">Verify Child's UID <span style="color:#ef4444;">*</span></label>
+                    <input type="text" id="signChildId" class="input-field" placeholder="e.g., exact 28-character Firebase UID" style="border-color:#16a34a;">
+                    <p style="font-size:10px; color:#64748b; margin:4px 0 0;">Ask your child to copy their secure system UID from their settings.</p>
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">Password</label>
+                    <input type="password" id="signPass" class="input-field" placeholder="Strong password" style="padding-right: 45px;" required minlength="6">
+                    <i class="fa-solid fa-eye-slash pass-icon" onclick="togglePassword('signPass', this)"></i>
+                </div>
+
+                <div class="input-group hidden" id="reasonBoxGroup">
+                    <label class="input-label" style="color:#8b5cf6;">Experience & Reason <span style="color:#ef4444;">*</span></label>
+                    <textarea id="signReason" class="input-field" style="min-height: 90px; resize: vertical; font-size:13px;" placeholder="What is your experience regarding this role? (Warning: Admin rejects blank answers)"></textarea>
+                </div>
+
+                <div class="checkbox-group">
+                    <input type="checkbox" id="legalAgreement" required>
+                    <label for="legalAgreement">
+                        I have read and agree to the <span class="info-link" onclick="document.getElementById('privacyModal').classList.add('active'); event.preventDefault();">Privacy Policy & Terms and Conditions</span>.
                     </label>
                 </div>
 
-                <button type="submit" class="submit-btn">Create Account</button>
+                <button type="submit" class="submit-btn" id="signupBtn">Create Account</button>
             </form>
-            <div class="toggle-text">Already have an account? <span class="toggle-link" onclick="toggleAuthMode('login')">Log In Here</span></div>
+
+            <div class="toggle-text">Already have an account? <span class="toggle-link" onclick="openLoginMode()">Log In Here</span></div>
+            <div class="toggle-text" id="specialSignupToggleBtn" style="margin-top: 5px;"><span class="toggle-link" style="color:#8b5cf6; font-size:12px;" onclick="openSpecialSignup()"><i class="fa-solid fa-shield-halved"></i> Apply for Special Role</span></div>
+            <div class="toggle-text hidden" id="backToStudentBtn" style="margin-top: 5px;"><span class="toggle-link" style="color:#64748b; font-size:12px;" onclick="openSignupMode('student')"><i class="fa-solid fa-arrow-left"></i> Back to Student Signup</span></div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="setupModal">
+        <div class="modal-box">
+            <button class="close-modal" onclick="document.getElementById('setupModal').classList.remove('active')"><i class="fa-solid fa-xmark"></i></button>
+            <h3 style="font-family: 'Poppins'; color: #0f172a; margin: 0 0 10px 0;"><i class="fa-solid fa-clipboard-check" style="color: #8b5cf6;"></i> How to Create an Account</h3>
+            <p style="color: #64748b; font-size: 13px; margin-bottom: 20px;">Follow these instructions to set up your account or apply for a special role.</p>
+            
+            <div style="background:#f8fafc; border:1px solid #cbd5e1; padding:12px; border-radius:8px; margin-bottom:15px;">
+                <strong style="color:#0f172a; font-size:12px;"><i class="fa-solid fa-user-graduate"></i> FOR STUDENTS:</strong>
+                <p style="font-size:12px; color:#475569; margin: 5px 0 0; line-height: 1.5;">Click on "Sign Up Here", fill in your Name, Email, and Password, and click "Create Account". Your email must be verified before you can log in.</p>
+            </div>
+
+            <div style="background:#fef2f2; border:1px solid #fca5a5; padding:12px; border-radius:8px; margin-bottom:15px;">
+                <strong style="color:#dc2626; font-size:12px;"><i class="fa-solid fa-triangle-exclamation"></i> FOR TEAM MEMBERS (Mentors/Support/Writers):</strong>
+                <ul style="margin:5px 0 0; padding-left:20px; font-size:12px; color:#991b1b; font-weight:600; line-height: 1.6;">
+                    <li>Click "Apply for Special Role" at the bottom of the Sign Up form.</li>
+                    <li>You must be at least <b>15+ years old</b>.</li>
+                    <li>Mandatory 10-digit WhatsApp Number.</li>
+                    <li><b>Strict Rule:</b> Provide a solid reason explaining your background. Admin will review and approve.</li>
+                    <li>Team Writers are official members of the platform creating core content.</li>
+                </ul>
+            </div>
+
+            <div style="background:#e0e7ff; border:1px solid #86efac; padding:12px; border-radius:8px; margin-bottom:15px;">
+                <strong style="color:#166534; font-size:12px;"><i class="fa-solid fa-pen-nib"></i> FOR STUDENT ARTICLE WRITERS:</strong>
+                <ul style="margin:5px 0 0; padding-left:20px; font-size:12px; color:#166534; font-weight:600; line-height: 1.6;">
+                    <li>Select "Student Article Writer" under Special Roles.</li>
+                    <li>This is a separate role from Team Writers. You contribute articles as a student to the community.</li>
+                    <li>Provide a reason for wanting to write.</li>
+                </ul>
+            </div>
+
+            <div style="background:#f0fdf4; border:1px solid #86efac; padding:12px; border-radius:8px; margin-bottom:15px;">
+                <strong style="color:#166534; font-size:12px;"><i class="fa-solid fa-shield-halved"></i> FOR PARENTS / GUARDIANS:</strong>
+                <ul style="margin:5px 0 0; padding-left:20px; font-size:12px; color:#166534; font-weight:600; line-height: 1.6;">
+                    <li>Select "Parent / Guardian" under Special Roles.</li>
+                    <li>You must be at least <b>18+ years old</b>.</li>
+                    <li>You must provide your Child's <b>System Student ID</b> (e.g., XG-STU-123456).</li>
+                </ul>
+            </div>
+
+            <div style="text-align: center; margin-top: 20px; font-size: 12px; color: #64748b;">
+                Need further assistance? Email us at:<br>
+                <a href="mailto:xplainerguru@gmail.com" style="color: #2563eb; font-weight: bold; text-decoration: none;">xplainerguru@gmail.com</a>
+            </div>
+
+            <button class="submit-btn" style="background: #8b5cf6; margin-top: 15px;" onclick="document.getElementById('setupModal').classList.remove('active');">Close Instructions</button>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="privacyModal">
+        <div class="modal-box">
+            <button class="close-modal" onclick="document.getElementById('privacyModal').classList.remove('active')"><i class="fa-solid fa-xmark"></i></button>
+            <h3 style="font-family: 'Poppins'; color: #0f172a; margin: 0 0 10px 0;"><i class="fa-solid fa-file-contract" style="color: #2563eb;"></i> Privacy Policy & Terms</h3>
+            <p style="color: #64748b; font-size: 13px; margin-bottom: 20px;">By using Xplainer Guru, you agree to the following terms:</p>
+            
+            <div style="background:#f8fafc; border:1px solid #cbd5e1; padding:15px; border-radius:8px; margin-bottom:15px; font-size: 12px; color:#475569; line-height: 1.6;">
+                <strong>1. Data Collection:</strong> We collect information necessary to provide educational and community services, such as your name and email. If provided, phone numbers are kept confidential.<br><br>
+                <strong>2. Account Usage:</strong> You are responsible for maintaining the security of your account. Misuse of the platform may result in suspension.<br><br>
+                <strong>3. Special Roles:</strong> Applications for Parent, Writer, Mentor, or Support roles are subject to manual review and approval by administrators. Falsifying information will lead to rejection.<br><br>
+                <strong>4. Community Guidelines:</strong> Users must maintain respectful behavior. Any form of harassment or inappropriate content will not be tolerated.
+            </div>
+
+            <button class="submit-btn" style="background: #2563eb;" onclick="document.getElementById('privacyModal').classList.remove('active');">I Agree</button>
         </div>
     </div>
 
     <script>
-        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwq33obEvRjmPhOU-TDhsgrReHTXzL8RcKKey_UauwQBmHYpzeO7pmbluzZeMxd4mYQ/exec";
+        let isSpecialMode = false;
 
-        window.onload = function() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const resetEmail = urlParams.get('reset');
-            
-            if(resetEmail) {
-                const [name, domain] = resetEmail.split('@');
-                const maskedDisplay = name.charAt(0) + "******" + name.charAt(name.length - 1) + "@" + domain;
-
-                document.getElementById('main-auth-box').innerHTML = `
-                    <div class="auth-brand"><img src="logo.png" alt="XG Logo">Xplainer<span>Guru</span></div>
-                    <h2>Reset Password</h2>
-                    <p style="color:#475569; margin-bottom: 25px;">Creating a new secure password for <br><strong style="color:#2563eb;">${maskedDisplay}</strong></p>
-                    <input type="password" id="newPass" class="input-field" placeholder="Enter New Password (Min 6 chars)" required>
-                    <button onclick="saveNewPassword('${resetEmail}')" class="submit-btn" style="margin-top: 15px;">Update Password</button>
-                `;
-            }
-        };
-
-        let base64Pic = "";
-        function previewImage(input) {
-            if (input.files && input.files[0]) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    document.getElementById('pic-preview').src = e.target.result;
-                    base64Pic = e.target.result;
-                };
-                reader.readAsDataURL(input.files[0]);
-            }
+        // --- UI NAVIGATION ---
+        function openLoginMode() {
+            document.getElementById('login-error').style.display = 'none'; 
+            document.getElementById('signup-section').classList.add('hidden');
+            document.getElementById('login-section').classList.remove('hidden');
         }
 
-        function saveNewPassword(email) {
-            const newPass = document.getElementById('newPass').value;
-            if(newPass.length < 6) {
-                alert("Security Alert: Password must be at least 6 characters long."); return;
-            }
-            
-            let usersDB = JSON.parse(localStorage.getItem('xg_users_db')) || [];
-            let userIndex = usersDB.findIndex(u => u.email === email);
-            
-            if(userIndex > -1) {
-                usersDB[userIndex].password = newPass;
-                localStorage.setItem('xg_users_db', JSON.stringify(usersDB));
-                alert("Success! Your password has been updated securely. Please log in with your new credentials.");
-                window.location.href = "login.html"; 
+        function openSignupMode(modeType) {
+            document.getElementById('signup-error').style.display = 'none'; 
+            document.getElementById('login-section').classList.add('hidden');
+            document.getElementById('signup-section').classList.remove('hidden');
+
+            const roleGroup = document.getElementById('roleSelectionGroup');
+            const signRole = document.getElementById('signRole');
+            const badge = document.getElementById('special-badge-area');
+            const backBtn = document.getElementById('backToStudentBtn');
+            const specialBtn = document.getElementById('specialSignupToggleBtn');
+
+            if (modeType === 'special') {
+                isSpecialMode = true;
+                roleGroup.classList.remove('hidden');
+                badge.classList.remove('hidden');
+                backBtn.classList.remove('hidden');
+                specialBtn.classList.add('hidden');
+                document.getElementById('signup-title').innerText = "Submit Application";
+                document.getElementById('signup-subtitle').innerText = "Select your role to view requirements.";
+                signRole.value = ""; // Reset dropdown
             } else {
-                alert("System Error: We could not verify this account on your current device. Please try again.");
+                isSpecialMode = false;
+                roleGroup.classList.add('hidden');
+                badge.classList.add('hidden');
+                backBtn.classList.add('hidden');
+                specialBtn.classList.remove('hidden');
+                document.getElementById('signup-title').innerText = "Create Account";
+                document.getElementById('signup-subtitle').innerText = "Join Xplainer Guru to start learning.";
             }
+            handleRoleUI(); // Refresh UI blocks based on mode
         }
 
-        function toggleAuthMode(mode) {
-            document.getElementById('login-error').style.display = 'none';
-            document.getElementById('signup-error').style.display = 'none';
-            if (mode === 'signup') {
-                document.getElementById('login-section').classList.add('hidden');
-                document.getElementById('signup-section').classList.remove('hidden');
-            } else {
-                document.getElementById('signup-section').classList.add('hidden');
-                document.getElementById('login-section').classList.remove('hidden');
+        function openSpecialSignup() {
+            openSignupMode('special');
+        }
+
+        // --- FIELD VISIBILITY ENGINE ---
+        function handleRoleUI() {
+            const role = isSpecialMode ? document.getElementById('signRole').value : 'student';
+            
+            const phoneInput = document.getElementById('signPhone');
+            const phoneTag = document.getElementById('phone-req-tag');
+            const ageGroup = document.getElementById('ageBoxGroup');
+            const ageInput = document.getElementById('signAge');
+            const reasonGroup = document.getElementById('reasonBoxGroup');
+            const reasonInput = document.getElementById('signReason');
+            const childGroup = document.getElementById('childIdGroup');
+            const childInput = document.getElementById('signChildId');
+
+            if (!isSpecialMode || role === 'student') {
+                // NORMAL STUDENT
+                phoneInput.required = false; phoneInput.placeholder = "10-digits"; phoneTag.innerHTML = '(Opt)';
+                ageGroup.classList.add('hidden'); ageInput.required = false; ageInput.value = "";
+                reasonGroup.classList.add('hidden'); reasonInput.required = false; reasonInput.value = ""; 
+                childGroup.classList.add('hidden'); childInput.required = false; childInput.value = "";
+            } 
+            else if (role === 'parent') {
+                // PARENT
+                phoneInput.required = true; phoneInput.placeholder = "Mandatory"; phoneTag.innerHTML = '<span style="color:#ef4444;">* Req</span>';
+                childGroup.classList.remove('hidden'); childInput.required = true;
+                ageGroup.classList.remove('hidden'); ageInput.required = true;
+                reasonGroup.classList.add('hidden'); reasonInput.required = false; reasonInput.value = "";
+            } 
+            else if (role === 'student_writer') {
+                // STUDENT WRITER
+                phoneInput.required = false; phoneInput.placeholder = "10-digits"; phoneTag.innerHTML = '(Opt)';
+                ageGroup.classList.remove('hidden'); ageInput.required = true;
+                reasonGroup.classList.remove('hidden'); reasonInput.required = true;
+                childGroup.classList.add('hidden'); childInput.required = false; childInput.value = "";
+            }
+            else if (role) {
+                // TEAM MEMBERS (mentor, writer, support)
+                phoneInput.required = true; phoneInput.placeholder = "Mandatory"; phoneTag.innerHTML = '<span style="color:#ef4444;">* Req</span>';
+                ageGroup.classList.remove('hidden'); ageInput.required = true;
+                reasonGroup.classList.remove('hidden'); reasonInput.required = true;
+                childGroup.classList.add('hidden'); childInput.required = false; childInput.value = "";
+            } 
+            else {
+                // SPECIAL MODE, BUT NO ROLE SELECTED YET
+                phoneInput.required = false; phoneInput.placeholder = "Select role first..."; phoneTag.innerHTML = '';
+                ageGroup.classList.add('hidden'); ageInput.required = false;
+                reasonGroup.classList.add('hidden'); reasonInput.required = false;
+                childGroup.classList.add('hidden'); childInput.required = false;
             }
         }
 
         function togglePassword(inputId, icon) {
             const input = document.getElementById(inputId);
-            if (input.type === "password") {
-                input.type = "text";
-                icon.classList.replace("fa-eye-slash", "fa-eye");
-            } else {
-                input.type = "password";
-                icon.classList.replace("fa-eye", "fa-eye-slash");
-            }
+            input.type = input.type === "password" ? "text" : "password";
+            icon.classList.toggle("fa-eye-slash"); icon.classList.toggle("fa-eye");
+        }
+
+        function showMessage(elementId, message, type="error") {
+            const box = document.getElementById(elementId);
+            box.innerHTML = type === "error" ? `<i class='fa-solid fa-circle-exclamation'></i> ${message}` : `<i class='fa-solid fa-check-circle'></i> ${message}`;
+            box.style.display = 'block';
         }
 
         function handleForgotPass() {
-            const input = prompt("Please enter your registered Email Address or Mobile Number to reset your password:");
+            const email = document.getElementById('loginId').value.trim();
+            if (!email) return showMessage("login-error", "Please enter your Email Address first to reset password.");
+            if (!window.authManager) return showMessage("login-error", "System modules are loading. Please wait.");
             
-            if(input && input.trim() !== "") {
-                let usersDB = JSON.parse(localStorage.getItem('xg_users_db')) || [];
-                let foundUser = usersDB.find(u => u.email === input.toLowerCase().trim() || (u.whatsapp !== "N/A" && u.whatsapp === input.trim()));
-                
-                if(foundUser) {
-                    const email = foundUser.email;
-                    const [name, domain] = email.split('@');
-                    let maskedEmail = email;
-                    if(name.length > 2) {
-                        maskedEmail = name.charAt(0) + "******" + name.charAt(name.length - 1) + "@" + domain;
-                    }
-
-                    alert(`A secure password reset link has been dispatched to your registered email address (${maskedEmail}). Please check your inbox.`);
-                    
-                    fetch(SCRIPT_URL, {
-                        method: "POST",
-                        mode: "no-cors",
-                        body: JSON.stringify({ action: "forgot_password", email: foundUser.email })
-                    }).catch(e => console.error("Email dispatch failed:", e));
-
-                } else {
-                    alert("Authentication Failed: We could not find an account associated with this Email Address or Mobile Number. Please check your details or proceed to Sign Up.");
-                }
-            }
+            const btn = document.getElementById('forgotBtn'); btn.innerText = "Sending Link...";
+            window.authManager.auth.sendPasswordResetEmail(email).then(() => {
+                showMessage("login-success", "Reset link sent! Please check your email inbox/spam.", "success");
+                document.getElementById('login-error').style.display = 'none'; btn.innerText = "Forgot Password?";
+            }).catch(() => {
+                showMessage("login-error", "Failed to send link. Ensure email is registered."); btn.innerText = "Forgot Password?";
+            });
         }
 
-        function validatePhone(phone) { return /^[6-9]\d{9}$/.test(phone); }
-        function validateEmail(email) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email); }
-
-        document.getElementById('signupForm').addEventListener('submit', function(e) {
+        // ================= LOGIN LOGIC =================
+        document.getElementById('loginForm').addEventListener('submit', (e) => {
             e.preventDefault();
-            const errorBox = document.getElementById('signup-error');
-            errorBox.style.display = 'none';
-
-            const newEmail = document.getElementById('signEmail').value.toLowerCase().trim();
-            const newPhone = document.getElementById('signPhone').value.trim();
-            const newPass = document.getElementById('signPass').value;
-
-            if(!validateEmail(newEmail)) { 
-                errorBox.innerHTML = "<i class='fa-solid fa-circle-exclamation'></i> Invalid Email Address format."; 
-                errorBox.style.display = 'block'; return; 
-            }
-            
-            if(newPhone !== "" && !validatePhone(newPhone)) { 
-                errorBox.innerHTML = "<i class='fa-solid fa-circle-exclamation'></i> Please enter a valid 10-digit Mobile Number or leave it blank."; 
-                errorBox.style.display = 'block'; return; 
-            }
-            
-            if(newPass.length < 6) { 
-                errorBox.innerHTML = "<i class='fa-solid fa-circle-exclamation'></i> Password must contain at least 6 characters."; 
-                errorBox.style.display = 'block'; return; 
+            if (!window.authManager) {
+                showMessage("login-error", "System modules are still loading. Please try again in a moment.");
+                return;
             }
 
-            const newUser = { 
-                name: document.getElementById('signName').value.trim(), 
-                email: newEmail, 
-                whatsapp: newPhone || "N/A", 
-                pic: base64Pic, 
-                password: newPass 
-            };
-            
-            let usersDB = JSON.parse(localStorage.getItem('xg_users_db')) || [];
-            
-            const duplicateEmail = usersDB.find(u => u.email === newUser.email);
-            const duplicatePhone = newUser.whatsapp !== "N/A" ? usersDB.find(u => u.whatsapp === newUser.whatsapp) : null;
+            const btn = document.getElementById('loginBtn');
+            const email = document.getElementById('loginId').value.trim();
+            const pass = document.getElementById('loginPass').value;
+            btn.disabled = true; btn.innerText = "Verifying...";
 
-            if (duplicateEmail) {
-                errorBox.innerHTML = "<i class='fa-solid fa-circle-exclamation'></i> An account with this Email already exists.";
-                errorBox.style.display = 'block'; return;
-            }
-            if (duplicatePhone) {
-                errorBox.innerHTML = "<i class='fa-solid fa-circle-exclamation'></i> This Mobile Number is already registered.";
-                errorBox.style.display = 'block'; return;
-            }
-            
-            usersDB.push(newUser);
-            localStorage.setItem('xg_users_db', JSON.stringify(usersDB));
-            
-            const activeSession = { name: newUser.name, email: newUser.email, whatsapp: newUser.whatsapp, pic: newUser.pic };
-            localStorage.setItem('xg_user', JSON.stringify(activeSession));
-            
-            if(window.syncToSheet) window.syncToSheet({...activeSession, interest: "Registration"});
-            
-            alert("Account created successfully! Please check your email for a welcome message.");
-            window.location.href = "dashboard.html"; 
-        });
-
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const loginId = document.getElementById('loginId').value.toLowerCase().trim();
-            const passInput = document.getElementById('loginPass').value;
-            const errorMsg = document.getElementById('login-error');
-            
-            let usersDB = JSON.parse(localStorage.getItem('xg_users_db')) || [];
-            
-            const validUser = usersDB.find(u => 
-                (u.email === loginId || (u.whatsapp !== "N/A" && u.whatsapp === loginId)) 
-                && u.password === passInput
+            window.authManager.processLogin(email, pass, 
+                (user) => {
+                    const redirectUrl = localStorage.getItem("redirectAfterLogin") || "index.html"; 
+                    localStorage.removeItem("redirectAfterLogin"); 
+                    window.location.href = redirectUrl;
+                }, 
+                (errorMsg, type, userData) => {
+                    btn.disabled = false; btn.innerText = "Secure Log In";
+                    
+                    if (type === "suspended") {
+                        document.getElementById('main-auth-box').innerHTML = `<i class="fa-solid fa-user-lock" style="font-size:40px; color:#ef4444; margin-bottom:15px;"></i><h2 style="font-family:'Poppins'; color:#0f172a; margin:0 0 10px;">Account Suspended</h2><p style="font-size:13px; color:#64748b;">This account was scheduled for deletion.</p><button class="submit-btn" style="background:#16a34a;" onclick="window.authManager.handleLogout('login.html')">Logout</button>`;
+                    } else if (type === "pending") {
+                        document.getElementById('main-auth-box').innerHTML = `
+                            <i class="fa-solid fa-hourglass-half" style="font-size:40px; color:#f59e0b; margin-bottom:15px;"></i>
+                            <h2 style="font-family:'Poppins'; color:#0f172a; font-size:20px; margin:0 0 10px;">Application Under Review</h2>
+                            <p style="font-size:13px; color:#64748b; margin-bottom:15px; line-height:1.5;">Your application for <b>${(userData.requestedRole||'').toUpperCase()}</b> is being reviewed by the Admin.</p>
+                            <div style="background:#f8fafc; border:1px solid #e2e8f0; padding:10px; border-radius:8px; margin-bottom:20px;">
+                                <span style="font-size:11px; color:#94a3b8; font-weight:800;">YOUR REFERENCE TOKEN</span><br><span style="font-family:monospace; color:#2563eb; font-weight:800; font-size:15px;">${userData.requestToken}</span>
+                            </div><button class="submit-btn" onclick="window.authManager.handleLogout('login.html')">Logout for now</button>
+                        `;
+                    } else {
+                        showMessage("login-error", errorMsg);
+                    }
+                }
             );
-            
-            if (validUser) {
-                const activeSession = { name: validUser.name, email: validUser.email, whatsapp: validUser.whatsapp, pic: validUser.pic };
-                localStorage.setItem('xg_user', JSON.stringify(activeSession));
-                if(window.syncToSheet) window.syncToSheet({...activeSession, interest: "User Logged In"});
-                window.location.href = "dashboard.html";
-            } else {
-                errorMsg.innerHTML = "<i class='fa-solid fa-circle-exclamation'></i> Incorrect Email/Mobile Number or Password. Please try again.";
-                errorMsg.style.display = 'block';
-                document.getElementById('loginPass').value = ''; 
-            }
         });
+
+        // ================= SIGNUP LOGIC =================
+        document.getElementById('signupForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            if (!window.authManager) {
+                showMessage("signup-error", "System modules are still loading. Please try again in a moment.");
+                return;
+            }
+
+            const btn = document.getElementById('signupBtn');
+            const role = isSpecialMode ? document.getElementById('signRole').value : 'student';
+            
+            if (isSpecialMode && !role) {
+                return showMessage("signup-error", "Please select a Role from the dropdown first.");
+            }
+
+            const signupData = {
+                role: role,
+                name: document.getElementById('signName').value.trim(),
+                email: document.getElementById('signEmail').value.toLowerCase().trim(),
+                pass: document.getElementById('signPass').value,
+                phone: document.getElementById('signPhone').value.trim(),
+                age: document.getElementById('signAge').value,
+                reason: document.getElementById('signReason').value.trim(),
+                childId: document.getElementById('signChildId').value.trim().toUpperCase(),
+                legalAgreementAccepted: document.getElementById('legalAgreement').checked
+            };
+
+            if(!signupData.legalAgreementAccepted) {
+                return showMessage("signup-error", "You must agree to the terms and privacy policy.");
+            }
+
+            // 🛑 STRICT VALIDATIONS
+            if (role === 'parent') {
+                if (!signupData.phone) return showMessage("signup-error", "WhatsApp number is strictly mandatory for Parents.");
+                if (!signupData.age || parseInt(signupData.age) < 18) return showMessage("signup-error", "Parents/Guardians must be 18 years or older.");
+                if (!signupData.childId.startsWith("XG-STU-") || signupData.childId.length < 10) return showMessage("signup-error", "Please provide a valid Child Student ID (e.g. XG-STU-123456).");
+            } else if (['mentor', 'writer', 'support', 'student_writer'].includes(role)) {
+                if (role !== 'student_writer' && !signupData.phone) return showMessage("signup-error", "WhatsApp number is strictly mandatory for Team applications.");
+                if (!signupData.age || parseInt(signupData.age) < 15) return showMessage("signup-error", "You must be at least 15 years old to apply.");
+                if (signupData.reason.length < 20) return showMessage("signup-error", "Application Rejected: Please provide a proper background/reason.");
+            }
+            
+            if (signupData.phone && !/^[6-9]\d{9}$/.test(signupData.phone)) return showMessage("signup-error", "Enter a valid 10-digit Indian mobile number.");
+            if (signupData.pass.length < 6) return showMessage("signup-error", "Password must be 6+ chars.");
+
+            btn.disabled = true; btn.innerText = "Processing...";
+
+            window.authManager.processSignup(signupData, 
+                (user, email, generatedToken) => {
+                    let tokenHtml = role !== 'student' ? `<div style="background: #f8fafc; padding: 15px; border-radius: 8px; margin-bottom: 15px; border: 1px solid #cbd5e1;"><p style="font-size:12px; color:#475569; margin:0 0 5px; font-weight:700;">Application Ticket Opened. Your Token:</p><div class="token-box">${generatedToken}</div><p style="font-size:11px; color:#ef4444; margin:0;">⚠️ Admin will review this token. Please verify your email while you wait.</p></div>` : "";
+
+                    document.getElementById('main-auth-box').innerHTML = `
+                        <i class="fa-solid fa-envelope-circle-check" style="font-size:50px; color:#2563eb; margin-bottom:15px;"></i>
+                        <h2 style="font-family:'Poppins'; color:#0f172a; margin:0 0 10px;">Verify Your Email</h2>
+                        <p style="font-size:14px; color:#475569; line-height:1.6; margin-bottom:15px;">A verification link has been sent to <b>${email}</b>. You must verify your email before logging in.</p>
+                        ${tokenHtml}
+                        <button class="submit-btn" style="margin-top:10px;" onclick="window.location.reload()">Return to Login</button>`;
+                },
+                (errorMsg) => {
+                    btn.disabled = false; btn.innerText = "Create Account";
+                    showMessage("signup-error", errorMsg);
+                }
+            );
+        });
+        
+        window.onload = function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            if(urlParams.get('email')) { document.getElementById('loginId').value = urlParams.get('email'); document.getElementById('loginPass').focus(); }
+        };
     </script>
+    
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
+    <script src="js/firebase-init.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/master.js"></script>
+    <script src="js/smart-back.js"></script>
 </body>
 </html>

@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Staff Portal | Xplainer Guru</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;800&family=Poppins:wght@700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        body { margin: 0; padding: 0; font-family: 'Manrope', sans-serif; background: #0f172a; color: white; display: flex; justify-content: center; align-items: center; min-height: 100vh; overflow: hidden; }
+        
+        /* Cool Background Effect */
+        .bg-glow { position: absolute; width: 600px; height: 600px; background: radial-gradient(circle, rgba(37,99,235,0.15) 0%, rgba(15,23,42,0) 70%); top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 0; pointer-events: none; }
+
+        .login-card { background: #1e293b; padding: 40px; border-radius: 20px; box-shadow: 0 25px 50px rgba(0,0,0,0.5); width: 100%; max-width: 400px; z-index: 1; border: 1px solid #334155; position: relative; }
+        
+        .header-logo { text-align: center; margin-bottom: 30px; }
+        .header-logo i { font-size: 40px; color: #38bdf8; margin-bottom: 10px; }
+        .header-logo h2 { margin: 0; font-family: 'Poppins'; font-size: 24px; color: #f8fafc; }
+        .header-logo p { margin: 5px 0 0; font-size: 13px; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px; font-weight: 800; }
+
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; font-size: 12px; font-weight: 800; color: #cbd5e1; margin-bottom: 8px; text-transform: uppercase; }
+        
+        .staff-input { width: 100%; padding: 14px 15px; background: #0f172a; border: 1px solid #475569; border-radius: 8px; color: white; font-family: 'Manrope'; font-size: 15px; box-sizing: border-box; outline: none; transition: 0.3s; }
+        .staff-input:focus { border-color: #38bdf8; box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.1); }
+        select.staff-input { cursor: pointer; appearance: none; background-image: url('data:image/svg+xml;utf8,<svg fill="%2394a3b8" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/><path d="M0 0h24v24H0z" fill="none"/></svg>'); background-repeat: no-repeat; background-position-x: 95%; background-position-y: 50%; }
+
+        .btn-login { width: 100%; padding: 15px; background: #2563eb; color: white; border: none; border-radius: 8px; font-weight: 800; font-family: 'Manrope'; font-size: 16px; cursor: pointer; transition: 0.3s; margin-top: 10px; display: flex; justify-content: center; align-items: center; gap: 10px; }
+        .btn-login:hover { background: #1d4ed8; transform: translateY(-2px); box-shadow: 0 10px 20px rgba(37,99,235,0.3); }
+        .btn-login:disabled { background: #475569; cursor: not-allowed; transform: none; box-shadow: none; color: #94a3b8; }
+
+        .error-box { background: rgba(239, 68, 68, 0.1); border: 1px solid #ef4444; color: #ef4444; padding: 12px; border-radius: 8px; font-size: 13px; font-weight: 600; margin-bottom: 20px; display: none; text-align: center; }
+    </style>
+</head>
+<body>
+
+    <div class="bg-glow"></div>
+
+    <div class="login-card">
+        <div class="header-logo">
+            <i class="fa-solid fa-fingerprint"></i>
+            <h2>Team Authenticator</h2>
+            <p>Authorized Personnel Only</p>
+        </div>
+
+        <div id="error-msg" class="error-box"></div>
+
+        <form id="staff-login-form" onsubmit="processStaffLogin(event)">
+            
+            <div class="form-group">
+                <label>1. Select Department</label>
+                <select id="s-dept" class="staff-input" onchange="updatePostDropdown()" required>
+                    <option value="" disabled selected>-- Choose Department --</option>
+                    <option value="academic">Academic & Content</option>
+                    <option value="support">Technical & Support</option>
+                    <option value="management">Management & Ops</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>2. Select Your Post</label>
+                <select id="s-post" class="staff-input" required disabled>
+                    <option value="" disabled selected>-- Select Department First --</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>3. Official Email ID</label>
+                <input type="email" id="s-email" class="staff-input" placeholder="e.g., name@xplainerguru.com" required>
+            </div>
+
+            <div class="form-group">
+                <label>4. Password</label>
+                <input type="password" id="s-password" class="staff-input" placeholder="••••••••" required>
+            </div>
+
+            <button type="submit" id="login-btn" class="btn-login">
+                <i class="fa-solid fa-right-to-bracket"></i> Authenticate & Enter
+            </button>
+        </form>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
+    <script src="js/firebase-init.js"></script>
+
+    <script>
+        // --- DYNAMIC DROPDOWN LOGIC ---
+        const roleStructure = {
+            academic: [
+                { value: "jr_mentor", label: "Junior Mentor" },
+                { value: "sr_mentor", label: "Senior Mentor" },
+                { value: "writer", label: "Content Writer" }
+            ],
+            support: [
+                { value: "jr_support", label: "Junior Support Exec." },
+                { value: "sr_support", label: "Senior Support Exec." }
+            ],
+            management: [
+                { value: "admin", label: "System Administrator" },
+                { value: "founder", label: "Founder / Director" }
+            ]
+        };
+
+        function updatePostDropdown() {
+            const dept = document.getElementById('s-dept').value;
+            const postSelect = document.getElementById('s-post');
+            
+            postSelect.innerHTML = '<option value="" disabled selected>-- Choose Your Post --</option>';
+            
+            if(roleStructure[dept]) {
+                roleStructure[dept].forEach(role => {
+                    postSelect.innerHTML += `<option value="${role.value}">${role.label}</option>`;
+                });
+                postSelect.disabled = false;
+            } else {
+                postSelect.disabled = true;
+            }
+        }
+
+        // --- EXTREME SECURE LOGIN LOGIC ---
+        async function processStaffLogin(e) {
+            e.preventDefault();
+            
+            const dept = document.getElementById('s-dept').value;
+            const post = document.getElementById('s-post').value;
+            const email = document.getElementById('s-email').value;
+            const password = document.getElementById('s-password').value;
+            
+            const btn = document.getElementById('login-btn');
+            const errorBox = document.getElementById('error-msg');
+            
+            // UI Reset
+            errorBox.style.display = 'none';
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Verifying Clearance...';
+            btn.disabled = true;
+
+            try {
+                // 1. Firebase Authentication
+                const userCredential = await firebase.auth().signInWithEmailAndPassword(email, password);
+                const user = userCredential.user;
+
+                // 2. Database Security Check (Cross-verifying selected role with actual DB role)
+                const userDoc = await firebase.firestore().collection('users').doc(user.uid).get();
+                
+                if (!userDoc.exists) {
+                    throw new Error("Profile not found in database.");
+                }
+
+                const userData = userDoc.data();
+                const dbRole = (userData.role || '').toLowerCase();
+
+                // 🚨 SECURITY TRAP: If a Student tries to use this portal
+                if (dbRole === 'student' || dbRole === 'parent') {
+                    await firebase.auth().signOut(); // Kick them out instantly
+                    throw new Error("SECURITY BREACH: Unauthorized Access. Students must use the main portal.");
+                }
+
+                // 🚨 INTEGRITY CHECK: Did they select the correct post?
+                // Example: If an Admin tries to select 'jr_mentor' to sneak into their workspace, it blocks them (or you can relax this if admins can go anywhere).
+                if (dbRole !== post && dbRole !== 'admin' && dbRole !== 'founder') {
+                    await firebase.auth().signOut();
+                    throw new Error(`Integrity Match Failed: Your actual clearance is '${dbRole.toUpperCase()}', not '${post.toUpperCase()}'.`);
+                }
+
+                // 3. SUCCESS! Save Session Data for Workspace Routing
+                sessionStorage.setItem('active_staff_dept', dept);
+                sessionStorage.setItem('active_staff_post', post);
+
+                // 4. Smart Routing
+                btn.style.background = "#10b981";
+                btn.innerHTML = '<i class="fa-solid fa-check"></i> Clearance Granted!';
+
+                setTimeout(() => {
+                    if (post === 'admin' || post === 'founder') {
+                        window.location.href = "admin.html"; // Admins go to Super Console
+                    } else if (dept === 'academic' || dept === 'support') {
+                        window.location.href = "workspace.html"; // Mentors/Support go to their desks
+                    } else {
+                        window.location.href = "dashboard.html"; // Fallback (e.g., Writers)
+                    }
+                }, 1000);
+
+            } catch (error) {
+                console.error(error);
+                // Handle specific Firebase errors for better UX
+                let msg = error.message;
+                if(error.code === 'auth/invalid-credential' || error.code === 'auth/wrong-password') msg = "Invalid Email or Password.";
+                
+                errorBox.innerText = msg;
+                errorBox.style.display = 'block';
+                
+                btn.innerHTML = '<i class="fa-solid fa-right-to-bracket"></i> Authenticate & Enter';
+                btn.disabled = false;
+            }
+        }
+    </script>
+</body>
+</html>

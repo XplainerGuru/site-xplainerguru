@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <title>Test Result | Xplainer Guru</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+    <style>
+        .dashboard-container { max-width: 1000px; margin: 40px auto; padding: 0 20px; min-height: 80vh; font-family: 'Manrope', sans-serif; }
+        
+        /* THE SCORECARD / CERTIFICATE DESIGN (This gets captured as Image) */
+        .scorecard-wrapper { background: linear-gradient(135deg, #ffffff, #f8fafc); border: 2px solid #e2e8f0; border-radius: 20px; padding: 40px; box-shadow: 0 15px 35px rgba(0,0,0,0.05); position: relative; overflow: hidden; margin-bottom: 30px; }
+        .scorecard-wrapper::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 8px; background: linear-gradient(90deg, #2563eb, #8b5cf6, #db2777); }
+        .watermark-logo { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-15deg); font-size: 8vw; color: rgba(37, 99, 235, 0.03); font-family: 'Poppins'; font-weight: 800; white-space: nowrap; pointer-events: none; }
+        
+        .sc-header { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px dashed #e2e8f0; padding-bottom: 20px; margin-bottom: 25px; position: relative; z-index: 2; }
+        .sc-brand { display: flex; align-items: center; gap: 10px; font-family: 'Poppins'; font-size: 24px; font-weight: 800; color: #0f172a; }
+        .sc-brand img { width: 40px; height: 40px; border-radius: 50%; }
+        
+        .sc-stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 20px; position: relative; z-index: 2; }
+        .stat-box { background: white; padding: 20px; border-radius: 12px; border: 1px solid #e2e8f0; text-align: center; }
+        .stat-value { font-family: 'Poppins'; font-size: 32px; font-weight: 800; color: #0f172a; line-height: 1; margin-bottom: 5px; }
+        .stat-label { font-size: 12px; font-weight: 800; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; }
+        
+        /* ACTION BUTTONS */
+        .share-actions { display: flex; justify-content: center; gap: 15px; margin-bottom: 40px; flex-wrap: wrap; }
+        .btn-action { padding: 12px 25px; border-radius: 8px; font-weight: 800; font-family: 'Manrope'; border: none; cursor: pointer; display: flex; align-items: center; gap: 10px; font-size: 15px; transition: 0.2s; }
+        .btn-download { background: #2563eb; color: white; box-shadow: 0 4px 15px rgba(37,99,235,0.2); }
+        .btn-download:hover { background: #1d4ed8; transform: translateY(-2px); }
+        .btn-wa { background: #25d366; color: white; box-shadow: 0 4px 15px rgba(37,211,102,0.2); }
+        .btn-wa:hover { background: #16a34a; transform: translateY(-2px); }
+
+        /* DETAILED SOLUTIONS SECTION */
+        .solutions-container { display: flex; flex-direction: column; gap: 20px; }
+        .sol-card { background: white; border: 1px solid #e2e8f0; border-radius: 16px; padding: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.02); }
+        .sol-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px; gap: 15px; flex-wrap: wrap; }
+        .q-badge { background: #f1f5f9; color: #475569; font-weight: 800; padding: 4px 10px; border-radius: 6px; font-size: 12px; }
+        .status-badge { font-weight: 800; padding: 4px 10px; border-radius: 6px; font-size: 12px; display: inline-flex; align-items: center; gap: 5px; }
+        .status-correct { background: #dcfce7; color: #16a34a; }
+        .status-wrong { background: #fee2e2; color: #ef4444; }
+        
+        .sol-text-area { background: #f8fafc; border-left: 4px solid #38bdf8; padding: 15px; border-radius: 0 8px 8px 0; margin-top: 20px; }
+        .lang-label { font-size: 11px; font-weight: 800; color: #2563eb; text-transform: uppercase; margin-bottom: 5px; display: block; }
+        
+        .yt-timeline-btn { background: #fef2f2; color: #ef4444; border: 1px solid #fecaca; padding: 8px 15px; border-radius: 8px; font-weight: 800; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; font-size: 13px; margin-top: 15px; transition: 0.2s; }
+        .yt-timeline-btn:hover { background: #ef4444; color: white; }
+
+        #loader-ui { position: fixed; inset: 0; background: white; z-index: 99999; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+        #result-ui { display: none; }
+    </style>
+</head>
+<body>
+
+    <div id="loader-ui">
+        <i class="fa-solid fa-chart-pie fa-spin fa-3x" style="color: #2563eb; margin-bottom: 20px;"></i>
+        <h2 style="font-family: 'Poppins'; color: #0f172a; margin: 0;">Generating Report Card...</h2>
+        <p style="color: #64748b; font-weight: 600;">Analyzing your time and accuracy.</p>
+    </div>
+
+    <div id="result-ui">
+        <div class="dashboard-container">
+            
+            <div style="text-align: center; margin-bottom: 30px;">
+                <h1 style="font-family: 'Poppins'; color: #0f172a; margin-bottom: 5px;">Test Completed Successfully! 🎉</h1>
+                <p style="color: #64748b;">Your performance analysis and detailed solutions are ready.</p>
+            </div>
+
+            <div id="certificate-node" class="scorecard-wrapper">
+                <div class="watermark-logo">XPLAINER GURU</div>
+                
+                <div class="sc-header">
+                    <div>
+                        <div class="sc-brand">
+                            <img src="logo.png" alt="XG" onerror="this.src='https://ui-avatars.com/api/?name=XG&background=2563eb&color=fff'"> 
+                            Xplainer Guru
+                        </div>
+                        <h2 id="test-title-display" style="margin: 15px 0 5px; font-family: 'Poppins'; font-size: 20px; color: #0f172a;">Loading...</h2>
+                        <p style="margin: 0; color: #64748b; font-weight: 600; font-size: 14px;" id="cert-name">Student: Loading...</p>
+                        <p style="margin: 2px 0 0; color: #94a3b8; font-size: 12px; font-family: monospace;" id="cert-id">ID: XG-XXXX</p>
+                    </div>
+                    <div style="text-align: right;">
+                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=80x80&data=https://xplainerguru.netlify.app" alt="Verify QR" style="border-radius: 8px; border: 1px solid #e2e8f0; padding: 5px; background: white;">
+                        <p style="font-size: 10px; color: #94a3b8; margin: 5px 0 0; font-weight: 800;">VERIFIED RESULT</p>
+                    </div>
+                </div>
+
+                <div class="sc-stats-grid">
+                    <div class="stat-box" style="border-color: #bfdbfe; background: #eff6ff;">
+                        <div id="stat-score" class="stat-value" style="color: #2563eb;">0/0</div>
+                        <div class="stat-label">Final Score</div>
+                    </div>
+                    <div class="stat-box" style="border-color: #bbf7d0; background: #f0fdf4;">
+                        <div id="stat-acc" class="stat-value" style="color: #16a34a;">0%</div>
+                        <div class="stat-label">Accuracy</div>
+                    </div>
+                    <div class="stat-box" style="border-color: #fbcfe8; background: #fdf2f8;">
+                        <div id="stat-time" class="stat-value" style="color: #db2777;">0m 0s</div>
+                        <div class="stat-label">Time Taken</div>
+                    </div>
+                    <div class="stat-box" style="border-color: #fde68a; background: #fffbeb;">
+                        <div id="stat-rank" class="stat-value" style="color: #d97706;">Eval</div>
+                        <div class="stat-label">Leaderboard</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="share-actions">
+                <button onclick="downloadCertificate()" class="btn-action btn-download" id="downloadBtn">
+                    <i class="fa-solid fa-download"></i> Download Report Card (PNG)
+                </button>
+                <button onclick="shareWhatsApp()" class="btn-action btn-wa">
+                    <i class="fa-brands fa-whatsapp"></i> Share on WhatsApp
+                </button>
+            </div>
+
+            <h2 style="font-family: 'Poppins'; color: #0f172a; margin-bottom: 20px; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px;">
+                <i class="fa-solid fa-microscope" style="color: #8b5cf6;"></i> Detailed Analysis & Solutions
+            </h2>
+            
+            <div id="dynamic-solutions" class="solutions-container">
+                </div>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
+    <script src="js/firebase-init.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/master.js"></script>
+
+    <script>
+        let resultData = null;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            if (window.authManager) {
+                window.authManager.initializeAuthListener((user, userData) => {
+                    if (!user) {
+                        window.location.href = "login.html";
+                        return;
+                    }
+
+                    // Retrieve Data from Session Storage
+                    const rawData = sessionStorage.getItem('xg_temp_result');
+                    if (!rawData) {
+                        alert("No recent test results found.");
+                        window.location.href = "tests.html";
+                        return;
+                    }
+                    resultData = JSON.parse(rawData);
+
+                    // Populate User Information
+                    let name = user.displayName || "Student";
+                    if (userData && userData.name) name = userData.name;
+                    
+                    document.getElementById('cert-name').innerText = `Student: ${name}`;
+                    document.getElementById('cert-id').innerText = `ID: ${user.uid.substring(0,8).toUpperCase()}`;
+
+                    // Populate Statistics
+                    document.getElementById('test-title-display').innerText = resultData.title;
+                    document.getElementById('stat-score').innerText = `${resultData.correct}/${resultData.totalQuestions}`;
+                    
+                    let accuracy = resultData.totalQuestions > 0 ? Math.round((resultData.correct / resultData.totalQuestions) * 100) : 0;
+                    document.getElementById('stat-acc').innerText = `${accuracy}%`;
+
+                    let timeMins = Math.floor(resultData.timeSpent / 60);
+                    let timeSecs = resultData.timeSpent % 60;
+                    document.getElementById('stat-time').innerText = `${timeMins}m ${timeSecs}s`;
+
+                    // Render Solutions Dynamically
+                    renderSolutions(resultData);
+
+                    // 🟢 NEW: Save result to Firestore permanently
+                    saveResultToFirestore(user, resultData);
+
+                    // Hide Loader & Show Results
+                    setTimeout(() => {
+                        document.getElementById('loader-ui').style.display = 'none';
+                        document.getElementById('result-ui').style.display = 'block';
+                    }, 1500);
+                });
+            }
+        });
+
+        // 🟢 FIX: Function to save the test result using Unique Attempt ID
+        async function saveResultToFirestore(user, data) {
+            try {
+                const db = firebase.firestore();
+                
+                // Agar same ATTEMPT pehle save ho chuka hai, tabhi rukega. Naya attempt humesha save hoga!
+                if(sessionStorage.getItem('xg_result_saved') === data.attemptId) {
+                    console.log("This specific attempt is already saved.");
+                    return;
+                }
+
+                await db.collection("test_results").add({
+                    uid: user.uid,
+                    studentName: user.displayName || "Learner",
+                    testId: data.testId,
+                    attemptId: data.attemptId, // Save the unique ID
+                    testTitle: data.title,
+                    score: `${data.correct}/${data.totalQuestions}`,
+                    correct: data.correct,
+                    totalQuestions: data.totalQuestions,
+                    accuracy: Math.round((data.correct / data.totalQuestions) * 100),
+                    timeSpent: data.timeSpent,
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                });
+
+                // Lock this specific attempt
+                sessionStorage.setItem('xg_result_saved', data.attemptId);
+                console.log("✅ Result saved to Firebase successfully!");
+
+            } catch (error) {
+                console.error("Error saving result to database:", error);
+                alert("Warning: Could not save your result to the dashboard. Please check your internet.");
+            }
+        }
+
+        function renderSolutions(data) {
+            const container = document.getElementById('dynamic-solutions');
+            container.innerHTML = '';
+
+            data.responses.forEach((res, index) => {
+                const q = data.originalTest.questions[index];
+                const isAttempted = res.selected !== null;
+                const isCorrect = isAttempted && res.selected === q.correctAnswer;
+
+                let statusHTML = '';
+                let answerHTML = '';
+                let borderColor = '';
+
+                if (!isAttempted) {
+                    statusHTML = `<span class="status-badge" style="background:#f1f5f9; color:#64748b;"><i class="fa-solid fa-minus-circle"></i> Unattempted (0)</span>`;
+                    answerHTML = `
+                        <p style="margin: 0 0 5px; font-size: 14px; font-weight: 600; color: #64748b;"><i class="fa-solid fa-minus"></i> You skipped this</p>
+                        <p style="margin: 0; font-size: 14px; font-weight: 800; color: #16a34a;"><i class="fa-solid fa-check"></i> Correct Answer: Option ${q.correctAnswer} - ${q.options[q.correctAnswer]}</p>
+                    `;
+                    borderColor = '#cbd5e1';
+                } else if (isCorrect) {
+                    statusHTML = `<span class="status-badge status-correct"><i class="fa-solid fa-check-circle"></i> Correct (+4)</span>`;
+                    answerHTML = `<p style="margin: 0; font-size: 14px; font-weight: 600; color: #16a34a;"><i class="fa-solid fa-check"></i> Your Answer: Option ${res.selected} - ${q.options[res.selected]}</p>`;
+                    borderColor = '#38bdf8';
+                } else {
+                    statusHTML = `<span class="status-badge status-wrong"><i class="fa-solid fa-xmark-circle"></i> Incorrect (-1)</span>`;
+                    answerHTML = `
+                        <p style="margin: 0 0 5px; font-size: 14px; font-weight: 600; color: #ef4444;"><i class="fa-solid fa-xmark"></i> Your Answer: Option ${res.selected} - ${q.options[res.selected]}</p>
+                        <p style="margin: 0; font-size: 14px; font-weight: 800; color: #16a34a;"><i class="fa-solid fa-check"></i> Correct Answer: Option ${q.correctAnswer} - ${q.options[q.correctAnswer]}</p>
+                    `;
+                    borderColor = '#ef4444';
+                }
+
+                let tMins = Math.floor(res.timeSpent / 60);
+                let tSecs = res.timeSpent % 60;
+                let timeStr = tMins > 0 ? `${tMins}m ${tSecs}s` : `${tSecs}s`;
+
+                let ytBtnHTML = '';
+                if (q.ytLink && q.ytLink.trim() !== '') {
+                    ytBtnHTML = `
+                        <a href="${q.ytLink}" target="_blank" class="yt-timeline-btn">
+                            <i class="fa-brands fa-youtube"></i> Watch Concept Video
+                        </a>
+                    `;
+                }
+
+                let imgHTML = '';
+                if (q.image && q.image.trim() !== '') {
+                    imgHTML = `<img src="${q.image}" style="max-width:100%; max-height:200px; border-radius:8px; margin-bottom:15px; border:1px solid #e2e8f0; object-fit:contain;">`;
+                }
+
+                const cardHTML = `
+                    <div class="sol-card">
+                        <div class="sol-header">
+                            <div>
+                                <span class="q-badge">Question ${index + 1}</span>
+                                <span style="font-size: 12px; color: #64748b; font-weight: 600; margin-left: 10px;"><i class="fa-regular fa-clock"></i> Time Taken: ${timeStr}</span>
+                            </div>
+                            ${statusHTML}
+                        </div>
+                        <h3 style="margin: 0 0 15px; font-size: 16px; color: #0f172a; line-height: 1.5;">${q.text}</h3>
+                        ${imgHTML}
+                        
+                        ${answerHTML}
+                        
+                        <div class="sol-text-area" style="border-left-color: ${borderColor};">
+                            <span class="lang-label">English Explanation</span>
+                            <p style="margin: 0 0 15px; font-size: 14px; color: #334155;">${q.solutionEng || 'No explanation provided.'}</p>
+                            
+                            <span class="lang-label" style="color: #d97706; margin-top: 15px;">Hinglish Explanation</span>
+                            <p style="margin: 0; font-size: 14px; color: #334155;">${q.solutionHin || 'No explanation provided.'}</p>
+                        </div>
+
+                        ${ytBtnHTML}
+                    </div>
+                `;
+                container.innerHTML += cardHTML;
+            });
+        }
+
+        function downloadCertificate() {
+            const btn = document.getElementById('downloadBtn');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Generating Image...';
+            btn.disabled = true;
+
+            const element = document.getElementById('certificate-node');
+            
+            html2canvas(element, { scale: 2, backgroundColor: '#ffffff', useCORS: true }).then(canvas => {
+                const imgData = canvas.toDataURL('image/png');
+                
+                const link = document.createElement('a');
+                link.download = 'XG_Test_Report.png';
+                link.href = imgData;
+                link.click();
+
+                btn.innerHTML = '<i class="fa-solid fa-check"></i> Downloaded Successfully!';
+                setTimeout(() => {
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                }, 3000);
+            }).catch(err => {
+                alert("Failed to generate image. Please try again.");
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            });
+        }
+
+        function shareWhatsApp() {
+            if(!resultData) return;
+            let accuracy = resultData.totalQuestions > 0 ? Math.round((resultData.correct / resultData.totalQuestions) * 100) : 0;
+            const text = `🔥 I just scored ${accuracy}% (${resultData.correct}/${resultData.totalQuestions}) on the "${resultData.title}" Mock Test at Xplainer Guru! Check out my performance & join me here: https://xplainerguru.netlify.app`;
+            const waUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`;
+            window.open(waUrl, '_blank');
+        }
+    </script>
+</body>
+</html>

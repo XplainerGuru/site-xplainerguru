@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <title>Live Exam | Xplainer Guru</title>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;800&family=Poppins:wght@700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* RESET & FOCUS JAIL CSS */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Manrope', sans-serif;
+            background: #f8fafc;
+            color: #0f172a;
+            overflow-x: hidden;
+            user-select: none;
+            /* Prevents text copying */
+        }
+
+        /* THE DYNAMIC WATERMARK */
+        .watermark {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0.04;
+            font-size: 8vw;
+            font-family: 'Poppins';
+            font-weight: 800;
+            color: #0f172a;
+            transform: rotate(-30deg);
+            white-space: nowrap;
+            text-align: center;
+            line-height: 1.2;
+        }
+
+        /* TOP NAV BAR (Exam specific, no standard header) */
+        .exam-header {
+            background: #0f172a;
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .exam-title {
+            font-family: 'Poppins';
+            font-size: 18px;
+            margin: 0;
+        }
+
+        .exam-timer {
+            background: #ef4444;
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-family: monospace;
+            font-weight: 800;
+            font-size: 20px;
+            letter-spacing: 2px;
+            box-shadow: 0 0 15px rgba(239, 68, 68, 0.4);
+        }
+
+        /* MAIN LAYOUT */
+        .exam-container {
+            display: grid;
+            grid-template-columns: 1fr 320px;
+            max-width: 1400px;
+            margin: 0 auto;
+            min-height: calc(100vh - 70px);
+        }
+
+        @media (max-width: 900px) {
+            .exam-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* QUESTION AREA */
+        .q-area {
+            padding: 40px;
+            background: white;
+            border-right: 1px solid #e2e8f0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .q-number-badge {
+            font-weight: 800;
+            color: #2563eb;
+            font-size: 14px;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .q-text {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 25px;
+            line-height: 1.6;
+        }
+
+        .q-image {
+            max-width: 100%;
+            max-height: 300px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            border: 1px solid #e2e8f0;
+            object-fit: contain;
+        }
+
+        .options-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 40px;
+        }
+
+        .option-label {
+            display: flex;
+            align-items: center;
+            padding: 15px 20px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: 0.2s;
+            font-size: 16px;
+        }
+
+        .option-label:hover {
+            background: #f8fafc;
+            border-color: #cbd5e1;
+        }
+
+        input[type="radio"] {
+            display: none;
+        }
+
+        input[type="radio"]:checked+.option-label {
+            border-color: #2563eb;
+            background: #eff6ff;
+            color: #1d4ed8;
+        }
+
+        input[type="radio"]:checked+.option-label::before {
+            content: '\\f058';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            margin-right: 10px;
+            color: #2563eb;
+        }
+
+        .option-label::before {
+            content: '\\f111';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 400;
+            margin-right: 10px;
+            color: #94a3b8;
+        }
+
+        /* BOTTOM ACTION BAR */
+        .action-bar {
+            margin-top: auto;
+            display: flex;
+            justify-content: space-between;
+            padding-top: 20px;
+            border-top: 1px solid #e2e8f0;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn-exam {
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-weight: 800;
+            border: none;
+            cursor: pointer;
+            font-family: 'Manrope';
+            transition: 0.2s;
+            font-size: 15px;
+        }
+
+        .btn-prev {
+            background: #f1f5f9;
+            color: #475569;
+        }
+
+        .btn-next {
+            background: #2563eb;
+            color: white;
+        }
+
+        .btn-review {
+            background: #8b5cf6;
+            color: white;
+        }
+
+        .btn-clear {
+            background: white;
+            color: #ef4444;
+            border: 1px solid #fecaca;
+        }
+
+        /* SIDEBAR PALETTE */
+        .palette-area {
+            background: #f8fafc;
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .palette-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        .p-btn {
+            aspect-ratio: 1;
+            border-radius: 50%;
+            border: 2px solid #cbd5e1;
+            background: white;
+            font-weight: 800;
+            cursor: pointer;
+            font-size: 14px;
+            color: #475569;
+            transition: 0.2s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 0;
+        }
+
+        /* Palette States */
+        .p-btn.ans {
+            background: #10b981;
+            color: white;
+            border-color: #10b981;
+        }
+
+        .p-btn.rev {
+            background: #8b5cf6;
+            color: white;
+            border-color: #8b5cf6;
+        }
+
+        .p-btn.not-ans {
+            background: #ef4444;
+            color: white;
+            border-color: #ef4444;
+        }
+
+        .p-btn.curr {
+            border: 3px solid #0f172a;
+            transform: scale(1.15);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .submit-btn {
+            background: #16a34a;
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 8px;
+            font-weight: 800;
+            cursor: pointer;
+            width: 100%;
+            font-size: 16px;
+            font-family: 'Manrope';
+            margin-top: auto;
+        }
+
+        .submit-btn:hover {
+            background: #15803d;
+        }
+
+        /* LOADER OVERLAY */
+        #loader-ui {
+            position: fixed;
+            inset: 0;
+            background: white;
+            z-index: 99999;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #exam-ui {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="watermark" id="watermark-text">XPLAINER GURU<br>Loading ID...</div>
+
+    <div id="loader-ui">
+        <i class="fa-solid fa-shield-halved fa-spin fa-2x" style="color: #2563eb; margin-bottom: 15px;"></i>
+        <h2 style="font-family: 'Poppins'; color: #0f172a; margin: 0;">Securing Exam Environment...</h2>
+        <p style="color: #64748b; font-weight: 600;">Do not switch tabs or refresh.</p>
+    </div>
+
+    <div id="exam-ui">
+        <div class="exam-header">
+            <h2 class="exam-title" id="test-title-display">Loading Test...</h2>
+            <div class="exam-timer" id="timer-display">--:--:--</div>
+        </div>
+
+        <div class="exam-container">
+            <div class="q-area">
+                <div class="q-number-badge" id="q-num-display">Question 1</div>
+                <div class="q-text" id="q-text-display">Fetching question from secure server...</div>
+
+                <img id="q-image-display" class="q-image" src="" style="display: none;" alt="Question Diagram">
+
+                <div class="options-grid" id="options-container">
+                </div>
+
+                <div class="action-bar">
+                    <div style="display: flex; gap: 10px;">
+                        <button class="btn-exam btn-prev" onclick="alert('Going to Previous Question')"><i
+                                class="fa-solid fa-arrow-left"></i> Previous</button>
+                        <button class="btn-exam btn-clear" onclick="alert('Response Cleared')"><i
+                                class="fa-solid fa-eraser"></i> Clear</button>
+                    </div>
+                    <div style="display: flex; gap: 10px;">
+                        <button class="btn-exam btn-review" onclick="alert('Marked for Review')"><i
+                                class="fa-solid fa-flag"></i> Mark Review</button>
+                        <button class="btn-exam btn-next" onclick="alert('Saving and Next')">Save & Next <i
+                                class="fa-solid fa-arrow-right"></i></button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="palette-area">
+                <h3 style="font-family: 'Poppins'; margin: 0 0 20px; font-size: 16px;">Question Palette</h3>
+
+                <div class="palette-grid" id="palette-container">
+                    <button class="p-btn curr">1</button>
+                    <button class="p-btn ans">2</button>
+                    <button class="p-btn rev">3</button>
+                    <button class="p-btn not-ans">4</button>
+                    <button class="p-btn">5</button>
+                </div>
+
+                <div
+                    style="background: white; padding: 15px; border-radius: 8px; border: 1px solid #e2e8f0; margin-bottom: 20px; font-size: 12px; font-weight: 700; color: #475569;">
+                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;"><span
+                            style="width:12px; height:12px; background:#10b981; border-radius:50%;"></span> Answered
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;"><span
+                            style="width:12px; height:12px; background:#ef4444; border-radius:50%;"></span> Not Answered
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;"><span
+                            style="width:12px; height:12px; background:#8b5cf6; border-radius:50%;"></span> Marked for
+                        Review</div>
+                    <div style="display: flex; align-items: center; gap: 10px;"><span
+                            style="width:12px; height:12px; background:white; border:2px solid #cbd5e1; border-radius:50%;"></span>
+                        Not Visited</div>
+                </div>
+
+                <button class="submit-btn" onclick="forceSubmit('User clicked Submit Test')"><i
+                        class="fa-solid fa-paper-plane"></i> Submit Test</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
+    <script src="js/firebase-init.js"></script>
+
+    <script>
+        // --- GLOBAL ENGINE STATE ---
+        let currentUserData = null;
+        let testId = new URLSearchParams(window.location.search).get("id");
+        let testData = null;
+        let isTestActive = false;
+
+        let currentQuestionIndex = 0;
+        let userResponses = []; // Tracks status, selected option, and time spent
+
+        let totalTimeSpent = 0;
+        let questionTimerInterval = null;
+        let globalTimerInterval = null;
+
+        // 1. STRICT AUTH CHECK & INITIALIZATION
+        firebase.auth().onAuthStateChanged(async (user) => {
+            if (!user) {
+                localStorage.setItem("redirectAfterLogin", `exam.html?id=${testId}`);
+                window.location.href = "login.html";
+                return;
+            }
+            try {
+                const doc = await firebase.firestore().collection("users").doc(user.uid).get();
+                if (doc.exists) {
+                    currentUserData = doc.data();
+                    document.getElementById('watermark-text').innerHTML = `XPLAINER GURU<br>${currentUserData.name.toUpperCase()}<br>${user.uid.substring(0, 8)}`;
+                    fetchTestFromDatabase(); 
+                }
+            } catch (e) {
+                alert("Authentication error. Please login again.");
+                window.location.href = "login.html";
+            }
+        });
+
+        // 2. FETCH REAL TEST FROM FIREBASE
+        async function fetchTestFromDatabase() {
+            if (!testId) {
+                alert("Invalid Test Link!");
+                window.location.href = "tests.html";
+                return;
+            }
+
+            try {
+                const doc = await firebase.firestore().collection('mock_tests').doc(testId).get();
+                if (doc.exists) {
+                    testData = doc.data();
+
+                    // Initialize tracking array for all questions
+                    testData.questions.forEach((q, index) => {
+                        userResponses.push({
+                            qIndex: index,
+                            status: 'not-visited', // ans, not-ans, rev, not-visited
+                            selected: null,
+                            timeSpent: 0
+                        });
+                    });
+
+                    // Hide loader, show UI
+                    document.getElementById('loader-ui').style.display = 'none';
+                    document.getElementById('exam-ui').style.display = 'block';
+                    document.getElementById('test-title-display').innerText = testData.title;
+
+                    isTestActive = true;
+                    startGlobalTimer(testData.duration || 0);
+
+                    // Load the first question
+                    loadQuestion(0);
+                    
+                    // ANTI-CHEAT REMOVED AS PER REQUEST
+                    // (Only copy/paste prevention remains)
+                    document.addEventListener('contextmenu', e => e.preventDefault());
+                    document.addEventListener('copy', e => e.preventDefault());
+
+                } else {
+                    alert("Test not found or has been removed.");
+                    window.location.href = "tests.html";
+                }
+            } catch (error) {
+                console.error(error);
+                alert("Failed to load the test. Please check your connection.");
+            }
+        }
+
+        // 3. QUESTION RENDERING LOGIC
+        function loadQuestion(index) {
+            if (questionTimerInterval) clearInterval(questionTimerInterval);
+
+            currentQuestionIndex = index;
+            const q = testData.questions[index];
+
+            if (userResponses[index].status === 'not-visited') {
+                userResponses[index].status = 'not-ans';
+            }
+
+            document.getElementById('q-num-display').innerText = `Question ${index + 1} of ${testData.questions.length}`;
+            document.getElementById('q-text-display').innerText = q.text;
+
+            const imgEl = document.getElementById('q-image-display');
+            if (q.image) {
+                imgEl.src = q.image;
+                imgEl.style.display = 'block';
+            } else {
+                imgEl.style.display = 'none';
+            }
+
+            let optionsHTML = "";
+            const opts = ['A', 'B', 'C', 'D'];
+            opts.forEach(optKey => {
+                const isChecked = userResponses[index].selected === optKey ? "checked" : "";
+                optionsHTML += `
+                    <input type="radio" name="q_option" id="opt_${optKey}" value="${optKey}" ${isChecked} onchange="saveAnswer('${optKey}')">
+                    <label class="option-label" for="opt_${optKey}">${optKey}. ${q.options[optKey]}</label>
+                `;
+            });
+            document.getElementById('options-container').innerHTML = optionsHTML;
+
+            renderPalette();
+
+            questionTimerInterval = setInterval(() => {
+                if (isTestActive) {
+                    userResponses[currentQuestionIndex].timeSpent++;
+                }
+            }, 1000);
+        }
+
+        // 4. ACTION BUTTONS LOGIC
+        function saveAnswer(optKey) {
+            userResponses[currentQuestionIndex].selected = optKey;
+            userResponses[currentQuestionIndex].status = 'ans';
+            renderPalette();
+        }
+
+        function clearResponse() {
+            userResponses[currentQuestionIndex].selected = null;
+            userResponses[currentQuestionIndex].status = 'not-ans';
+
+            const radios = document.getElementsByName('q_option');
+            radios.forEach(r => r.checked = false);
+
+            renderPalette();
+        }
+
+        function markForReview() {
+            userResponses[currentQuestionIndex].status = 'rev';
+            renderPalette();
+            nextQuestion(); 
+        }
+
+        function nextQuestion() {
+            if (currentQuestionIndex < testData.questions.length - 1) {
+                loadQuestion(currentQuestionIndex + 1);
+            } else {
+                alert("You have reached the last question. Please review the palette and click 'Submit Test' when you are ready.");
+            }
+        }
+
+        function prevQuestion() {
+            if (currentQuestionIndex > 0) {
+                loadQuestion(currentQuestionIndex - 1);
+            }
+        }
+
+        function jumpToQuestion(index) {
+            loadQuestion(index);
+        }
+
+        // 5. PALETTE RENDERER
+        function renderPalette() {
+            let paletteHTML = "";
+            userResponses.forEach((res, i) => {
+                let currClass = (i === currentQuestionIndex) ? "curr" : "";
+                let statusClass = res.status; 
+                paletteHTML += `<button class="p-btn ${statusClass} ${currClass}" onclick="jumpToQuestion(${i})">${i + 1}</button>`;
+            });
+            document.getElementById('palette-container').innerHTML = paletteHTML;
+        }
+
+        // 6. TIMER LOGIC
+        function startGlobalTimer(minutes) {
+            let timeRemaining = minutes * 60;
+            let isCountUp = (minutes === 0);
+            let display = document.getElementById('timer-display');
+
+            globalTimerInterval = setInterval(() => {
+                if (!isTestActive) return;
+
+                totalTimeSpent++; 
+
+                if (isCountUp) {
+                    timeRemaining++;
+                } else {
+                    timeRemaining--;
+                    if (timeRemaining <= 0) forceSubmit("Time Limit Exceeded");
+                }
+
+                let hrs = Math.floor(timeRemaining / 3600);
+                let mins = Math.floor((timeRemaining % 3600) / 60);
+                let secs = timeRemaining % 60;
+
+                display.innerText = `${hrs > 0 ? (hrs < 10 ? "0" + hrs + ":" : hrs + ":") : ""}${mins < 10 ? "0" + mins : mins}:${secs < 10 ? "0" + secs : secs}`;
+            }, 1000);
+        }
+
+        // 7. FINAL SUBMISSION LOGIC 
+        function forceSubmit(reason) {
+            if (!isTestActive) return;
+            
+            if (reason === "User clicked Submit Test") {
+                const confirmSubmit = confirm("Are you sure you want to submit the test? You cannot change your answers after this.");
+                if(!confirmSubmit) return; 
+            }
+
+            isTestActive = false;
+            clearInterval(questionTimerInterval);
+            clearInterval(globalTimerInterval);
+
+            let correctCount = 0;
+            let wrongCount = 0;
+
+            userResponses.forEach((res, i) => {
+                if (res.selected) {
+                    if (res.selected === testData.questions[i].correctAnswer) correctCount++;
+                    else wrongCount++;
+                }
+            });
+
+            // 🟢 FIX: Pack Result Payload with a UNIQUE ATTEMPT ID
+            const resultPayload = {
+                testId: testId,
+                attemptId: Date.now().toString(), // Har naye test ka unique time-stamp ID
+                title: testData.title,
+                totalQuestions: testData.questions.length,
+                correct: correctCount,
+                wrong: wrongCount,
+                timeSpent: totalTimeSpent,
+                responses: userResponses,
+                originalTest: testData
+            };
+
+            sessionStorage.setItem('xg_temp_result', JSON.stringify(resultPayload));
+
+            alert(`TEST SUBMITTED!\nRedirecting to your detailed Report Card...`);
+            window.location.href = `result.html?id=${testId}`;
+        }
+
+        // Attach Button Listeners
+        document.querySelector('.btn-prev').onclick = prevQuestion;
+        document.querySelector('.btn-next').onclick = nextQuestion;
+        document.querySelector('.btn-review').onclick = markForReview;
+        document.querySelector('.btn-clear').onclick = clearResponse;
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Account | Xplainer Guru</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=Poppins:wght@700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <link rel="stylesheet" href="css/style.css">
+
+    <style>
+        .auth-container { background: #fff; max-width: 450px; width: 100%; margin: 50px auto 20px; padding: 40px; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border: 1px solid #f1f5f9; position: relative; }
+        
+        .brand-header { text-align: center; margin-bottom: 30px; }
+        .brand-header h1 { font-family: 'Poppins', sans-serif; font-size: 24px; color: #0f172a; margin: 0; }
+        .brand-header h1 span { color: #2563eb; }
+        .brand-header p { color: #64748b; font-size: 14px; margin-top: 5px; }
+
+        .input-group { margin-bottom: 20px; }
+        .input-group label { display: block; font-size: 12px; font-weight: 800; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+        .input-field { width: 100%; padding: 14px 15px; border: 1px solid #e2e8f0; border-radius: 8px; font-family: 'Manrope'; font-size: 14px; box-sizing: border-box; transition: 0.3s; color: #0f172a; background: #f8fafc; cursor: pointer; }
+        .input-field:focus { border-color: #2563eb; outline: none; background: #fff; box-shadow: 0 0 0 3px rgba(37,99,235,0.1); }
+
+        .btn-primary { width: 100%; padding: 14px; background: #2563eb; color: #fff; border: none; border-radius: 8px; font-family: 'Manrope'; font-weight: 700; font-size: 15px; cursor: pointer; transition: 0.3s; box-shadow: 0 4px 10px rgba(37,99,235,0.2); }
+        .btn-primary:hover { background: #1d4ed8; transform: translateY(-2px); }
+        .btn-primary:disabled { background: #94a3b8; cursor: not-allowed; transform: none; box-shadow: none; }
+
+        .form-footer { text-align: center; margin-top: 25px; font-size: 14px; color: #64748b; font-weight: 600; }
+        .form-footer a { color: #2563eb; text-decoration: none; font-weight: 800; }
+        .form-footer a:hover { text-decoration: underline; }
+
+        .error-msg { color: #ef4444; font-size: 12px; font-weight: 700; margin-top: 5px; display: none; }
+    </style>
+</head>
+<body>
+
+    <div class="auth-container">
+        <div class="brand-header">
+            <h1>Xplainer<span>Guru</span></h1>
+            <p>Create your free learning account</p>
+        </div>
+
+        <form id="signupForm" onsubmit="handleSignup(event)">
+            
+            <div class="input-group">
+                <label>I am joining as a...</label>
+                <select id="su-role" class="input-field" required>
+                    <option value="student" selected>Student / Learner</option>
+                    <option value="parent">Parent</option>
+                    <option value="student_writer">Student Article Writer</option>
+                    <option value="writer">Content Writer (Team)</option>
+                    <option value="mentor">Academic Mentor (Team)</option>
+                    <option value="support">Tech Support (Team)</option>
+                </select>
+            </div>
+
+            <div class="input-group">
+                <label>Full Name</label>
+                <input type="text" id="su-name" class="input-field" placeholder="Enter your full name" required>
+            </div>
+            
+            <div class="input-group">
+                <label>Email Address</label>
+                <input type="email" id="su-email" class="input-field" placeholder="student@gmail.com" required>
+                <small class="form-text" style="color: #ef4444; font-size: 11px; margin-top: 4px; display: block;">* Note: This cannot be changed later.</small>
+                <div id="email-error" class="error-msg"><i class="fa-solid fa-triangle-exclamation"></i> Temporary emails are not allowed!</div>
+            </div>
+
+            <div class="input-group">
+                <label>WhatsApp Number</label>
+                <input type="tel" id="su-phone" class="input-field" placeholder="10-digit mobile number" required>
+                <div id="phone-error" class="error-msg"><i class="fa-solid fa-triangle-exclamation"></i> Enter a valid 10-digit Indian number.</div>
+            </div>
+
+            <div class="input-group">
+                <label>Password</label>
+                <input type="password" id="su-password" class="input-field" placeholder="Create a strong password (min 6 chars)" minlength="6" required>
+            </div>
+
+            <button type="submit" id="signupBtn" class="btn-primary">Create Account</button>
+        </form>
+
+        <div class="form-footer">
+            Already have an account? <a href="login.html">Sign In here</a>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
+    <script src="js/firebase-init.js"></script>
+    <script>
+        const auth = firebase.auth();
+        const db = firebase.firestore(); // 🟢 Fixed: Added explicitly for safe DB operations
+
+        // 🛡️ THE SPAM SHIELD
+        const tempMailBlacklist = [
+            "10minutemail.com", "temp-mail.org", "guerrillamail.com", "yopmail.com", 
+            "mailinator.com", "tempmail.plus", "dispostable.com", "sharklasers.com"
+        ];
+
+        // 🚀 APPS SCRIPT URL (Make sure this is your NEW deployed Script URL)
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw7HnmqV789rjclioBMa2kwNELRkrMqECh21e3pzyqosok6Q371TNW4aiVLBb4rE0Zk/exec";
+
+        async function handleSignup(event) {
+            event.preventDefault(); 
+            
+            const btn = document.getElementById('signupBtn');
+            const emailError = document.getElementById('email-error');
+            const phoneError = document.getElementById('phone-error');
+            
+            emailError.style.display = 'none';
+            phoneError.style.display = 'none';
+
+            const role = document.getElementById('su-role').value;
+            const name = document.getElementById('su-name').value.trim();
+            const email = document.getElementById('su-email').value.trim().toLowerCase();
+            const phone = document.getElementById('su-phone').value.trim();
+            const password = document.getElementById('su-password').value;
+
+            // Validation
+            const phoneRegex = /^[6-9]\d{9}$/;
+            if (!phoneRegex.test(phone)) { phoneError.style.display = 'block'; return; }
+            const domain = email.split('@')[1];
+            if (tempMailBlacklist.includes(domain)) { emailError.style.display = 'block'; return; }
+
+            const originalBtnText = btn.innerHTML;
+            btn.disabled = true;
+            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Creating Profile...`;
+
+            try {
+                // 1. Create User in Firebase Auth
+                const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+                const user = userCredential.user;
+                await user.updateProfile({ displayName: name });
+
+                // 2. 🟢 STATUS LOGIC (Active vs Pending)
+                const isTeamMember = (role !== 'student' && role !== 'parent');
+                const accountStatus = isTeamMember ? "pending" : "active";
+
+                // 3. Save to Firebase (100% Unchanged Structure)
+                await db.collection("users").doc(user.uid).set({
+                    uid: user.uid,
+                    name: name,
+                    email: email,
+                    whatsapp: phone,
+                    role: role,
+                    accountStatus: accountStatus, 
+                    publicProfile: false,
+                    joined: firebase.firestore.FieldValue.serverTimestamp()
+                });
+
+                // 4. Send Firebase Auth Verification Email
+                await user.sendEmailVerification();
+
+                // 5. 🟢 SEND DATA TO GOOGLE SHEET & TRIGGER ROLE-BASED EMAILS
+                const params = new URLSearchParams();
+                params.append("action", "signup_user");
+                params.append("name", name);
+                params.append("email", email);
+                params.append("phone", phone);
+                params.append("role", role);
+                params.append("status", accountStatus);
+
+                fetch(SCRIPT_URL, { 
+                    method: 'POST', 
+                    mode: 'no-cors', 
+                    body: params 
+                }).catch(e => console.log("Silent AppScript Fail", e));
+
+                // 6. Final UX & Redirect
+                if(accountStatus === "pending") {
+                    alert("✅ Application Submitted! Your account is under review. Please check your email for updates.");
+                    window.location.href = "login.html"; // Redirect to login, they can't access dashboard yet
+                } else {
+                    alert("🎉 Account created successfully! We've sent a verification link to your email.");
+                    window.location.href = "dashboard.html"; // Students go straight to dashboard
+                }
+
+            } catch (error) {
+                console.error("Signup Error:", error);
+                if (error.code === 'auth/email-already-in-use') {
+                    alert("This email is already registered! Please Login instead.");
+                } else {
+                    alert("Error: " + error.message);
+                }
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = originalBtnText;
+            }
+        }
+    </script>
+</body>
+</html>

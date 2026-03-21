@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <title>Xplainer Guru | Team Workspace</title>
+
+    <link rel="icon" href="data:,">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Poppins:wght@600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+
+    <style>
+        /* SAFE AREA FOR MASTER.JS UNIVERSAL HEADER & FOOTER */
+        .dashboard-container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+            min-height: 80vh;
+            font-family: 'Manrope', sans-serif;
+        }
+
+        .page-header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 25px;
+            width: 100%;
+        }
+
+        .portal-tag {
+            display: inline-block;
+            font-weight: 800;
+            color: #4f46e5;
+            font-size: 20px;
+            background: #e0e7ff;
+            padding: 10px 20px;
+            border-radius: 50px;
+            border: 1px solid #c7d2fe;
+        }
+
+        .dash-card {
+            background: white;
+            border-radius: 16px;
+            padding: clamp(15px, 3vw, 25px);
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
+        }
+
+        .admin-btn {
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.2s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            font-family: 'Manrope';
+        }
+
+        .admin-btn:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="loader"
+        style="position: fixed; inset: 0; background: white; z-index: 99999; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+        <i class="fa-solid fa-spinner fa-spin fa-2x" style="color: #4f46e5;"></i>
+        <p style="margin-top: 15px; font-weight: 700; color: #4f46e5; font-family: 'Manrope';">Loading Secure
+            Workspace...</p>
+    </div>
+
+    <div class="dashboard-container" id="dashboard-main-content" style="display: none;">
+
+        <div class="page-header-row">
+            <span class="portal-tag" id="workspace-title"><i class="fa-solid fa-briefcase"></i> Team Workspace</span>
+            <div
+                style="font-weight: 800; color: #64748b; font-size: 14px; background: white; padding: 8px 15px; border-radius: 8px; border: 1px solid #e2e8f0;">
+                Role: <span id="display-role" style="color: #0f172a; text-transform: uppercase;">Checking...</span>
+            </div>
+        </div>
+
+        <div id="inject-my-desk"></div>
+
+        <div id="inject-smart-pool"></div>
+
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
+
+    <script src="js/firebase-init.js"></script>
+    <script src="js/components.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/master.js"></script>
+    <script>
+        // ==========================================
+        // TICKET CLAIMING LOGIC (The Desk Engine)
+        // ==========================================
+        let isDeskOccupied = false;
+
+        function claimTicket(ticketCardId, id, title, desc) {
+            if (isDeskOccupied) {
+                alert("⚠️ Rule Violation: You already have an active ticket on your desk. Please solve or escalate it first before picking another.");
+                return;
+            }
+
+            // 1. Move data to Desk UI
+            document.getElementById('active-tkt-id').innerText = id;
+            document.getElementById('active-tkt-title').innerText = title;
+            document.getElementById('active-tkt-desc').innerText = desc;
+            
+            // 2. Toggle Desk UI states
+            document.getElementById('desk-empty-state').style.display = 'none';
+            document.getElementById('desk-active-state').style.display = 'block';
+            
+            isDeskOccupied = true;
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function releaseTicket() {
+            if(confirm("Action Confirmed? This ticket will be removed from your desk.")) {
+                document.getElementById('desk-active-state').style.display = 'none';
+                document.getElementById('desk-empty-state').style.display = 'block';
+                isDeskOccupied = false;
+            }
+        }
+
+        // 🟢 NEW: FIREBASE FETCH - Load Pending Tickets Live
+        function fetchPendingTickets() {
+            const db = firebase.firestore();
+
+            // Listen to all pending tickets in real-time
+            db.collection('tickets').where('status', '==', 'pending')
+              .onSnapshot((snapshot) => {
+                  
+                const academicList = document.getElementById('academic-ticket-list');
+                const techList = document.getElementById('tech-ticket-list');
+                
+                let academicHtml = ''; let techHtml = '';
+                let acount = 0; let tcount = 0;
+
+                snapshot.forEach(doc => {
+                    const t = doc.data();
+                    const tId = doc.id;
+                    const dateStr = t.timestamp ? t.timestamp.toDate().toLocaleDateString('en-GB') : 'Just now';
+
+                    // Clean string for JS injection
+                    const safeTitle = (t.subject || "No Title").replace(/'/g, "\\'");
+                    const safeDesc = (t.description || "").replace(/'/g, "\\'");
+
+                    const ticketCard = `
+                        <div class="dash-card" style="margin-bottom: 15px; border-left: 4px solid ${t.category === 'academic' ? '#2563eb' : '#8b5cf6'};">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                <span style="font-size: 11px; font-weight: 800; color: #64748b;">#${tId.substring(0,6).toUpperCase()}</span>
+                                <span style="font-size: 11px; color: #94a3b8;"><i class="fa-regular fa-clock"></i> ${dateStr}</span>
+                            </div>
+                            <h4 style="margin: 0 0 5px; font-size: 15px; color: #0f172a;">${t.subject}</h4>
+                            <p style="margin: 0 0 15px; font-size: 13px; color: #475569;">${t.description}</p>
+                            
+                            <button onclick="claimTicket('ticket-${tId}', '${tId}', '${safeTitle}', '${safeDesc}')" class="admin-btn" style="background: #0f172a; width: 100%; font-size: 13px;">
+                                <i class="fa-solid fa-hand-sparkles"></i> Claim Ticket
+                            </button>
+                        </div>
+                    `;
+
+                    if (t.category === 'academic') { academicHtml += ticketCard; acount++; }
+                    else { techHtml += ticketCard; tcount++; }
+                });
+
+                // Safely Inject Data if the Pool exists on the screen
+                if(academicList) {
+                    academicList.innerHTML = acount > 0 ? academicHtml : '<div style="text-align:center; padding: 20px; color:#94a3b8;">No pending academic doubts! 🎉</div>';
+                    if(document.getElementById('academic-count')) document.getElementById('academic-count').innerText = acount;
+                }
+                if(techList) {
+                    techList.innerHTML = tcount > 0 ? techHtml : '<div style="text-align:center; padding: 20px; color:#94a3b8;">No pending tech issues! 🎉</div>';
+                    if(document.getElementById('tech-count')) document.getElementById('tech-count').innerText = tcount;
+                }
+            }, (error) => {
+                console.error("Error fetching tickets:", error);
+            });
+        }
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            if (window.authManager && typeof XGComponents !== 'undefined') {
+                window.authManager.initializeAuthListener((user, userData) => {
+                    
+                    if (!user) {
+                        window.location.href = "login.html"; 
+                        return;
+                    }
+
+                    // 1. Identify User's Role
+                    let role = "student"; 
+                    if (userData && userData.role) role = userData.role;
+                    
+                    // Master Override for Founders
+                    if (user.uid === "XCxglOl7FzLyRIFgl4SXNiW9VKA3" || user.uid === "EZpI9ea4b0X8x8vOhxzar5KNzAw1") {
+                        role = "founder";
+                    }
+
+                    document.getElementById('display-role').innerText = role;
+
+                    // 2. INJECT WIDGETS BASED ON ROLE
+                    injectComponent('inject-my-desk', XGComponents.getMyDeskWidget());
+
+                    const poolContainer = document.getElementById('inject-smart-pool');
+                    poolContainer.innerHTML = ''; 
+
+                    if (role === 'mentor') {
+                        document.getElementById('workspace-title').innerHTML = '<i class="fa-solid fa-graduation-cap"></i> Mentor Portal';
+                        injectComponent('inject-smart-pool', XGComponents.getAcademicPoolWidget());
+                    } else if (role === 'support') {
+                        document.getElementById('workspace-title').innerHTML = '<i class="fa-solid fa-headset"></i> Support Portal';
+                        injectComponent('inject-smart-pool', XGComponents.getTechPoolWidget());
+                    } else if (role === 'admin' || role === 'founder') {
+                        document.getElementById('workspace-title').innerHTML = '<i class="fa-solid fa-eye"></i> Oversight Portal';
+                        const academicPool = XGComponents.getAcademicPoolWidget();
+                        const techPool = XGComponents.getTechPoolWidget();
+                        poolContainer.innerHTML = academicPool + techPool;
+                    } else {
+                        alert("Unauthorized Access. Redirecting to Student Dashboard.");
+                        window.location.href = "dashboard.html";
+                        return;
+                    }
+
+                    // 🟢 FIX: Start fetching real tickets from Firebase AFTER pools are injected
+                    fetchPendingTickets();
+
+                    setTimeout(() => {
+                        document.getElementById('loader').style.display = 'none';
+                        document.getElementById('dashboard-main-content').style.display = 'block';
+                    }, 1000);
+                });
+            } else {
+                alert("Critical System Error: Auth or Components not loaded.");
+            }
+        });
+    </script>
+</body>
+
+</html>

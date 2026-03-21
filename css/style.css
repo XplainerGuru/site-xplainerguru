@@ -1,0 +1,312 @@
+/* ==========================================
+   1. GLOBAL RESET & SAFE DEFAULTS
+========================================== */
+:root { 
+    --primary: #2563eb; 
+    --sidebar-bg: #0f172a; 
+    --bg: #f8fafc; 
+    --text-main: #0f172a; 
+    --text-muted: #64748b; 
+    --border: #e2e8f0; 
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body { 
+    font-family: 'Manrope', sans-serif; 
+    background-color: var(--bg); 
+    color: var(--text-main);
+    overflow-x: hidden; /* Screen ke bahar scroll block */
+    width: 100%; /* 100vw ki jagah 100% safe hota hai */
+}
+
+/* Global Navbar - Taki baaki public pages kharab na hon */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    background: #ffffff;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+/* ==========================================
+   2. HIDE MASTER.JS GARBAGE
+========================================== */
+body:has(> .dashboard-wrapper) > header.navbar,
+body:has(> .dashboard-wrapper) > #drawer,
+body:has(> .dashboard-wrapper) > #drawer-mask,
+body:has(> .dashboard-wrapper) > footer {
+    display: none !important;
+}
+
+body:has(> .dashboard-wrapper) {
+    padding-top: 0 !important; /* Override master.js global padding */
+}
+
+/* ==========================================
+   3. HIGHEST PRIORITY: LOADERS & POPUPS
+========================================== */
+/* Verifying Loader ab hamesha sabse upar rahega */
+#loader {
+    position: fixed;
+    inset: 0;
+    background: white;
+    z-index: 999999 !important; 
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Notification & Broadcast Popups ab chhupege nahi */
+.push-prompt-overlay, .bcast-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(15,23,42,0.8);
+    z-index: 999999 !important; 
+    display: none;
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(4px);
+    padding: 20px;
+}
+
+.push-prompt-card, .bcast-card {
+    background: white;
+    width: 100%;
+    max-width: 450px; /* Mobile par apne aap adjust hoga */
+    border-radius: 20px;
+    padding: clamp(20px, 4vw, 30px);
+    text-align: center;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+}
+
+/* ==========================================
+   4. DASHBOARD LAYOUT & SIDEBAR
+========================================== */
+.dashboard-wrapper {
+    display: flex;
+    align-items: flex-start;
+    width: 100%;
+    min-height: calc(100vh - var(--god-mode-height, 0px));
+}
+
+.sidebar {
+    width: 260px;
+    background: var(--sidebar-bg);
+    color: white;
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    position: sticky; 
+    top: var(--god-mode-height, 0px);
+    height: calc(100vh - var(--god-mode-height, 0px));
+    overflow-y: auto;
+    z-index: 100;
+    left: 0; /* Ensures it stays visible on desktop */
+    transition: left 0.3s ease-in-out;
+}
+
+.sidebar .brand { padding: 20px 25px; font-family: 'Poppins', sans-serif; font-size: 22px; font-weight: 800; border-bottom: 1px solid rgba(255,255,255,0.1); color: #fff !important; display: block !important; text-decoration: none; }
+.sidebar .brand span { color: #38bdf8 !important; }
+
+.sidebar .user-info { padding: 20px 25px; display: flex; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.05); margin-bottom: 15px; gap: 15px;}
+.sidebar .user-info img { width: 45px; height: 45px; border-radius: 50%; border: 2px solid #38bdf8; object-fit: cover; }
+.sidebar .user-info h4 { font-family: 'Poppins', sans-serif; font-size: 15px; margin: 0; color: #fff; }
+.sidebar .user-info div#u-id { font-size: 11px; color: #94a3b8; font-family: monospace; font-weight: 800; margin-top: 2px;}
+
+.sidebar .menu-area { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; flex: 1; }
+.sidebar .menu-item { padding: 15px 25px; display: flex; align-items: center; gap: 12px; color: #94a3b8; cursor: pointer; font-weight: 600; transition: 0.2s; border-left: 4px solid transparent; text-decoration: none; font-size: 14px;}
+.sidebar .menu-item:hover { color: #fff; background: #1e293b; }
+.sidebar .menu-item.active { background: #1e293b; color: white; border-left-color: var(--primary); }
+
+.sidebar .submenu { list-style: none; padding: 5px 0 10px 25px; background: rgba(0,0,0,0.2); display: none; }
+.sidebar .has-submenu.active > .submenu { display: block; }
+.sidebar .submenu a { display: block; padding: 10px 15px; color: #94a3b8; text-decoration: none; font-size: 13px; font-weight: 600; transition: 0.2s; border-radius: 6px; }
+.sidebar .submenu a:hover { color: #fff; background: rgba(255,255,255,0.05); }
+
+/* ==========================================
+   5. WORKSPACE & CENTERED PORTAL TAG
+========================================== */
+.main-content {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.top-bar { 
+    position: relative !important; /* Overrides master.js global fixed header */
+    width: 100% !important; /* Keeps the top bar neatly bound inside the main-content area */
+    height: 65px !important; 
+    background: white; 
+    border-bottom: 1px solid var(--border); 
+    display: flex; 
+    align-items: center; 
+    justify-content: space-between; 
+    padding: 0 20px; 
+    flex-shrink: 0;
+    z-index: 10;
+}
+.workspace { padding: clamp(15px, 3vw, 30px); flex: 1; overflow-y: auto; }
+
+/* Centered Portal Tag CSS */
+.portal-tag-container { text-align: center; margin-bottom: 20px; width: 100%; }
+.portal-tag { display: inline-block; font-weight: 800; color: var(--primary); font-size: clamp(16px, 2vw, 20px); font-family: 'Poppins', sans-serif; background: #eff6ff; padding: 10px 20px; border-radius: 50px; border: 1px solid #bfdbfe; }
+
+.auth-btn { background: #ef4444; color: white; border: none; padding: 8px 16px; border-radius: 8px; font-weight: 700; cursor: pointer; font-family: 'Manrope'; display: inline-flex; align-items: center; gap: 8px; font-size: 13px; }
+
+/* ==========================================
+   6. CARDS, TABLES & NOTIFICATIONS (Fluid)
+========================================== */
+.dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; width: 100%;}
+.dash-card { background: white; border-radius: 16px; padding: clamp(15px, 3vw, 25px); border: 1px solid var(--border); box-shadow: 0 4px 15px rgba(0,0,0,0.02); width: 100%; overflow: hidden;}
+.dash-card h3 { margin: 0 0 15px; font-family: 'Poppins', sans-serif; color: var(--text-main); display: flex; align-items: center; gap: 10px; font-size: clamp(15px, 2vw, 17px); }
+
+.welcome-banner { background: linear-gradient(135deg, #2563eb, #8b5cf6); color: white; padding: clamp(20px, 4vw, 30px); border-radius: 16px; margin-bottom: 20px; }
+.welcome-banner h1 { margin: 0 0 8px; font-family: 'Poppins', sans-serif; font-size: clamp(20px, 3vw, 26px); }
+
+/* RESTORED: Tables CSS for Tickets */
+.table-responsive { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: 8px; }
+.data-table { width: 100%; border-collapse: collapse; min-width: 500px; font-size: 13px; }
+.data-table th { padding: 14px 15px; border-bottom: 2px solid var(--border); color: var(--text-muted); font-weight: 800; font-size: 12px; text-transform: uppercase; text-align: left; background:#f8fafc;}
+.data-table td { padding: 14px 15px; border-bottom: 1px solid var(--border); vertical-align: middle; color: var(--text-main); }
+.data-table tbody tr:hover { background: #f8fafc; }
+.status-badge { padding: 4px 8px; border-radius: 6px; font-size: 10px; font-weight: 800; text-transform: uppercase; display: inline-block; }
+.ticket-id { font-family: monospace; background: #f1f5f9; padding: 2px 6px; border-radius: 4px; font-weight: 700; color: var(--text-muted); border: 1px solid var(--border);}
+.action-btn { border: none; padding: 8px 14px; border-radius: 8px; cursor: pointer; font-size: 12px; font-weight: 700; font-family: 'Manrope'; display: inline-flex; align-items: center; gap: 6px; color: white;}
+
+/* Bell & Dropdown */
+.bell-wrapper { position: relative; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 50%; background: #f8fafc; border: 1px solid var(--border); }
+.badge-unread { background: #ef4444; color: white; border-radius: 50%; padding: 2px 5px; font-size: 10px; font-weight: 800; position: absolute; top: -5px; right: -5px; display: none; }
+#notification-dropdown { position: absolute; top: 50px; right: 0; width: clamp(260px, 90vw, 300px); max-width: calc(100vw - 40px); background: white; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.15); border: 1px solid var(--border); display: none; flex-direction: column; z-index: 10000; }
+#notification-dropdown.active { display: flex; }
+
+/* ==========================================
+   7. TRUE MOBILE RESPONSIVE FIXES
+========================================== */
+@media (max-width: 768px) {
+    .dashboard-wrapper { flex-direction: column; }
+    
+    .sidebar {
+        position: fixed;
+        left: -280px; /* Fully hidden off screen */
+        top: 0; 
+        height: 100vh;
+        width: 260px;
+        z-index: 99999 !important; /* Sidebar over navbar */
+    }
+    
+    .sidebar.open { left: 0; box-shadow: 10px 0 30px rgba(0, 0, 0, 0.5); }
+    
+    .sidebar-overlay {
+        position: fixed; inset: 0; top: 0;
+        background: rgba(15, 23, 42, 0.6);
+        z-index: 99998 !important; 
+        display: none;
+        backdrop-filter: blur(2px);
+    }
+    .sidebar-overlay.active { display: block; }
+    
+    /* Make sure notification dropdown doesn't go off-screen on mobile */
+    #notification-dropdown { right: -10px; }
+    
+    .dashboard-grid { grid-template-columns: 1fr; }
+}
+
+/* ==========================================
+   8. FINAL OVERRIDE & CONFLICT FIXES
+========================================== */
+
+/* --- Fix for Moved Icons --- */
+.workspace-actions { display: flex; justify-content: flex-end; gap: 15px; margin-bottom: 20px; width: 100%; }
+
+/* --- Fix for Missing Form Styles --- */
+.ticket-input { width: 100%; padding: 12px 15px; border: 1px solid var(--border); border-radius: 8px; font-family: 'Manrope'; font-size: 14px; box-sizing: border-box; outline: none; transition: 0.3s; background: #f8fafc; margin-top: 6px; }
+.ticket-input:focus { border-color: #2563eb; background: #fff; box-shadow: 0 0 0 3px rgba(37,99,235,0.1); }
+.submit-ticket-btn { background: #2563eb; color: white; border: none; padding: 12px 20px; border-radius: 8px; font-weight: 700; cursor: pointer; font-family: 'Manrope'; transition: 0.2s; width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 14px;}
+.submit-ticket-btn:hover { background: #1d4ed8; transform: translateY(-2px); }
+
+/* --- Fix for Missing Broadcast Modal Styles --- */
+.bcast-overlay { display: flex; }
+.bcast-card { background: white; width: 90%; max-width: 500px; border-radius: 16px; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.3); }
+.bcast-header { background: #f59e0b; color: #0f172a; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; font-family: 'Poppins', sans-serif; font-weight: 800; }
+.bcast-header button { background: none; border: none; font-size: 24px; color: #0f172a; cursor: pointer; }
+.bcast-body { padding: 20px; display: flex; flex-direction: column; gap: 15px; }
+.bcast-input { width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 8px; font-family: 'Manrope'; box-sizing: border-box; outline: none; }
+.bcast-input:focus { border-color: #f59e0b; }
+.bcast-send-btn { background: #0f172a; color: white; border: none; padding: 12px; border-radius: 8px; font-weight: 800; cursor: pointer; transition: 0.3s; }
+.bcast-send-btn:hover { background: #1e293b; }
+
+/* --- Fix for Hidden Desktop Sidebar --- */
+@media (min-width: 769px) {
+    .sidebar {
+        position: sticky !important;
+        left: 0 !important;
+    }
+    .hamburger-btn {
+        display: none !important;
+    }
+    .mobile-brand-logo { display: none !important; }
+}
+
+/* --- Fix for Raw Submenu Links --- */
+.sidebar .submenu { list-style: none; padding: 5px 0 10px 25px; background: rgba(0,0,0,0.2); display: none; }
+.sidebar .has-submenu.active > .submenu { display: block; }
+.sidebar .submenu a { display: block; padding: 10px 15px; color: #94a3b8; text-decoration: none; font-size: 13px; font-weight: 600; transition: 0.2s; border-radius: 6px; }
+.sidebar .submenu a:hover { color: #fff; background: rgba(255,255,255,0.05); }
+.sidebar .has-submenu > a .arrow { transition: transform 0.3s; display: inline-block; font-size: 10px; }
+.sidebar .has-submenu.active > a .arrow { transform: rotate(180deg); }
+/* --- 1. HEADER ROW CENTERING (Portal Name Fix) --- */
+.page-header-row {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr; /* Center column takes exactly what it needs */
+    align-items: center;
+    width: 100%;
+    margin-bottom: 25px;
+    gap: 15px;
+}
+
+/* Mobile Friendly Header */
+@media (max-width: 768px) {
+    .page-header-row {
+        grid-template-columns: 1fr; /* Stack everything on top of each other */
+        text-align: center;
+    }
+    .workspace-actions {
+        justify-content: center !important;
+        margin-top: 10px;
+    }
+}
+
+/* --- 2. DESKTOP SIDEBAR LOCK (Force Visible) --- */
+@media (min-width: 769px) {
+    .sidebar {
+        position: sticky !important;
+        left: 0 !important;
+        display: flex !important;
+        width: 260px !important;
+        transform: none !important;
+    }
+    .hamburger-btn { display: none !important; }
+}
+
+/* --- 3. FLUID FONT & OVERFLOW CONTROL --- */
+.portal-tag {
+    font-size: clamp(16px, 2.5vw, 20px) !important;
+    white-space: nowrap;
+}
+
+/* --- 4. FORM & BROADCAST MODAL CSS --- */
+.ticket-input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    font-family: inherit;
+    margin-top: 5px;
+}
+.bcast-overlay {
+    z-index: 999999 !important; /* Above everything */
+}

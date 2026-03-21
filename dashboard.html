@@ -1,252 +1,739 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Dashboard | Xplainer Guru</title>
-    
-    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=Poppins:wght@700;800&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <title>Xplainer Guru | Student Dashboard</title>
+
+    <link rel="icon" href="data:,">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Poppins:wght@600;700;800&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <script src="content.js"></script>
-    <script src="master.js" defer></script>
-    
+    <link rel="stylesheet" href="css/style.css">
+
     <style>
-        /* BASE STYLES FIX: Removed padding-bottom from body so footer stays at absolute bottom */
-        body { background: #f8fafc; font-family: 'Manrope', sans-serif; margin: 0; padding-top: 100px; }
-        
-        /* Container ab saara space cover karega aur footer ko niche dhakel dega */
-        .container { max-width: 600px; margin: 0 auto 50px; padding: 0 20px; flex: 1; width: 100%; box-sizing: border-box; }
-        
-        /* CARD STYLES */
-        .card { background: #fff; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.04); padding: 35px; border: 1px solid #f1f5f9; }
-        
-        /* HOME BUTTON */
-        .back-home { display: inline-block; color: #64748b; text-decoration: none; font-size: 14px; font-weight: 700; margin-bottom: 20px; transition: 0.2s; }
-        .back-home:hover { color: #2563eb; transform: translateX(-3px); }
+        /* SAFE AREA FOR MASTER.JS UNIVERSAL HEADER & FOOTER */
+        .dashboard-container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+            min-height: 80vh;
+            font-family: 'Manrope', sans-serif;
+        }
 
-        /* PROFILE HEADER */
-        .profile-header { display: flex; align-items: center; gap: 20px; }
-        
-        /* PROFILE PIC WITH PENCIL */
-        .pic-wrapper { position: relative; width: 90px; height: 90px; border-radius: 50%; cursor: pointer; flex-shrink: 0; }
-        .pic-wrapper img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; background: #000080; }
-        .edit-pic-badge { position: absolute; bottom: 0; right: 0; background: #2563eb; color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; border: 2px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
-        
-        .profile-info h2 { font-family: 'Poppins'; font-size: 1.6rem; color: #0f172a; margin: 0 0 5px; }
-        .profile-info p { margin: 0; color: #64748b; font-size: 15px; font-weight: 500; }
-        
-        hr { border: none; border-top: 1px solid #e2e8f0; margin: 30px 0; }
-        
-        /* DETAILS SECTION */
-        .detail-group { margin-bottom: 25px; text-align: left; }
-        .detail-group label { display: block; font-size: 12px; font-weight: 800; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
-        .detail-group p { margin: 0; font-size: 16px; color: #0f172a; font-weight: 500; }
-        
-        /* INPUTS (For Edit Mode) */
-        .input-field { width: 100%; padding: 14px 15px; border: 1px solid #e2e8f0; border-radius: 8px; font-family: 'Manrope'; font-size: 15px; box-sizing: border-box; transition: 0.3s; color: #0f172a; }
-        .input-field:focus { border-color: #2563eb; outline: none; }
-        .input-readonly { background: #f8fafc; color: #64748b; cursor: not-allowed; }
-        
-        /* BUTTONS */
-        .btn-row { display: flex; gap: 15px; margin-top: 10px; }
-        .btn { flex: 1; padding: 14px; border-radius: 10px; font-family: 'Manrope'; font-weight: 700; font-size: 15px; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.2s; }
-        
-        .btn-blue { background: #2563eb; color: #fff; }
-        .btn-blue:hover { background: #1d4ed8; }
-        
-        .btn-red-light { background: #fee2e2; color: #ef4444; }
-        .btn-red-light:hover { background: #fecaca; }
-        
-        .btn-gray { background: #f1f5f9; color: #0f172a; }
-        .btn-gray:hover { background: #e2e8f0; }
+        .page-header-row {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 25px;
+            width: 100%;
+        }
 
-        .btn-solid-red { background: #ef4444; color: #fff; width: 100%; margin-top: 15px; }
-        .btn-solid-red:hover { background: #dc2626; }
+        .portal-tag {
+            display: inline-block;
+            font-weight: 800;
+            color: #2563eb;
+            font-size: 20px;
+            background: #eff6ff;
+            padding: 10px 20px;
+            border-radius: 50px;
+            border: 1px solid #bfdbfe;
+        }
 
-        .hidden { display: none !important; }
-        
-        @media (max-width: 600px) {
-            .btn-row { flex-direction: column; }
-            .card { padding: 25px; }
+        /* --- TEST ANALYSIS TABLE CSS --- */
+        .test-analysis-card {
+            background: #fff;
+            border-radius: 16px;
+            padding: clamp(15px, 3vw, 25px);
+            border: 1px solid #e2e8f0;
+            margin-top: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
+        }
+
+        .test-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        .test-table th {
+            text-align: left;
+            padding: 12px;
+            border-bottom: 2px solid #f1f5f9;
+            color: #64748b;
+            font-weight: 800;
+            font-size: 11px;
+            text-transform: uppercase;
+        }
+
+        .test-table td {
+            padding: 12px;
+            border-bottom: 1px solid #f1f5f9;
+            font-weight: 600;
+            font-size: 14px;
+            color: #0f172a;
+        }
+
+        .score-pill {
+            padding: 4px 10px;
+            border-radius: 50px;
+            font-weight: 800;
+            font-size: 12px;
+        }
+
+        .score-high {
+            background: #dcfce7;
+            color: #16a34a;
+        }
+
+        .score-low {
+            background: #fee2e2;
+            color: #ef4444;
+        }
+
+        /* --- CHATBOT & MODAL CSS --- */
+        .xg-bot-fab {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            background: #2563eb;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.4);
+            cursor: pointer;
+            z-index: 9999;
+            transition: 0.3s;
+        }
+
+        .xg-bot-fab:hover {
+            transform: scale(1.1);
+            background: #1d4ed8;
+        }
+
+        .xg-bot-modal {
+            position: fixed;
+            bottom: 90px;
+            right: 20px;
+            width: clamp(280px, 90vw, 350px);
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            display: none;
+            flex-direction: column;
+            z-index: 10000;
+            overflow: hidden;
+            border: 1px solid #e2e8f0;
+        }
+
+        .xg-bot-header {
+            background: #1e293b;
+            color: white;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .xg-bot-header h3 {
+            margin: 0;
+            font-size: 15px;
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .xg-bot-actions {
+            display: flex;
+            gap: 15px;
+        }
+
+        .xg-bot-actions button {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
+            opacity: 0.7;
+            transition: 0.2s;
+            padding: 0;
+        }
+
+        .xg-bot-actions button:hover {
+            opacity: 1;
+            color: #ef4444;
+        }
+
+        .xg-bot-body {
+            padding: 20px;
+            height: 380px;
+            overflow-y: auto;
+            background: #f8fafc;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            scroll-behavior: smooth;
+        }
+
+        .xg-bot-footer {
+            padding: 12px 15px;
+            text-align: center;
+            background: white;
+            border-top: 1px solid #e2e8f0;
+            font-size: 10px;
+            color: #94a3b8;
+            font-family: 'Manrope';
+        }
+
+        .push-prompt-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.8);
+            z-index: 11000;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(4px);
         }
     </style>
 </head>
+
 <body>
-
-    <div class="container">
-        
-        <div id="view-profile" class="card">
-            <a href="index.html" class="back-home"><i class="fa-solid fa-arrow-left"></i> Back to Home</a>
-            
-            <div class="profile-header">
-                <div class="pic-wrapper" onclick="document.getElementById('profilePicInput').click()" title="Change Profile Photo">
-                    <img id="display-pic" src="" alt="Profile">
-                    <div class="edit-pic-badge"><i class="fa-solid fa-pencil"></i></div>
-                    <input type="file" id="profilePicInput" hidden accept="image/*" onchange="uploadNewPic(this)">
-                </div>
-                
-                <div class="profile-info">
-                    <h2 id="display-name">Loading...</h2>
-                    <p>Student Account</p>
-                </div>
-            </div>
-            
-            <hr>
-            
-            <div class="detail-group">
-                <label>EMAIL ADDRESS</label>
-                <p id="display-email">loading...</p>
-            </div>
-            
-            <div class="detail-group">
-                <label>WHATSAPP NUMBER</label>
-                <p id="display-phone">loading...</p>
-            </div>
-            
-            <div class="btn-row">
-                <button class="btn btn-blue" onclick="toggleEditMode(true)">
-                    <i class="fa-solid fa-pencil"></i> Edit Profile
-                </button>
-                <button class="btn btn-red-light" onclick="switchAccount()">
-                    <i class="fa-solid fa-users"></i> Switch Account
-                </button>
-            </div>
-            
-            <button class="btn btn-solid-red" onclick="handleLogout()">
-                <i class="fa-solid fa-power-off"></i> Log Out
-            </button>
-        </div>
-
-        <div id="edit-profile" class="card hidden">
-            <h2 style="font-family: 'Poppins'; color: #0f172a; margin-top: 0; margin-bottom: 25px;">Edit Profile</h2>
-            
-            <div class="detail-group">
-                <label>FULL NAME</label>
-                <input type="text" id="edit-name" class="input-field">
-            </div>
-            
-            <div class="detail-group">
-                <label>EMAIL ADDRESS (CANNOT BE CHANGED)</label>
-                <input type="text" id="edit-email" class="input-field input-readonly" readonly>
-            </div>
-            
-            <div class="detail-group">
-                <label>WHATSAPP NUMBER</label>
-                <input type="text" id="edit-phone" class="input-field">
-            </div>
-            
-            <div class="btn-row" style="margin-top: 30px;">
-                <button class="btn btn-gray" onclick="toggleEditMode(false)">Cancel</button>
-                <button class="btn btn-blue" onclick="saveProfileChanges()">Save Changes</button>
-            </div>
-        </div>
-
+    <div class="page-header-row"><span>For beter experience on mobile please use desktop site</span></div>
+    <div id="loader"
+        style="position: fixed; inset: 0; background: white; z-index: 99999; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+        <i class="fa-solid fa-spinner fa-spin fa-2x" style="color: #2563eb;"></i>
+        <p style="margin-top: 15px; font-weight: 700; color: #2563eb; font-family: 'Manrope';">Verifying Session...</p>
     </div>
 
+    <div class="dashboard-container" id="dashboard-main-content" style="display: none;">
+
+        <div class="page-header-row">
+            <span class="portal-tag" id="portal-title">Student Portal</span>
+        </div>
+
+        <div id="dynamic-views-container">
+
+            <div id="student-view" style="display: none;">
+                <div class="welcome-banner"
+                    style="background: linear-gradient(135deg, #2563eb, #8b5cf6); color: white; padding: clamp(20px, 4vw, 30px); border-radius: 16px; margin-bottom: 20px;">
+                    <h1 style="margin: 0 0 8px; font-family: 'Poppins', sans-serif; font-size: clamp(20px, 3vw, 26px);">
+                        Welcome, <span id="display-name">Learner</span>! 👋</h1>
+                    <p style="margin: 0; font-size: clamp(12px, 1.5vw, 14px); opacity: 0.9;">Ready to continue your
+                        learning journey?</p>
+                </div>
+
+                <div
+                    style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; width: 100%;">
+
+                    <div
+                        style="background: white; border-radius: 16px; padding: clamp(15px, 3vw, 25px); border: 1px solid #e2e8f0; box-shadow: 0 4px 15px rgba(0,0,0,0.02);">
+                        <h3
+                            style="margin: 0 0 15px; font-family: 'Poppins', sans-serif; display: flex; align-items: center; gap: 10px; font-size: clamp(15px, 2vw, 17px);">
+                            <i class="fa-solid fa-user" style="color: #2563eb;"></i> My Profile
+                        </h3>
+                        <div style="display: flex; align-items: center; gap: 15px; flex-wrap: wrap;">
+                            <img id="p-img" src="" alt="Profile" onerror="this.src='https://ui-avatars.com/api/?name=S'"
+                                style="width: 55px; height: 55px; background: #e2e8f0; border-radius: 50%; object-fit: cover;">
+                            <div>
+                                <div id="p-name" style="font-weight: 700; font-size: 16px;">Loading...</div>
+                                <div id="p-id"
+                                    style="font-family: monospace; font-size: 12px; color: #2563eb; font-weight: 800; margin-bottom: 2px;">
+                                    ID: Loading...</div>
+                                <div id="p-email"
+                                    style="font-size: 13px; color: #64748b; margin-bottom: 6px; word-break: break-all;">
+                                    Loading...</div>
+                                <div id="p-role"
+                                    style="background: #dbeafe; color: #2563eb; font-size: 10px; font-weight: 800; padding: 4px 8px; border-radius: 4px; display: inline-block; text-transform: uppercase;">
+                                    STUDENT</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div
+                        style="background: white; border-radius: 16px; padding: clamp(15px, 3vw, 25px); border: 1px solid #e2e8f0; box-shadow: 0 4px 15px rgba(0,0,0,0.02);">
+                        <h3
+                            style="margin: 0 0 15px; font-family: 'Poppins', sans-serif; display: flex; align-items: center; gap: 10px; font-size: clamp(15px, 2vw, 17px);">
+                            <i class="fa-solid fa-clock-rotate-left" style="color: #10b981;"></i> Learning Materials
+                        </h3>
+                        <p style="color: #64748b; font-size: 14px; margin-bottom: 15px;">Access your recent study
+                            materials and notes.</p>
+                        <div style="display: flex; flex-direction: column; gap: 10px;">
+                            <a href="notes.html"
+                                style="color: #0f172a; background: #f8fafc; border: 1px solid #e2e8f0; padding: 12px 15px; border-radius: 8px; font-weight: 600; text-decoration: none; font-size: 14px; display: flex; align-items: center; gap: 10px;"><i
+                                    class="fa-solid fa-file-pdf"></i> My Notes</a>
+                            <a href="videos.html"
+                                style="color: #0f172a; background: #f8fafc; border: 1px solid #e2e8f0; padding: 12px 15px; border-radius: 8px; font-weight: 600; text-decoration: none; font-size: 14px; display: flex; align-items: center; gap: 10px;"><i
+                                    class="fa-solid fa-play"></i> Video Classes</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="test-analysis-card">
+                    <h3
+                        style="margin: 0 0 15px; font-family: 'Poppins', sans-serif; display: flex; align-items: center; gap: 10px; font-size: clamp(15px, 2vw, 17px);">
+                        <i class="fa-solid fa-chart-line" style="color: #8b5cf6;"></i> Performance Analysis
+                    </h3>
+                    <div style="overflow-x: auto;">
+                        <table class="test-table">
+                            <thead>
+                                <tr>
+                                    <th>Subject / Topic</th>
+                                    <th>Date</th>
+                                    <th>Accuracy</th>
+                                    <th>Score</th>
+                                </tr>
+                            </thead>
+                            <tbody id="performance-table-body">
+                                <tr>
+                                    <td colspan="4" style="text-align:center; color:#64748b; padding: 20px;">
+                                        <i class="fa-solid fa-spinner fa-spin"></i> Loading recent performance...
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div id="parent-view" style="display: none; margin-top: 20px;">
+                <div
+                    style="background: linear-gradient(135deg, #16a34a, #22c55e); color: white; padding: clamp(20px, 4vw, 30px); border-radius: 16px; margin-bottom: 20px;">
+                    <h1 style="margin: 0 0 8px; font-family: 'Poppins', sans-serif; font-size: clamp(20px, 3vw, 26px);">
+                        Parent Portal 🛡️</h1>
+                    <p style="margin: 0; font-size: clamp(12px, 1.5vw, 14px); opacity: 0.9;">Monitor your child's
+                        academic progress securely.</p>
+                </div>
+                <div
+                    style="background: white; border-radius: 16px; padding: clamp(15px, 3vw, 25px); border: 1px solid #e2e8f0; box-shadow: 0 4px 15px rgba(0,0,0,0.02);">
+                    <h3
+                        style="margin: 0 0 15px; font-family: 'Poppins', sans-serif; display: flex; align-items: center; gap: 10px; font-size: clamp(15px, 2vw, 17px);">
+                        <i class="fa-solid fa-children" style="color: #16a34a;"></i> Child Performance Tracker
+                    </h3>
+                    <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                        <input type="text" id="child-id-input" placeholder="e.g., XG-STU-12345"
+                            style="padding: 12px 15px; border: 1px solid #e2e8f0; border-radius: 8px; flex: 1; font-family: monospace; text-transform: uppercase; font-size: 14px; outline: none; min-width: 200px;">
+                        <button
+                            style="background: #16a34a; color: white; border: none; padding: 12px 25px; border-radius: 8px; font-weight: 700; cursor: pointer; font-family: 'Manrope';"><i
+                                class="fa-solid fa-magnifying-glass"></i> Track</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="writer-tools" style="display: none; margin-top: 20px;">
+                <div
+                    style="background: #fdf2f8; border-radius: 16px; padding: clamp(15px, 3vw, 25px); border: 1px solid #fbcfe8; box-shadow: 0 4px 15px rgba(0,0,0,0.02);">
+                    <h3
+                        style="margin: 0 0 15px; font-family: 'Poppins', sans-serif; display: flex; align-items: center; gap: 10px; font-size: clamp(15px, 2vw, 17px);">
+                        <i class="fa-solid fa-pen-nib" style="color: #db2777;"></i> Writer Portal
+                    </h3>
+                    <p style="font-size: 14px; color: #831843; margin-bottom: 15px;">Contribute to the library by
+                        writing articles.</p>
+                    <button
+                        style="background: #db2777; color: white; border: none; padding: 10px 15px; border-radius: 8px; font-weight: bold; cursor: pointer; font-family: 'Manrope';"><i
+                            class="fa-solid fa-plus"></i> Create New Article</button>
+                </div>
+            </div>
+
+           <div id="help-desk-section" style="display: none; margin-top: 20px;">
+        <div style="background: white; border-radius: 16px; padding: clamp(15px, 3vw, 25px); border: 1px solid #e2e8f0; box-shadow: 0 4px 15px rgba(0,0,0,0.02);">
+            <h3 style="margin: 0 0 15px; font-family: 'Poppins', sans-serif; display: flex; align-items: center; gap: 10px; font-size: clamp(15px, 2vw, 17px);"><i class="fa-solid fa-headset" style="color: #ef4444;"></i> Help Desk & Support</h3>
+            <form id="ticket-form" onsubmit="submitTicket(event)">
+                <div style="margin-bottom: 15px;">
+                    <input type="text" id="t-subject" placeholder="Ticket Subject (e.g., Chapter 4 Doubt)" required style="width: 100%; padding: 12px; border: 1px solid #e2e8f0; border-radius: 8px; font-family: inherit; box-sizing: border-box;">
+                </div>
+                <div style="margin-bottom: 15px;">
+                    <select id="t-category" required style="width: 100%; padding: 12px; border: 1px solid #e2e8f0; border-radius: 8px; font-family: inherit; box-sizing: border-box; cursor: pointer;">
+                        <option value="" disabled selected>-- Select Category --</option>
+                        <option value="academic">Academic Doubt</option>
+                        <option value="technical">Technical Issue</option>
+                    </select>
+                </div>
+                <div style="margin-bottom: 15px;">
+                    <textarea id="t-desc" placeholder="Describe your issue in detail..." required style="min-height: 100px; resize: vertical; width: 100%; padding: 12px; border: 1px solid #e2e8f0; border-radius: 8px; font-family: inherit; box-sizing: border-box;"></textarea>
+                </div>
+                <button type="submit" id="submit-ticket-btn" style="background: #2563eb; color: white; border: none; padding: 12px 20px; border-radius: 8px; font-weight: 700; cursor: pointer; width: 100%; display: flex; justify-content: center; align-items: center; gap: 8px;"><i class="fa-solid fa-paper-plane"></i> Submit Ticket</button>
+            </form>
+        </div>
+        
+        <div style="margin-top: 30px; border-top: 2px dashed #e2e8f0; padding-top: 20px;">
+            <h4 style="margin: 0 0 15px; font-family: 'Poppins'; color: #0f172a;"><i class="fa-solid fa-clock-rotate-left"></i> My Recent Tickets</h4>
+            <div id="my-tickets-list" style="display: flex; flex-direction: column; gap: 15px;">
+                <div style="text-align:center; color:#64748b; padding: 15px; background: #f8fafc; border-radius: 8px;">
+                    <i class="fa-solid fa-spinner fa-spin"></i> Loading your tickets...
+                </div>
+            </div>
+        </div>
+    </div>
+
+        </div>
+    </div>
+
+    <div id="push-soft-prompt" class="push-prompt-overlay">
+        <div
+            style="background: white; width: 90%; max-width: 400px; border-radius: 20px; padding: 30px; text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.3);">
+            <div style="font-size: 40px; color: #2563eb; margin-bottom: 15px;"><i
+                    class="fa-solid fa-bell-concierge"></i></div>
+            <h3 style="margin-bottom: 10px; font-family: 'Poppins';">Stay Updated!</h3>
+            <p style="margin-bottom: 25px; font-size: 14px; color: #64748b;">Enable push notifications to instantly
+                receive important updates.</p>
+            <div style="display: flex; gap: 10px;">
+                <button
+                    style="flex: 1; padding: 12px; border: none; border-radius: 10px; background: #e2e8f0; cursor: pointer; font-weight: bold; font-family: 'Manrope';"
+                    onclick="document.getElementById('push-soft-prompt').style.display='none'">Not Now</button>
+                <button
+                    style="flex: 1; padding: 12px; border: none; border-radius: 10px; background: #2563eb; color: white; cursor: pointer; font-weight: bold; font-family: 'Manrope';"
+                    onclick="window.notificationManager.triggerNativePushPrompt()">Enable Notifications</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="xg-bot-fab" class="xg-bot-fab" onclick="if(window.chatbotManager) window.chatbotManager.toggleBot()">
+        <i class="fa-solid fa-comment-dots"></i>
+    </div>
+
+    <div id="xg-bot-modal" class="xg-bot-modal">
+        <div class="xg-bot-header">
+            <h3><i class="fa-solid fa-robot" style="color: #38bdf8;"></i> XG Assistant</h3>
+            <div class="xg-bot-actions">
+                <button onclick="if(window.chatbotManager) window.chatbotManager.minimizeBot()"><i
+                        class="fa-solid fa-minus"></i></button>
+                <button onclick="if(window.chatbotManager) window.chatbotManager.strictCloseBot()"><i
+                        class="fa-solid fa-xmark"></i></button>
+            </div>
+        </div>
+        <div id="xg-bot-body" class="xg-bot-body"></div>
+        <div class="xg-bot-footer">* XG Assistant is automated and can make mistakes.</div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
+
+    <script src="js/firebase-init.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/master.js"></script>
+    <script src="js/notification.js"></script>
+    <script src="js/ticketing.js"></script>
+    <script src="js/chatbot.js"></script>
+
     <script>
-        window.onload = function() {
-            const userStr = localStorage.getItem('xg_user');
-            if(!userStr) { 
-                window.location.href = "login.html"; 
-                return; 
-            }
-            populateData(JSON.parse(userStr));
-        };
-
-        function populateData(user) {
-            document.getElementById('display-name').innerText = user.name;
-            document.getElementById('display-email').innerText = user.email;
-            document.getElementById('display-phone').innerText = user.whatsapp && user.whatsapp !== "" ? user.whatsapp : "N/A";
-            
-            const picImg = document.getElementById('display-pic');
-            if(user.pic && user.pic !== "") {
-                picImg.src = user.pic;
-            } else {
-                picImg.src = `https://ui-avatars.com/api/?name=${user.name}&background=000080&color=fff&size=128`;
-            }
-
-            document.getElementById('edit-name').value = user.name;
-            document.getElementById('edit-email').value = user.email;
-            document.getElementById('edit-phone').value = user.whatsapp === "N/A" ? "" : user.whatsapp;
-        }
-
-        function toggleEditMode(showEdit) {
-            if(showEdit) {
-                document.getElementById('view-profile').classList.add('hidden');
-                document.getElementById('edit-profile').classList.remove('hidden');
-            } else {
-                populateData(JSON.parse(localStorage.getItem('xg_user')));
-                document.getElementById('edit-profile').classList.add('hidden');
-                document.getElementById('view-profile').classList.remove('hidden');
-            }
-        }
-
-        function saveProfileChanges() {
-            const newName = document.getElementById('edit-name').value.trim();
-            const newPhone = document.getElementById('edit-phone').value.trim();
-
-            if(newName === "") { alert("Name cannot be empty."); return; }
-            if(newPhone !== "" && !/^[6-9]\d{9}$/.test(newPhone)) { alert("Please enter a valid 10-digit mobile number or leave blank."); return; }
-
-            let user = JSON.parse(localStorage.getItem('xg_user'));
-            user.name = newName;
-            user.whatsapp = newPhone || "N/A";
-
-            localStorage.setItem('xg_user', JSON.stringify(user));
-
-            let usersDB = JSON.parse(localStorage.getItem('xg_users_db')) || [];
-            let index = usersDB.findIndex(u => u.email === user.email);
-            if(index > -1) {
-                usersDB[index].name = user.name;
-                usersDB[index].whatsapp = user.whatsapp;
-                localStorage.setItem('xg_users_db', JSON.stringify(usersDB));
-            }
-
-            if(window.syncToSheet) window.syncToSheet({...user, interest: "Profile Updated"});
-
-            populateData(user);
-            toggleEditMode(false);
-            
-            location.reload();
-        }
-
-        function uploadNewPic(input) {
-            if (input.files && input.files[0]) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const base64Image = e.target.result;
-                    
-                    document.getElementById('display-pic').src = base64Image;
-                    
-                    let user = JSON.parse(localStorage.getItem('xg_user'));
-                    user.pic = base64Image;
-                    localStorage.setItem('xg_user', JSON.stringify(user));
-
-                    let usersDB = JSON.parse(localStorage.getItem('xg_users_db')) || [];
-                    let index = usersDB.findIndex(u => u.email === user.email);
-                    if(index > -1) {
-                        usersDB[index].pic = base64Image;
-                        localStorage.setItem('xg_users_db', JSON.stringify(usersDB));
+        document.addEventListener('DOMContentLoaded', () => {
+            if (window.authManager) {
+                window.authManager.initializeAuthListener((user, userData) => {
+                    if (!user) {
+                        window.location.href = "login.html";
+                        return;
                     }
-                    
-                    location.reload(); 
-                };
-                reader.readAsDataURL(input.files[0]);
+
+                    document.getElementById('display-name').innerText = user.displayName || userData?.name || "Learner";
+                    document.getElementById('p-name').innerText = user.displayName || userData?.name || "Learner";
+
+                    let roleKey = (userData?.role || 'student').toUpperCase();
+                    let prefix = roleKey === 'STUDENT' ? 'STU' : (roleKey === 'PARENT' ? 'PRN' : (roleKey === 'MENTOR' ? 'MNT' : 'ADM'));
+
+                    // Dynamic Hash Generation 
+                    let customId = `XG-${prefix}-${user.uid.substring(0, 6).toUpperCase()}`;
+
+                    // Founder Exception
+                    if (user.uid === 'XCxglOl7FzLyRIFgl4SXNiW9VKA3') customId = 'XG-F-AK';
+                    if (user.uid === 'EZpI9ea4b0X8x8vOhxzar5KNzAw1') customId = 'XG-F-SK';
+
+                    document.getElementById('p-id').innerText = `ID: ${customId}`;
+
+                    document.getElementById('p-email').innerText = user.email;
+
+                    if (userData && userData.role) {
+                        document.getElementById('p-role').innerText = userData.role;
+                    }
+
+                    setupRoleViews(userData?.role || 'student');
+
+                    const role = userData?.role || 'student';
+                    if (role === 'student' || role === 'admin' || role === 'founder') {
+                        fetchRecentPerformance(user.uid);
+                        // 🟢 NEW: Fetch Student's Doubt Tickets
+                        fetchMyTickets(user.uid);
+                    }
+
+                    setTimeout(() => {
+                        document.getElementById('loader').style.display = 'none';
+                        document.getElementById('dashboard-main-content').style.display = 'block';
+
+                        if (!localStorage.getItem('notif_prompt_shown')) {
+                            const p = document.getElementById('push-soft-prompt');
+                            if (p) { p.style.display = 'flex'; localStorage.setItem('notif_prompt_shown', 'true'); }
+                        }
+                    }, 1000);
+                });
+            }
+        });
+
+        function setupRoleViews(role) {
+            document.getElementById('student-view').style.display = 'none';
+            document.getElementById('parent-view').style.display = 'none';
+            document.getElementById('writer-tools').style.display = 'none';
+            document.getElementById('help-desk-section').style.display = 'none';
+
+            if (role === 'student') {
+                document.getElementById('portal-title').innerText = 'Student Portal';
+                document.getElementById('student-view').style.display = 'block';
+                document.getElementById('help-desk-section').style.display = 'block';
+            }
+            else if (role === 'parent') {
+                document.getElementById('portal-title').innerText = 'Parent Portal';
+                document.getElementById('parent-view').style.display = 'block';
+                document.getElementById('help-desk-section').style.display = 'block';
+            }
+            else if (role === 'writer') {
+                document.getElementById('portal-title').innerText = 'Writer Workspace';
+                document.getElementById('writer-tools').style.display = 'block';
+            }
+            else if (role === 'admin' || role === 'founder') {
+                document.getElementById('portal-title').innerText = 'Admin Oversight';
+                document.getElementById('student-view').style.display = 'block';
+                document.getElementById('writer-tools').style.display = 'block';
             }
         }
 
-        function switchAccount() {
-            localStorage.removeItem('xg_user');
-            window.location.href = "login.html";
-        }
+        async function fetchRecentPerformance(uid) {
+            const tableBody = document.getElementById('performance-table-body');
+            const tableHead = tableBody.previousElementSibling;
 
-        function handleLogout() {
-            if(confirm("Are you sure you want to log out of Xplainer Guru?")) {
-                localStorage.removeItem('xg_user');
-                window.location.href = "login.html";
+            try {
+                const db = firebase.firestore();
+
+                const snapshot = await db.collection('test_results')
+                    .where('uid', '==', uid)
+                    .get();
+
+                if (snapshot.empty) {
+                    tableHead.style.display = 'none';
+                    tableBody.innerHTML = `
+                        <tr>
+                            <td colspan="4" style="text-align:center; padding: 40px 20px; border-bottom: none;">
+                                <div style="background: #f8fafc; border: 2px dashed #cbd5e1; border-radius: 16px; padding: 30px; max-width: 400px; margin: 0 auto;">
+                                    <i class="fa-solid fa-flask-vial" style="font-size: 40px; color: #94a3b8; margin-bottom: 15px;"></i>
+                                    <h4 style="margin: 0 0 8px; color: #0f172a; font-family: 'Poppins'; font-size: 18px;">No Data Found</h4>
+                                    <p style="margin: 0 0 20px; color: #64748b; font-size: 14px;">You haven't attempted any mock tests yet. Give it a try to see your analysis here!</p>
+                                    <a href="tests.html" style="background: #0f172a; color: white; padding: 12px 25px; border-radius: 8px; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; font-size: 14px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+                                        <i class="fa-solid fa-play"></i> Take a Mock Test
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                    return;
+                }
+
+                tableHead.style.display = '';
+
+                let testHistory = [];
+                snapshot.forEach(doc => {
+                    testHistory.push(doc.data());
+                });
+
+                testHistory.sort((a, b) => {
+                    let timeA = a.timestamp ? a.timestamp.toMillis() : 0;
+                    let timeB = b.timestamp ? b.timestamp.toMillis() : 0;
+                    return timeB - timeA;
+                });
+
+                testHistory = testHistory.slice(0, 5);
+
+                tableBody.innerHTML = '';
+
+                testHistory.forEach(data => {
+                    let dateStr = "Recently";
+                    if (data.timestamp) {
+                        const dateObj = data.timestamp.toDate();
+                        dateStr = dateObj.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+                    }
+
+                    let accClass = data.accuracy >= 70 ? 'score-high' : (data.accuracy < 40 ? 'score-low' : '');
+                    let accHTML = `<span class="score-pill ${accClass}">${data.accuracy}%</span>`;
+
+                    const row = `
+                        <tr>
+                            <td>
+                                <div style="font-weight: 800; color: #0f172a;">${data.testTitle}</div>
+                                <div style="font-size: 11px; color: #64748b;">${Math.floor(data.timeSpent / 60)}m ${data.timeSpent % 60}s spent</div>
+                            </td>
+                            <td style="color: #475569; font-size: 13px;">${dateStr}</td>
+                            <td>${accHTML}</td>
+                            <td style="font-weight: 800; font-family: monospace; font-size: 16px;">${data.score}</td>
+                        </tr>
+                    `;
+                    tableBody.innerHTML += row;
+                });
+
+            } catch (error) {
+                console.error("Error fetching performance:", error);
+                tableBody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:#ef4444; padding: 20px;">Failed to load data. Please refresh.</td></tr>`;
             }
         }
+
+        // 🟢 NEW: FIREBASE FETCH: Student's Doubt Tickets
+        async function fetchMyTickets(uid) {
+            const ticketList = document.getElementById('my-tickets-list');
+
+            try {
+                const db = firebase.firestore();
+                const snapshot = await db.collection('tickets')
+                    .where('uid', '==', uid)
+                    .get();
+
+                if (snapshot.empty) {
+                    ticketList.innerHTML = `<div style="text-align:center; color:#64748b; padding: 15px; background: #f8fafc; border-radius: 8px; border: 1px dashed #cbd5e1;">No tickets raised yet. Need help? Ask above!</div>`;
+                    return;
+                }
+
+                let tickets = [];
+                snapshot.forEach(doc => {
+                    let data = doc.data();
+                    data.id = doc.id;
+                    tickets.push(data);
+                });
+
+                tickets.sort((a, b) => {
+                    let timeA = a.timestamp ? a.timestamp.toMillis() : 0;
+                    let timeB = b.timestamp ? b.timestamp.toMillis() : 0;
+                    return timeB - timeA;
+                });
+
+                ticketList.innerHTML = '';
+
+                tickets.forEach(ticket => {
+                    let dateStr = "Recently";
+                    if (ticket.timestamp) {
+                        dateStr = ticket.timestamp.toDate().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+                    }
+
+                    let isSolved = ticket.status === 'solved';
+                    let statusBadge = isSolved
+                        ? `<span style="background:#dcfce7; color:#16a34a; font-size:10px; font-weight:800; padding:4px 8px; border-radius:4px;"><i class="fa-solid fa-check-circle"></i> SOLVED</span>`
+                        : `<span style="background:#fef3c7; color:#d97706; font-size:10px; font-weight:800; padding:4px 8px; border-radius:4px;"><i class="fa-solid fa-clock"></i> PENDING</span>`;
+
+                    let replyBox = '';
+                    if (isSolved && ticket.reply) {
+                        replyBox = `
+                            <div style="margin-top: 15px; padding: 15px; background: #eff6ff; border-left: 3px solid #3b82f6; border-radius: 0 8px 8px 0;">
+                                <div style="font-size: 11px; font-weight: 800; color: #2563eb; margin-bottom: 5px; text-transform: uppercase;">Reply from Team</div>
+                                <div style="font-size: 13px; color: #1e3a8a; line-height: 1.5;">${ticket.reply}</div>
+                            </div>
+                        `;
+                    }
+
+                    const card = `
+                        <div style="border: 1px solid #e2e8f0; border-radius: 12px; padding: 15px; background: white;">
+                            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;">
+                                <h4 style="margin: 0; font-size: 15px; color: #0f172a;">${ticket.subject || 'Doubt Question'}</h4>
+                                ${statusBadge}
+                            </div>
+                            <div style="font-size: 11px; color: #94a3b8; font-weight: 600; margin-bottom: 10px;">Ticket ID: #${ticket.id.substring(0, 6).toUpperCase()} • ${dateStr}</div>
+                            <p style="margin: 0; font-size: 13px; color: #475569;">${ticket.description || ''}</p>
+                            ${replyBox}
+                        </div>
+                    `;
+                    ticketList.innerHTML += card;
+                });
+
+            } catch (error) {
+                console.error("Error fetching tickets:", error);
+                ticketList.innerHTML = `<div style="text-align:center; color:#ef4444; padding: 15px;">Failed to load tickets. Please refresh.</div>`;
+            }
+        }
+        // 🟢 FIREBASE: Submit Ticket Logic (Isolated directly in Dashboard)
+        window.submitTicket = async function(e) {
+            e.preventDefault();
+            const btn = document.getElementById('submit-ticket-btn');
+            const originalText = btn.innerHTML;
+            
+            const subject = document.getElementById('t-subject').value.trim();
+            const categoryVal = document.getElementById('t-category').value;
+            const description = document.getElementById('t-desc').value.trim();
+
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Submitting...';
+
+            try {
+                // Get Current User
+                const user = firebase.auth().currentUser;
+                if (!user) throw new Error("Please login to submit a ticket.");
+
+                const db = firebase.firestore();
+                const userName = user.displayName || "Student";
+
+                // 1. SAVE TO FIREBASE
+                const docRef = await db.collection('tickets').add({ 
+                    category: categoryVal, 
+                    subject: subject, 
+                    description: description, 
+                    uid: user.uid,
+                    raisedByEmail: user.email || 'No Email', 
+                    status: 'pending',
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                
+                const ticketId = docRef.id;
+
+                // 2. APPS SCRIPT AUTOMATION (Emails)
+                const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw7HnmqV789rjclioBMa2kwNELRkrMqEcH21e3pzyqosok6Q371TNW4aiVLBb4rE0Zk/exec";
+                
+                // 🚨 FIX: Using URLSearchParams (application/x-www-form-urlencoded) to safely bypass CORS
+                
+                // Fire Alert to Pool (Academic/Tech)
+                const poolPayload = new URLSearchParams();
+                poolPayload.append("action", "new_ticket");
+                poolPayload.append("category", categoryVal);
+                poolPayload.append("subject", subject);
+                poolPayload.append("description", description);
+
+                fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    body: poolPayload
+                }).then(res => res.json()).then(data => console.log("Pool Email Triggered:", data)).catch(e => console.error("Pool Alert Fail:", e));
+
+                // Fire Confirmation to Student
+                const confMsg = `Hello ${userName},\n\nWe have successfully received your ticket request.\nTicket ID: #${ticketId.substring(0,6).toUpperCase()}\nSubject: ${subject}\n\nOur team is reviewing your query. You can track its status on your Dashboard.\n\nRegards,\nXplainer Guru Team`;
+                
+                const studentPayload = new URLSearchParams();
+                studentPayload.append("action", "admin_direct_email");
+                studentPayload.append("studentEmail", user.email);
+                studentPayload.append("subject", "Ticket Received: " + subject);
+                studentPayload.append("message", confMsg);
+
+                fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    body: studentPayload
+                }).then(res => res.json()).then(data => console.log("Student Email Triggered:", data)).catch(e => console.error("Student Confirmation Fail:", e));
+
+                // 3. SUCCESS UI UPDATE
+                alert(`✅ Success! Your ticket has been submitted.\n\nTicket ID: #${ticketId.substring(0,6).toUpperCase()}`);
+                document.getElementById('ticket-form').reset();
+                
+                // Immediately update the tickets list on dashboard
+                if(typeof fetchMyTickets === 'function') {
+                    fetchMyTickets(user.uid);
+                }
+
+            } catch (error) { 
+                console.error("Ticket Submission Error:", error); 
+                alert("Failed to submit ticket: " + error.message); 
+            } finally { 
+                btn.disabled = false; 
+                btn.innerHTML = originalText; 
+            }
+        };
     </script>
 </body>
+
 </html>

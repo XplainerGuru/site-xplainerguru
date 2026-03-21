@@ -2,199 +2,190 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
-    <title>Premium Notes | Xplainer Guru</title>
-    <link rel="icon" type="image/png" href="logo.png">
-    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700&family=Poppins:wght@600;800&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Study Notes | Xplainer Guru</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=Poppins:wght@700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
-    <script>pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js';</script>
-
-    <script src="master.js" defer></script>
+    <link rel="stylesheet" href="css/style.css">
     
     <style>
-        body { background: #f8fafc; margin: 0; padding-top: 72px; font-family: 'Manrope', sans-serif; }
-        .container { max-width: 1000px; margin: 40px auto; padding: 0 15px; }
-        .page-header { text-align: center; margin-bottom: 40px; }
-        .page-header h1 { font-family: 'Poppins'; color: #0f172a; font-size: 2rem; }
-
-        .notes-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
-        .note-card { background: #fff; border-radius: 15px; padding: 15px; border: 1px solid #e2e8f0; transition: 0.3s; position: relative; display: flex; flex-direction: column; align-items: center; text-align: center; }
-        .note-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,128,0.06); }
-        .note-icon { width: 40px; height: 40px; background: #eff6ff; color: #2563eb; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; margin-bottom: 12px; }
-        .note-title { font-family: 'Poppins'; font-size: 13px; color: #0f172a; margin-bottom: 10px; line-height: 1.4; flex-grow: 1; }
+        body { background: #f8fafc; font-family: 'Manrope', sans-serif; margin: 0; padding-top: 100px; display: flex; flex-direction: column; min-height: 100vh;}
+        .container { max-width: 1000px; margin: 0 auto; padding: 0 20px 50px; flex: 1; width: 100%; box-sizing: border-box; }
         
-        .download-btn { 
-            width: 100%; margin-top: 10px; padding: 10px; border-radius: 8px; border: none;
-            background: #000080; color: #fff; font-weight: 700; cursor: pointer; transition: 0.3s;
-            display: flex; align-items: center; justify-content: center; gap: 8px; font-family: 'Manrope'; font-size: 12px;
-        }
-        .download-btn:hover { background: #2563eb; }
+        .page-header { margin-bottom: 20px; display: flex; justify-content: space-between; align-items: flex-end;}
+        .page-header h1 { font-family: 'Poppins'; color: #0f172a; margin: 0 0 5px; font-size: 2rem;}
+        .page-header p { color: #64748b; margin: 0; font-size: 14px;}
 
-        /* --- DOCUMENT VIEWER MODAL --- */
-        #pdf-viewer-modal {
-            display: none; position: fixed; inset: 0; background: #f1f5f9;
-            z-index: 99990; flex-direction: column; width: 100%; height: 100vh;
-        }
-        .pdf-header {
-            background: #0f172a; color: #fff; padding: 15px 20px; display: flex;
-            justify-content: space-between; align-items: center; box-shadow: 0 4px 15px rgba(0,0,0,0.2); z-index: 10;
-        }
-        .pdf-header h3 { margin: 0; font-family: 'Poppins'; font-size: 15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 70%; }
-        .close-pdf-btn { background: #ef4444; color: #fff; border: none; padding: 8px 16px; border-radius: 8px; font-weight: 800; cursor: pointer; transition: 0.2s; }
-        
-        #pdf-container { flex: 1; overflow-y: auto; padding: 20px; text-align: center; }
-        
-        /* IMAGE & CANVAS STYLES */
-        #pdf-container canvas, #pdf-container img { 
-            max-width: 100%; width: 800px; margin: 0 auto 15px auto; display: block; 
-            border-radius: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.15); 
-        }
+        /* 🟢 NEW: LIVE SEARCH BAR CSS 🟢 */
+        .search-container { position: relative; width: 100%; margin-bottom: 30px; }
+        .search-container i { position: absolute; left: 18px; top: 50%; transform: translateY(-50%); color: #94a3b8; font-size: 16px; }
+        .live-search-input { width: 100%; padding: 14px 15px 14px 45px; border-radius: 12px; border: 1px solid #cbd5e1; outline: none; font-family: 'Manrope'; box-shadow: 0 4px 15px rgba(0,0,0,0.02); font-size: 15px; transition: 0.2s; box-sizing: border-box; background: #fff; }
+        .live-search-input:focus { border-color: #10b981; box-shadow: 0 4px 20px rgba(16, 185, 129, 0.15); }
 
-        /* --- STRICT AUTH POPUP --- */
-        #auth-modal {
-            display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.9);
-            z-index: 99999; backdrop-filter: blur(8px); align-items: center; justify-content: center; padding: 20px;
-        }
-        .modal-content {
-            background: #fff; padding: 30px 20px; border-radius: 20px; max-width: 350px; width: 100%;
-            text-align: center; box-shadow: 0 25px 50px rgba(0,0,0,0.5); animation: popIn 0.4s ease;
-        }
-        @keyframes popIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
+        /* CONSISTENT CARD STYLES */
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
         
-        .modal-content h2 { font-family: 'Poppins'; color: #0f172a; margin-bottom: 10px; font-size: 1.5rem; }
-        .modal-content p { color: #64748b; font-size: 13px; margin-bottom: 25px; line-height: 1.5; }
-        .modal-btn { display: block; width: 100%; padding: 12px; border-radius: 10px; font-weight: 800; text-decoration: none; margin-bottom: 10px; font-size: 13px; transition: 0.3s; }
-        .btn-login { background: #2563eb; color: #fff; }
-        .btn-signup { background: #f1f5f9; color: #0f172a; border: 1px solid #e2e8f0; }
-        .btn-cancel { background: transparent; color: #ef4444; border: none; cursor: pointer; font-weight: 700; margin-top: 10px; text-decoration: underline; font-family: 'Manrope'; }
-
-        @media (max-width: 600px) {
-            .notes-grid { gap: 10px; }
-            .note-card { padding: 12px; }
-            .note-title { font-size: 12px; }
-            .download-btn { padding: 8px; font-size: 11px; }
-            #pdf-container { padding: 10px; }
+        .note-card {
+            background: white;
+            border-radius: 16px;
+            padding: 25px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
+            display: flex;
+            flex-direction: column;
+            transition: 0.3s;
         }
+        .note-card:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05); border-color: #10b981; }
+        
+        .note-meta { display: flex; gap: 15px; margin: 10px 0 20px; font-size: 13px; color: #64748b; font-weight: 600; }
+        
+        .start-btn {
+            background: #0f172a;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            font-family: 'Manrope';
+            transition: 0.2s;
+            display: block;
+            width: 100%;
+            box-sizing: border-box;
+            margin-top: auto;
+        }
+        .start-btn:hover { background: #1e293b; }
+
+        .loader { text-align: center; padding: 50px; color: #94a3b8; font-family: 'Poppins'; grid-column: 1/-1;}
+        
+        /* Message shown when search yields no results */
+        .no-search-results { grid-column: 1/-1; text-align: center; padding: 40px; background: #fff; border-radius: 12px; border: 1px dashed #cbd5e1; color: #64748b; display: none; }
     </style>
 </head>
 <body>
 
-    <div id="pdf-viewer-modal">
-        <div class="pdf-header">
-            <h3 id="pdf-title">Loading Document...</h3>
-            <button class="close-pdf-btn" onclick="closePdfViewer()"><i class="fa-solid fa-xmark"></i> Close</button>
-        </div>
-        <div id="pdf-container"></div>
-    </div>
-
-    <div id="auth-modal">
-        <div class="modal-content">
-            <div style="font-size: 35px; color: #2563eb; margin-bottom: 15px;"><i class="fa-solid fa-lock"></i></div>
-            <h2>Unlock Full Access</h2>
-            <p>This document is part of our premium study library. Please log in or create a free account to read the complete notes.</p>
-            <a href="login.html" class="modal-btn btn-login">Log In to Continue</a>
-            <a href="login.html" class="modal-btn btn-signup">Create Account</a>
-            <button class="btn-cancel" onclick="cancelAndClose()">Go Back</button>
-        </div>
-    </div>
-
-    <div class="container">
+    <div class="container" id="main-ui" style="display:none;">
         <div class="page-header">
-            <h1>Premium Study Notes</h1>
-            <p>Access high-quality PDFs and Board Notes curated by our expert team.</p>
+            <div>
+                <h1><i class="fa-solid fa-file-pdf" style="color: #10b981;"></i> Study Notes</h1>
+                <p>Download chapter-wise revision notes.</p>
+            </div>
         </div>
-        <div class="notes-grid" id="notesGrid"></div>
+
+        <div class="search-container">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" id="notes-search-box" class="live-search-input" onkeyup="filterNotes()" placeholder="Search notes by chapter, topic, or title...">
+        </div>
+
+        <div id="contentGrid" class="grid">
+            <div class="loader"><i class="fa-solid fa-spinner fa-spin fa-2x"></i><br><br>Loading Notes...</div>
+        </div>
+        
+        <div id="no-results-msg" class="no-search-results">
+            <i class="fa-solid fa-folder-open" style="font-size: 30px; color: #cbd5e1; margin-bottom: 10px;"></i>
+            <p style="margin: 0; font-family: 'Manrope';">No notes found matching your search.</p>
+        </div>
     </div>
 
-    <script src="content.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
+
+    <script src="js/firebase-init.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/master.js"></script>
+
     <script>
-        let pdfTimer; 
+        const grid = document.getElementById('contentGrid');
 
-        document.addEventListener('DOMContentLoaded', () => {
-            const grid = document.getElementById('notesGrid');
-            if (typeof studyNotes !== 'undefined') {
-                studyNotes.forEach(note => {
-                    const card = document.createElement('div');
-                    card.className = 'note-card';
-                    
-                    // Smart Icon logic: If image, show image icon, else show PDF icon
-                    const isImg = note.file.match(/\.(jpeg|jpg|gif|png|webp)$/i);
-                    const iconClass = isImg ? 'fa-image' : 'fa-file-pdf';
-                    const formatText = isImg ? 'Board Image' : 'PDF';
-
-                    card.innerHTML = `
-                        <div class="note-icon"><i class="fa-solid ${iconClass}"></i></div>
-                        <h3 class="note-title">${note.title}</h3>
-                        <div style="font-size: 11px; color: #94a3b8;">Format: ${formatText}</div>
-                        <button class="download-btn" onclick="startHook('${note.file}', '${note.title.replace(/'/g, "\\'")}')">
-                            <i class="fa-solid fa-eye"></i> View Notes
-                        </button>
-                    `;
-                    grid.appendChild(card);
-                });
+        // 🔒 AUTH GUARD (Uses global 'auth' from your JS files or firebase directly)
+        firebase.auth().onAuthStateChanged((user) => {
+            if (!user) {
+                localStorage.setItem("redirectAfterLogin", "notes.html");
+                window.location.href = "login.html";
+            } else {
+                document.getElementById('main-ui').style.display = 'block';
+                loadNotes();
             }
         });
 
-        // SMART RENDER FUNCTION (Handles both PDF and Images)
-        async function renderDocument(url) {
-            const container = document.getElementById('pdf-container');
-            
-            // Check if URL ends with an image extension
-            const isImage = url.match(/\.(jpeg|jpg|gif|png|webp)$/i);
+        function loadNotes() {
+            db.collection("notes").onSnapshot(snap => {
+                let nData = [];
+                snap.forEach(doc => { 
+                    let d = doc.data(); d.id = doc.id;
+                    if(d.deleteStatus === 'Active' || !d.isDeleted) nData.push(d); 
+                });
+                nData.sort((a,b) => (b.timestamp?.seconds || 0) - (a.timestamp?.seconds || 0));
 
-            if(isImage) {
-                // It's a Board Photo
-                container.innerHTML = `<img src="${url}" alt="Board Notes">`;
-            } else {
-                // It's a PDF
-                container.innerHTML = '<div style="padding: 40px; color: #64748b; font-family: Poppins;"><i class="fa-solid fa-spinner fa-spin fa-2x"></i><br><br>Loading Premium Notes...</div>';
-                try {
-                    const pdf = await pdfjsLib.getDocument(url).promise;
-                    container.innerHTML = ''; 
-                    for (let num = 1; num <= pdf.numPages; num++) {
-                        const page = await pdf.getPage(num);
-                        const viewport = page.getViewport({ scale: 1.5 }); 
-                        const canvas = document.createElement('canvas');
-                        container.appendChild(canvas);
-                        const ctx = canvas.getContext('2d');
-                        canvas.height = viewport.height;
-                        canvas.width = viewport.width;
-                        await page.render({ canvasContext: ctx, viewport: viewport }).promise;
-                    }
-                } catch (error) {
-                    container.innerHTML = '<div style="padding: 30px; color: #ef4444;"><i class="fa-solid fa-triangle-exclamation fa-2x"></i><br><br>Unable to load Document. Please ensure internet is active.</div>';
+                if(nData.length === 0) {
+                    grid.innerHTML = `
+                        <div style="grid-column: 1/-1; text-align:center; padding: 60px 20px; background:#fff; border-radius:16px; border:2px dashed #cbd5e1;">
+                            <i class="fa-solid fa-folder-open" style="font-size: 40px; color: #94a3b8; margin-bottom: 15px;"></i>
+                            <h4 style="margin: 0 0 8px; color: #0f172a; font-family: 'Poppins'; font-size: 18px;">No Notes Available</h4>
+                            <p style="margin: 0; color: #64748b; font-size: 14px;">Study materials will be uploaded here soon.</p>
+                        </div>`;
+                    return;
                 }
+
+                let html = '';
+                nData.forEach(item => {
+                    const dateStr = item.timestamp ? new Date(item.timestamp.seconds*1000).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) : 'Recently Added';
+                    const subject = item.subject || 'General';
+                    const safeSearchTitle = item.title ? item.title.toLowerCase().replace(/"/g, '&quot;') : '';
+                    const safeLink = item.link ? item.link.replace(/'/g, "\\'") : '#';
+                    
+                    html += `
+                    <div class="note-card search-item" data-title="${safeSearchTitle}">
+                        <span style="background: #ecfdf5; color: #10b981; font-size: 10px; font-weight: 800; padding: 4px 8px; border-radius: 4px; align-self: flex-start; text-transform: uppercase;">${subject}</span>
+                        <h3 style="margin: 15px 0 5px; font-family: 'Poppins'; color: #0f172a; font-size: 16px; line-height: 1.4;">${item.title}</h3>
+                        <div class="note-meta">
+                            <span><i class="fa-regular fa-calendar"></i> ${dateStr}</span>
+                        </div>
+                        <button onclick="openNote('${safeLink}', '${item.id}')" class="start-btn"><i class="fa-solid fa-file-pdf"></i> View PDF</button>
+                    </div>`;
+                });
+                grid.innerHTML = html;
+            }, e => { 
+                console.error("Firebase error: ", e);
+                grid.innerHTML = `<div style="color:red; grid-column:1/-1; text-align:center; padding: 20px;">Error loading notes. Retrying...</div>`; 
+            });
+        }
+
+        function openNote(link, docId) {
+            window.open(link, '_blank');
+            if(docId) db.collection("notes").doc(docId).update({ views: firebase.firestore.FieldValue.increment(1) }).catch(()=>{});
+        }
+
+        // 🟢 NEW: LIVE SEARCH FUNCTION LOGIC 🟢
+        function filterNotes() {
+            let input = document.getElementById('notes-search-box').value.toLowerCase();
+            let cards = document.querySelectorAll('.search-item');
+            let visibleCount = 0;
+            let noResultsMsg = document.getElementById('no-results-msg');
+
+            cards.forEach(card => {
+                let title = card.getAttribute('data-title');
+                
+                // If input matches title, show card; else hide it
+                if (title.includes(input)) {
+                    card.style.display = 'flex'; // Uses standard flexbox display to not break your grid
+                    visibleCount++;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            // Show "No Results" message if everything is hidden
+            if (visibleCount === 0 && cards.length > 0) {
+                noResultsMsg.style.display = 'block';
+            } else {
+                noResultsMsg.style.display = 'none';
             }
-        }
-
-        function startHook(url, title) {
-            document.getElementById('pdf-title').innerText = title;
-            document.getElementById('pdf-viewer-modal').style.display = 'flex';
-            document.body.style.overflow = 'hidden'; 
-            
-            renderDocument(url);
-
-            const user = localStorage.getItem('xg_user');
-            if (!user) {
-                clearTimeout(pdfTimer);
-                pdfTimer = setTimeout(() => {
-                    document.getElementById('auth-modal').style.display = 'flex';
-                }, 1500); 
-            }
-        }
-
-        function closePdfViewer() {
-            document.getElementById('pdf-viewer-modal').style.display = 'none';
-            document.getElementById('pdf-container').innerHTML = ""; 
-            document.body.style.overflow = 'auto'; 
-            clearTimeout(pdfTimer); 
-        }
-
-        function cancelAndClose() {
-            document.getElementById('auth-modal').style.display = 'none';
-            closePdfViewer(); 
         }
     </script>
 </body>
