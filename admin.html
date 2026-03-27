@@ -11,7 +11,7 @@
         href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Poppins:wght@600;700;800&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="../../css/style.css">
 
     <style>
         .dashboard-container {
@@ -322,10 +322,11 @@
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
-    <script src="js/firebase-init.js"></script>
-    <script src="js/components.js"></script>
-    <script src="js/auth.js"></script>
-    <script src="js/master.js"></script>
+    <script src="../../js/firebase-init.js"></script>
+    <script src="../../js/api/ticketApi.js"></script>
+    <script src="../../js/components.js"></script>
+    <script src="../../js/auth.js"></script>
+    <script src="../../js/master.js"></script>
 
     <script>
         // LIVE SEARCH FUNCTION
@@ -392,10 +393,7 @@
                 tests.sort((a, b) => (b.timestamp?.toMillis() || 0) - (a.timestamp?.toMillis() || 0));
 
                 // Fetch Help Desk Tickets
-                const ticketsSnap = await db.collection('tickets').where('uid', '==', targetUid).get();
-                let tickets = [];
-                ticketsSnap.forEach(doc => { let t = doc.data(); t.id = doc.id; tickets.push(t); });
-                tickets.sort((a, b) => (b.timestamp?.toMillis() || 0) - (a.timestamp?.toMillis() || 0));
+                let tickets = await window.TicketAPI.getMyTickets(targetUid);
 
                 // HTML Build Process
                 let testsHtml = tests.length === 0 ? "<tr><td colspan='4' style='text-align:center; color:#64748b;'>No mock tests attempted yet.</td></tr>" : "";
@@ -544,33 +542,12 @@
             btn.disabled = true;
 
             try {
-                // 1. Update Firebase to Solved
-                await firebase.firestore().collection("tickets").doc(tId).update({
-                    status: 'solved',
-                    reply: replyMsg,
-                    resolvedBy: 'Admin',
-                    resolvedAt: firebase.firestore.FieldValue.serverTimestamp()
-                });
-
-                // 2. Trigger Resolution Email to Student via Apps Script
-                if(studentEmail !== 'No Email') {
-                    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw7HnmqV789rjclioBMa2kwNELRkrMqEcH21e3pzyqosok6Q371TNW4aiVLBb4rE0Zk/exec";
-                    
-                    const emailBody = `Hello,\n\nYour support ticket regarding "${subject}" has been successfully resolved by our team.\n\nAdmin Response:\n"${replyMsg}"\n\nYou can view the full details in your Xplainer Guru Dashboard.\n\nRegards,\nXplainer Guru Support`;
-                    
-                    const params = new URLSearchParams();
-                    params.append("action", "admin_direct_email");
-                    params.append("studentEmail", studentEmail);
-                    params.append("subject", "✅ Ticket Resolved: " + subject);
-                    params.append("message", emailBody);
-
-                    // Send silently
-                    fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: params })
-                        .catch(e => console.log("Email trigger failed:", e));
-                }
+                // API-First Resolution
+                await window.TicketAPI.resolveTicket(tId, replyMsg, studentEmail, subject);
 
                 alert("✅ Ticket Solved & Email Notification Sent to Student!");
                 closeModal('ticket-reply-modal');
+                fetchPendingTickets();
             } catch (e) {
                 console.error("Resolve Error:", e);
                 alert("Failed to resolve ticket: " + e.message);
@@ -621,26 +598,25 @@
         }
 
         // 🟢 2. FIXED: FETCH LIVE TICKETS (Show Custom Student ID)
-        function fetchPendingTickets() {
-            const db = firebase.firestore();
-            db.collection('tickets').where('status', '==', 'pending').onSnapshot(snap => {
+        async function fetchPendingTickets() {
+            try {
+                const tickets = await window.TicketAPI.getPendingTickets();
+                
                 let aHtml = '', tHtml = '';
                 let acount = 0, tcount = 0;
 
-                snap.forEach(doc => {
-                    const t = doc.data();
-                    
+                tickets.forEach(t => {
                     // Generate exact Student Custom ID (e.g., XG-STU-A1B2C3)
                     let stuId = t.uid ? `XG-STU-${t.uid.substring(0, 6).toUpperCase()}` : 'UNKNOWN';
 
                     const card = `<div style="background:white; padding:15px; margin-bottom:10px; border-radius:8px; border:1px solid #e2e8f0; box-shadow: 0 2px 5px rgba(0,0,0,0.02);">
                         <div style="display:flex; justify-content:space-between; margin-bottom:5px;">
-                            <span style="font-size:11px; color:#94a3b8; font-weight:bold;">TKT: #${doc.id.substring(0, 6).toUpperCase()}</span>
+                            <span style="font-size:11px; color:#94a3b8; font-weight:bold;">TKT: #${t.id.substring(0, 6).toUpperCase()}</span>
                             <span style="font-size:11px; color:#2563eb; background:#eff6ff; padding:2px 6px; border-radius:4px; font-weight:bold;">BY: ${stuId}</span>
                         </div>
                         <h4 style="margin:0 0 5px; color:#0f172a;">${t.subject}</h4>
                         <p style="font-size:12px; color:#475569; margin:0 0 10px;">${t.description}</p>
-                        <button onclick="openTicketReplyModal('${doc.id}', '${t.description.replace(/'/g, "\\'")}', '${t.raisedByEmail || ''}', '${t.subject.replace(/'/g, "\\'")}')" class="admin-btn" style="background:#2563eb; padding:8px; font-size:13px;"><i class="fa-solid fa-reply"></i> Resolve</button>
+                        <button onclick="openTicketReplyModal('${t.id}', '${t.description.replace(/'/g, "\\'")}', '${t.raisedByEmail || ''}', '${t.subject.replace(/'/g, "\\'")}')" class="admin-btn" style="background:#2563eb; padding:8px; font-size:13px;"><i class="fa-solid fa-reply"></i> Resolve</button>
                     </div>`;
 
                     if (t.category === 'academic') { aHtml += card; acount++; }
@@ -652,7 +628,9 @@
 
                 if (document.getElementById('academic-count')) document.getElementById('academic-count').innerText = acount;
                 if (document.getElementById('tech-count')) document.getElementById('tech-count').innerText = tcount;
-            });
+            } catch(e) {
+                console.error("Error fetching pending tickets:", e);
+            }
         }
 
         // CBT MOCK TEST PUBLISHER (KEPT UNTOUCHED)

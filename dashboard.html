@@ -11,7 +11,7 @@
         href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Poppins:wght@600;700;800&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="../../css/style.css">
 
     <style>
         /* SAFE AREA FOR MASTER.JS UNIVERSAL HEADER & FOOTER */
@@ -418,12 +418,13 @@
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
 
-    <script src="js/firebase-init.js"></script>
-    <script src="js/auth.js"></script>
-    <script src="js/master.js"></script>
-    <script src="js/notification.js"></script>
-    <script src="js/ticketing.js"></script>
-    <script src="js/chatbot.js"></script>
+    <script src="../../js/firebase-init.js"></script>
+    <script src="../../js/api/ticketApi.js"></script>
+    <script src="../../js/auth.js"></script>
+    <script src="../../js/master.js"></script>
+    <script src="../../js/notification.js"></script>
+    <script src="../../js/ticketing.js"></script>
+    <script src="../../js/chatbot.js"></script>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
@@ -581,40 +582,24 @@
             }
         }
 
-        // 🟢 NEW: FIREBASE FETCH: Student's Doubt Tickets
+        // 🟢 API-FIRST FETCH: Student's Doubt Tickets
         async function fetchMyTickets(uid) {
             const ticketList = document.getElementById('my-tickets-list');
 
             try {
-                const db = firebase.firestore();
-                const snapshot = await db.collection('tickets')
-                    .where('uid', '==', uid)
-                    .get();
+                const tickets = await window.TicketAPI.getMyTickets(uid);
 
-                if (snapshot.empty) {
+                if (!tickets || tickets.length === 0) {
                     ticketList.innerHTML = `<div style="text-align:center; color:#64748b; padding: 15px; background: #f8fafc; border-radius: 8px; border: 1px dashed #cbd5e1;">No tickets raised yet. Need help? Ask above!</div>`;
                     return;
                 }
-
-                let tickets = [];
-                snapshot.forEach(doc => {
-                    let data = doc.data();
-                    data.id = doc.id;
-                    tickets.push(data);
-                });
-
-                tickets.sort((a, b) => {
-                    let timeA = a.timestamp ? a.timestamp.toMillis() : 0;
-                    let timeB = b.timestamp ? b.timestamp.toMillis() : 0;
-                    return timeB - timeA;
-                });
 
                 ticketList.innerHTML = '';
 
                 tickets.forEach(ticket => {
                     let dateStr = "Recently";
                     if (ticket.timestamp) {
-                        dateStr = ticket.timestamp.toDate().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+                        dateStr = new Date(ticket.timestamp).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
                     }
 
                     let isSolved = ticket.status === 'solved';
@@ -651,7 +636,7 @@
                 ticketList.innerHTML = `<div style="text-align:center; color:#ef4444; padding: 15px;">Failed to load tickets. Please refresh.</div>`;
             }
         }
-        // 🟢 FIREBASE: Submit Ticket Logic (Isolated directly in Dashboard)
+        // 🟢 API-FIRST: Submit Ticket Logic
         window.submitTicket = async function(e) {
             e.preventDefault();
             const btn = document.getElementById('submit-ticket-btn');
@@ -669,52 +654,16 @@
                 const user = firebase.auth().currentUser;
                 if (!user) throw new Error("Please login to submit a ticket.");
 
-                const db = firebase.firestore();
-                const userName = user.displayName || "Student";
-
-                // 1. SAVE TO FIREBASE
-                const docRef = await db.collection('tickets').add({ 
+                const payload = { 
                     category: categoryVal, 
                     subject: subject, 
                     description: description, 
-                    uid: user.uid,
-                    raisedByEmail: user.email || 'No Email', 
-                    status: 'pending',
-                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
-                });
+                    uid: user.uid, 
+                    raisedByEmail: user.email || 'No Email' 
+                };
                 
-                const ticketId = docRef.id;
-
-                // 2. APPS SCRIPT AUTOMATION (Emails)
-                const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw7HnmqV789rjclioBMa2kwNELRkrMqEcH21e3pzyqosok6Q371TNW4aiVLBb4rE0Zk/exec";
-                
-                // 🚨 FIX: Using URLSearchParams (application/x-www-form-urlencoded) to safely bypass CORS
-                
-                // Fire Alert to Pool (Academic/Tech)
-                const poolPayload = new URLSearchParams();
-                poolPayload.append("action", "new_ticket");
-                poolPayload.append("category", categoryVal);
-                poolPayload.append("subject", subject);
-                poolPayload.append("description", description);
-
-                fetch(SCRIPT_URL, {
-                    method: 'POST',
-                    body: poolPayload
-                }).then(res => res.json()).then(data => console.log("Pool Email Triggered:", data)).catch(e => console.error("Pool Alert Fail:", e));
-
-                // Fire Confirmation to Student
-                const confMsg = `Hello ${userName},\n\nWe have successfully received your ticket request.\nTicket ID: #${ticketId.substring(0,6).toUpperCase()}\nSubject: ${subject}\n\nOur team is reviewing your query. You can track its status on your Dashboard.\n\nRegards,\nXplainer Guru Team`;
-                
-                const studentPayload = new URLSearchParams();
-                studentPayload.append("action", "admin_direct_email");
-                studentPayload.append("studentEmail", user.email);
-                studentPayload.append("subject", "Ticket Received: " + subject);
-                studentPayload.append("message", confMsg);
-
-                fetch(SCRIPT_URL, {
-                    method: 'POST',
-                    body: studentPayload
-                }).then(res => res.json()).then(data => console.log("Student Email Triggered:", data)).catch(e => console.error("Student Confirmation Fail:", e));
+                const response = await window.TicketAPI.createTicket(payload);
+                const ticketId = response.data.id;
 
                 // 3. SUCCESS UI UPDATE
                 alert(`✅ Success! Your ticket has been submitted.\n\nTicket ID: #${ticketId.substring(0,6).toUpperCase()}`);
