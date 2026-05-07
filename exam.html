@@ -6,383 +6,81 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
     <title>Live Exam | Xplainer Guru</title>
 
-    <link
-        href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;800&family=Poppins:wght@700;800&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;800&family=Poppins:wght@700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <style>
-        /* RESET & FOCUS JAIL CSS */
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: 'Manrope', sans-serif;
-            background: #f8fafc;
-            color: #0f172a;
-            overflow-x: hidden;
-            user-select: none;
-            /* Prevents text copying */
-        }
-
-        /* THE DYNAMIC WATERMARK */
-        .watermark {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            pointer-events: none;
-            z-index: 9999;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            opacity: 0.04;
-            font-size: 8vw;
-            font-family: 'Poppins';
-            font-weight: 800;
-            color: #0f172a;
-            transform: rotate(-30deg);
-            white-space: nowrap;
-            text-align: center;
-            line-height: 1.2;
-        }
-
-        /* TOP NAV BAR (Exam specific, no standard header) */
-        .exam-header {
-            background: #0f172a;
-            color: white;
-            padding: 15px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-        }
-
-        .exam-title {
-            font-family: 'Poppins';
-            font-size: 18px;
-            margin: 0;
-        }
-
-        .exam-timer {
-            background: #ef4444;
-            padding: 8px 20px;
-            border-radius: 50px;
-            font-family: monospace;
-            font-weight: 800;
-            font-size: 20px;
-            letter-spacing: 2px;
-            box-shadow: 0 0 15px rgba(239, 68, 68, 0.4);
-        }
-
-        /* MAIN LAYOUT */
-        .exam-container {
-            display: grid;
-            grid-template-columns: 1fr 320px;
-            max-width: 1400px;
-            margin: 0 auto;
-            min-height: calc(100vh - 70px);
-        }
-
-        @media (max-width: 900px) {
-            .exam-container {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        /* QUESTION AREA */
-        .q-area {
-            padding: 40px;
-            background: white;
-            border-right: 1px solid #e2e8f0;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .q-number-badge {
-            font-weight: 800;
-            color: #2563eb;
-            font-size: 14px;
-            margin-bottom: 15px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .q-text {
-            font-size: 20px;
-            font-weight: 600;
-            margin-bottom: 25px;
-            line-height: 1.6;
-        }
-
-        .q-image {
-            max-width: 100%;
-            max-height: 300px;
-            border-radius: 8px;
-            margin-bottom: 25px;
-            border: 1px solid #e2e8f0;
-            object-fit: contain;
-        }
-
-        .options-grid {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            margin-bottom: 40px;
-        }
-
-        .option-label {
-            display: flex;
-            align-items: center;
-            padding: 15px 20px;
-            border: 2px solid #e2e8f0;
-            border-radius: 12px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: 0.2s;
-            font-size: 16px;
-        }
-
-        .option-label:hover {
-            background: #f8fafc;
-            border-color: #cbd5e1;
-        }
-
-        input[type="radio"] {
-            display: none;
-        }
-
-        input[type="radio"]:checked+.option-label {
-            border-color: #2563eb;
-            background: #eff6ff;
-            color: #1d4ed8;
-        }
-
-        input[type="radio"]:checked+.option-label::before {
-            content: '\\f058';
-            font-family: 'Font Awesome 6 Free';
-            font-weight: 900;
-            margin-right: 10px;
-            color: #2563eb;
-        }
-
-        .option-label::before {
-            content: '\\f111';
-            font-family: 'Font Awesome 6 Free';
-            font-weight: 400;
-            margin-right: 10px;
-            color: #94a3b8;
-        }
-
-        /* BOTTOM ACTION BAR */
-        .action-bar {
-            margin-top: auto;
-            display: flex;
-            justify-content: space-between;
-            padding-top: 20px;
-            border-top: 1px solid #e2e8f0;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-
-        .btn-exam {
-            padding: 12px 25px;
-            border-radius: 8px;
-            font-weight: 800;
-            border: none;
-            cursor: pointer;
-            font-family: 'Manrope';
-            transition: 0.2s;
-            font-size: 15px;
-        }
-
-        .btn-prev {
-            background: #f1f5f9;
-            color: #475569;
-        }
-
-        .btn-next {
-            background: #2563eb;
-            color: white;
-        }
-
-        .btn-review {
-            background: #8b5cf6;
-            color: white;
-        }
-
-        .btn-clear {
-            background: white;
-            color: #ef4444;
-            border: 1px solid #fecaca;
-        }
-
-        /* SIDEBAR PALETTE */
-        .palette-area {
-            background: #f8fafc;
-            padding: 25px;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .palette-grid {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 10px;
-            margin-bottom: 30px;
-        }
-
-        .p-btn {
-            aspect-ratio: 1;
-            border-radius: 50%;
-            border: 2px solid #cbd5e1;
-            background: white;
-            font-weight: 800;
-            cursor: pointer;
-            font-size: 14px;
-            color: #475569;
-            transition: 0.2s;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 0;
-        }
-
-        /* Palette States */
-        .p-btn.ans {
-            background: #10b981;
-            color: white;
-            border-color: #10b981;
-        }
-
-        .p-btn.rev {
-            background: #8b5cf6;
-            color: white;
-            border-color: #8b5cf6;
-        }
-
-        .p-btn.not-ans {
-            background: #ef4444;
-            color: white;
-            border-color: #ef4444;
-        }
-
-        .p-btn.curr {
-            border: 3px solid #0f172a;
-            transform: scale(1.15);
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .submit-btn {
-            background: #16a34a;
-            color: white;
-            border: none;
-            padding: 15px;
-            border-radius: 8px;
-            font-weight: 800;
-            cursor: pointer;
-            width: 100%;
-            font-size: 16px;
-            font-family: 'Manrope';
-            margin-top: auto;
-        }
-
-        .submit-btn:hover {
-            background: #15803d;
-        }
-
-        /* LOADER OVERLAY */
-        #loader-ui {
-            position: fixed;
-            inset: 0;
-            background: white;
-            z-index: 99999;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-        }
-
-        #exam-ui {
-            display: none;
-        }
-    </style>
+    <link rel="stylesheet" href="css/style.css">
 </head>
 
-<body>
+<body class="m-0 p-0 font-['Manrope'] bg-slate-50 text-slate-900 overflow-x-hidden select-none">
 
-    <div class="watermark" id="watermark-text">XPLAINER GURU<br>Loading ID...</div>
-
-    <div id="loader-ui">
-        <i class="fa-solid fa-shield-halved fa-spin fa-2x" style="color: #2563eb; margin-bottom: 15px;"></i>
-        <h2 style="font-family: 'Poppins'; color: #0f172a; margin: 0;">Securing Exam Environment...</h2>
-        <p style="color: #64748b; font-weight: 600;">Do not switch tabs or refresh.</p>
+    <div class="fixed inset-0 w-screen h-screen pointer-events-none z-[9999] flex justify-center items-center opacity-5 text-[8vw] font-['Poppins'] font-extrabold text-slate-900 -rotate-[30deg] whitespace-nowrap text-center leading-tight" id="watermark-text">
+        XPLAINER GURU<br>Loading ID...
     </div>
 
-    <div id="exam-ui">
-        <div class="exam-header">
-            <h2 class="exam-title" id="test-title-display">Loading Test...</h2>
-            <div class="exam-timer" id="timer-display">--:--:--</div>
+    <div id="loader-ui" class="fixed inset-0 bg-white z-[99999] flex flex-col justify-center items-center">
+        <div class="w-full flex justify-center mb-10 min-h-[50px] absolute top-10 z-[100000]">
+            <div id="at-320x50"></div>
         </div>
 
-        <div class="exam-container">
-            <div class="q-area">
-                <div class="q-number-badge" id="q-num-display">Question 1</div>
-                <div class="q-text" id="q-text-display">Fetching question from secure server...</div>
+        <script type="text/javascript">
+            atOptions = { 'key' : '1a4e90822d236b74e172b42322f602f7', 'format' : 'iframe', 'height' : 50, 'width' : 320, 'params' : {} };
+            const bannerScript = document.createElement('script');
+            bannerScript.type = "text/javascript";
+            bannerScript.src = "https://www.highperformanceformat.com/1a4e90822d236b74e172b42322f602f7/invoke.js";
+            bannerScript.onerror = () => console.error("320x50 Banner blocked by Ad-Blocker");
+            document.getElementById('at-320x50').appendChild(bannerScript);
+        </script>
 
-                <img id="q-image-display" class="q-image" src="" style="display: none;" alt="Question Diagram">
+        <i class="fa-solid fa-shield-halved fa-spin fa-2x text-blue-600 mb-[15px]"></i>
+        <h2 class="font-['Poppins'] text-slate-900 m-0 text-2xl">Securing Exam Environment...</h2>
+        <p class="text-slate-500 font-semibold mt-2">Do not switch tabs or refresh.</p>
+    </div>
 
-                <div class="options-grid" id="options-container">
-                </div>
+    <div id="exam-ui" class="hidden">
+        
+        <div class="bg-slate-900 text-white py-3.5 px-5 flex justify-between items-center sticky top-0 z-[100] shadow-[0_4px_15px_rgba(0,0,0,0.1)]">
+            <h2 class="font-['Poppins'] text-[16px] sm:text-[18px] m-0 leading-tight" id="test-title-display">Loading Test...</h2>
+            <div class="bg-red-500 py-2 px-4 sm:px-5 rounded-full font-mono font-extrabold text-[16px] sm:text-[20px] tracking-[2px] shadow-[0_0_15px_rgba(239,68,68,0.4)]" id="timer-display">--:--:--</div>
+        </div>
 
-                <div class="action-bar">
-                    <div style="display: flex; gap: 10px;">
-                        <button class="btn-exam btn-prev" onclick="alert('Going to Previous Question')"><i
-                                class="fa-solid fa-arrow-left"></i> Previous</button>
-                        <button class="btn-exam btn-clear" onclick="alert('Response Cleared')"><i
-                                class="fa-solid fa-eraser"></i> Clear</button>
+        <div class="grid grid-cols-1 md:grid-cols-[1fr_320px] max-w-[1400px] mx-auto min-h-[calc(100vh-70px)]">
+            
+            <div class="p-5 sm:p-10 bg-white border-b md:border-b-0 md:border-r border-slate-200 flex flex-col z-10 relative">
+                <div class="font-extrabold text-blue-600 text-[14px] mb-[15px] uppercase tracking-wide" id="q-num-display">Question 1</div>
+                <div class="text-[18px] sm:text-[20px] font-semibold mb-[25px] leading-relaxed text-slate-800" id="q-text-display">Fetching question from secure server...</div>
+
+                <img id="q-image-display" class="max-w-full max-h-[300px] rounded-lg mb-[25px] border border-slate-200 object-contain hidden" src="" alt="Question Diagram">
+
+                <div class="flex flex-col gap-[15px] mb-10" id="options-container">
                     </div>
-                    <div style="display: flex; gap: 10px;">
-                        <button class="btn-exam btn-review" onclick="alert('Marked for Review')"><i
-                                class="fa-solid fa-flag"></i> Mark Review</button>
-                        <button class="btn-exam btn-next" onclick="alert('Saving and Next')">Save & Next <i
-                                class="fa-solid fa-arrow-right"></i></button>
+
+                <div class="mt-auto flex flex-col sm:flex-row justify-between pt-5 border-t border-slate-200 gap-4">
+                    <div class="flex gap-2.5 w-full sm:w-auto">
+                        <button class="flex-1 sm:flex-none px-4 sm:px-[25px] py-3 rounded-lg font-extrabold border-none cursor-pointer font-['Manrope'] transition duration-200 text-[14px] sm:text-[15px] bg-slate-100 text-slate-600 hover:bg-slate-200 flex items-center justify-center gap-2" onclick="prevQuestion()"><i class="fa-solid fa-arrow-left"></i> Previous</button>
+                        <button class="flex-1 sm:flex-none px-4 sm:px-[25px] py-3 rounded-lg font-extrabold border bg-white border-red-200 text-red-500 cursor-pointer font-['Manrope'] transition duration-200 text-[14px] sm:text-[15px] hover:bg-red-50 flex items-center justify-center gap-2" onclick="clearResponse()"><i class="fa-solid fa-eraser"></i> Clear</button>
+                    </div>
+                    <div class="flex gap-2.5 w-full sm:w-auto">
+                        <button class="flex-1 sm:flex-none px-4 sm:px-[25px] py-3 rounded-lg font-extrabold border-none cursor-pointer font-['Manrope'] transition duration-200 text-[14px] sm:text-[15px] bg-violet-500 text-white hover:bg-violet-600 flex items-center justify-center gap-2" onclick="markForReview()"><i class="fa-solid fa-flag"></i> Mark Review</button>
+                        <button class="flex-1 sm:flex-none px-4 sm:px-[25px] py-3 rounded-lg font-extrabold border-none cursor-pointer font-['Manrope'] transition duration-200 text-[14px] sm:text-[15px] bg-blue-600 text-white hover:bg-blue-700 flex items-center justify-center gap-2 shadow-md" onclick="nextQuestion()">Save & Next <i class="fa-solid fa-arrow-right"></i></button>
                     </div>
                 </div>
             </div>
 
-            <div class="palette-area">
-                <h3 style="font-family: 'Poppins'; margin: 0 0 20px; font-size: 16px;">Question Palette</h3>
+            <div class="bg-slate-50 p-5 sm:p-[25px] flex flex-col z-10 relative">
+                <h3 class="font-['Poppins'] m-0 mb-5 text-[16px] text-slate-900">Question Palette</h3>
 
-                <div class="palette-grid" id="palette-container">
-                    <button class="p-btn curr">1</button>
-                    <button class="p-btn ans">2</button>
-                    <button class="p-btn rev">3</button>
-                    <button class="p-btn not-ans">4</button>
-                    <button class="p-btn">5</button>
+                <div class="grid grid-cols-5 gap-[10px] mb-[30px]" id="palette-container">
+                    </div>
+
+                <div class="bg-white p-[15px] rounded-lg border border-slate-200 mb-[20px] text-[12px] font-bold text-slate-600">
+                    <div class="flex items-center gap-2.5 mb-2"><span class="w-3 h-3 bg-emerald-500 rounded-full"></span> Answered</div>
+                    <div class="flex items-center gap-2.5 mb-2"><span class="w-3 h-3 bg-red-500 rounded-full"></span> Not Answered</div>
+                    <div class="flex items-center gap-2.5 mb-2"><span class="w-3 h-3 bg-violet-500 rounded-full"></span> Marked for Review</div>
+                    <div class="flex items-center gap-2.5"><span class="w-3 h-3 bg-white border-2 border-slate-300 rounded-full box-border"></span> Not Visited</div>
                 </div>
 
-                <div
-                    style="background: white; padding: 15px; border-radius: 8px; border: 1px solid #e2e8f0; margin-bottom: 20px; font-size: 12px; font-weight: 700; color: #475569;">
-                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;"><span
-                            style="width:12px; height:12px; background:#10b981; border-radius:50%;"></span> Answered
-                    </div>
-                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;"><span
-                            style="width:12px; height:12px; background:#ef4444; border-radius:50%;"></span> Not Answered
-                    </div>
-                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;"><span
-                            style="width:12px; height:12px; background:#8b5cf6; border-radius:50%;"></span> Marked for
-                        Review</div>
-                    <div style="display: flex; align-items: center; gap: 10px;"><span
-                            style="width:12px; height:12px; background:white; border:2px solid #cbd5e1; border-radius:50%;"></span>
-                        Not Visited</div>
-                </div>
-
-                <button class="submit-btn" onclick="forceSubmit('User clicked Submit Test')"><i
-                        class="fa-solid fa-paper-plane"></i> Submit Test</button>
+                <button class="bg-green-600 hover:bg-green-700 text-white border-none p-[15px] rounded-lg font-extrabold cursor-pointer w-full text-[16px] font-['Manrope'] mt-auto transition duration-200 shadow-lg" onclick="forceSubmit('User clicked Submit Test')"><i class="fa-solid fa-paper-plane mr-2"></i> Submit Test</button>
             </div>
         </div>
     </div>
@@ -393,20 +91,18 @@
     <script src="js/firebase-init.js"></script>
 
     <script>
-        // --- GLOBAL ENGINE STATE ---
         let currentUserData = null;
         let testId = new URLSearchParams(window.location.search).get("id");
         let testData = null;
         let isTestActive = false;
 
         let currentQuestionIndex = 0;
-        let userResponses = []; // Tracks status, selected option, and time spent
+        let userResponses = [];
 
         let totalTimeSpent = 0;
         let questionTimerInterval = null;
         let globalTimerInterval = null;
 
-        // 1. STRICT AUTH CHECK & INITIALIZATION
         firebase.auth().onAuthStateChanged(async (user) => {
             if (!user) {
                 localStorage.setItem("redirectAfterLogin", `exam.html?id=${testId}`);
@@ -426,7 +122,6 @@
             }
         });
 
-        // 2. FETCH REAL TEST FROM FIREBASE
         async function fetchTestFromDatabase() {
             if (!testId) {
                 alert("Invalid Test Link!");
@@ -439,29 +134,24 @@
                 if (doc.exists) {
                     testData = doc.data();
 
-                    // Initialize tracking array for all questions
                     testData.questions.forEach((q, index) => {
                         userResponses.push({
                             qIndex: index,
-                            status: 'not-visited', // ans, not-ans, rev, not-visited
+                            status: 'not-visited',
                             selected: null,
                             timeSpent: 0
                         });
                     });
 
-                    // Hide loader, show UI
                     document.getElementById('loader-ui').style.display = 'none';
+                    document.getElementById('exam-ui').classList.remove('hidden');
                     document.getElementById('exam-ui').style.display = 'block';
                     document.getElementById('test-title-display').innerText = testData.title;
 
                     isTestActive = true;
                     startGlobalTimer(testData.duration || 0);
-
-                    // Load the first question
                     loadQuestion(0);
                     
-                    // ANTI-CHEAT REMOVED AS PER REQUEST
-                    // (Only copy/paste prevention remains)
                     document.addEventListener('contextmenu', e => e.preventDefault());
                     document.addEventListener('copy', e => e.preventDefault());
 
@@ -475,7 +165,6 @@
             }
         }
 
-        // 3. QUESTION RENDERING LOGIC
         function loadQuestion(index) {
             if (questionTimerInterval) clearInterval(questionTimerInterval);
 
@@ -492,8 +181,10 @@
             const imgEl = document.getElementById('q-image-display');
             if (q.image) {
                 imgEl.src = q.image;
+                imgEl.classList.remove('hidden');
                 imgEl.style.display = 'block';
             } else {
+                imgEl.classList.add('hidden');
                 imgEl.style.display = 'none';
             }
 
@@ -501,9 +192,16 @@
             const opts = ['A', 'B', 'C', 'D'];
             opts.forEach(optKey => {
                 const isChecked = userResponses[index].selected === optKey ? "checked" : "";
+                
                 optionsHTML += `
-                    <input type="radio" name="q_option" id="opt_${optKey}" value="${optKey}" ${isChecked} onchange="saveAnswer('${optKey}')">
-                    <label class="option-label" for="opt_${optKey}">${optKey}. ${q.options[optKey]}</label>
+                    <div class="relative">
+                        <input type="radio" name="q_option" id="opt_${optKey}" value="${optKey}" ${isChecked} onchange="saveAnswer('${optKey}')" class="peer hidden">
+                        <label for="opt_${optKey}" class="flex items-center p-[15px_20px] border-2 border-slate-200 rounded-xl cursor-pointer font-semibold transition duration-200 text-[16px] text-slate-700 hover:bg-slate-50 hover:border-slate-300 peer-checked:border-blue-600 peer-checked:bg-blue-50 peer-checked:text-blue-700 [&>.checked-icon]:hidden peer-checked:[&>.checked-icon]:inline-block peer-checked:[&>.unchecked-icon]:hidden">
+                            <i class="fa-regular fa-circle text-slate-300 mr-3 text-[18px] unchecked-icon"></i>
+                            <i class="fa-solid fa-circle-check text-blue-600 mr-3 text-[18px] checked-icon"></i>
+                            ${optKey}. ${q.options[optKey]}
+                        </label>
+                    </div>
                 `;
             });
             document.getElementById('options-container').innerHTML = optionsHTML;
@@ -517,7 +215,6 @@
             }, 1000);
         }
 
-        // 4. ACTION BUTTONS LOGIC
         function saveAnswer(optKey) {
             userResponses[currentQuestionIndex].selected = optKey;
             userResponses[currentQuestionIndex].status = 'ans';
@@ -527,10 +224,8 @@
         function clearResponse() {
             userResponses[currentQuestionIndex].selected = null;
             userResponses[currentQuestionIndex].status = 'not-ans';
-
             const radios = document.getElementsByName('q_option');
             radios.forEach(r => r.checked = false);
-
             renderPalette();
         }
 
@@ -558,13 +253,18 @@
             loadQuestion(index);
         }
 
-        // 5. PALETTE RENDERER
+        // 5. PALETTE RENDERER (TAILWIND DYNAMIC INJECTION)
         function renderPalette() {
             let paletteHTML = "";
             userResponses.forEach((res, i) => {
-                let currClass = (i === currentQuestionIndex) ? "curr" : "";
-                let statusClass = res.status; 
-                paletteHTML += `<button class="p-btn ${statusClass} ${currClass}" onclick="jumpToQuestion(${i})">${i + 1}</button>`;
+                let currClass = (i === currentQuestionIndex) ? "!border-slate-900 !border-[3px] scale-110 shadow-md" : "";
+                let statusClass = "";
+                
+                if(res.status === 'ans') statusClass = "!bg-emerald-500 !text-white !border-emerald-500";
+                else if(res.status === 'not-ans') statusClass = "!bg-red-500 !text-white !border-red-500";
+                else if(res.status === 'rev') statusClass = "!bg-violet-500 !text-white !border-violet-500";
+
+                paletteHTML += `<button class="aspect-square rounded-full border-2 border-slate-300 bg-white font-extrabold cursor-pointer text-[14px] text-slate-600 transition duration-200 flex justify-center items-center p-0 hover:bg-slate-100 ${statusClass} ${currClass}" onclick="jumpToQuestion(${i})">${i + 1}</button>`;
             });
             document.getElementById('palette-container').innerHTML = paletteHTML;
         }
@@ -618,10 +318,9 @@
                 }
             });
 
-            // 🟢 FIX: Pack Result Payload with a UNIQUE ATTEMPT ID
             const resultPayload = {
                 testId: testId,
-                attemptId: Date.now().toString(), // Har naye test ka unique time-stamp ID
+                attemptId: Date.now().toString(), 
                 title: testData.title,
                 totalQuestions: testData.questions.length,
                 correct: correctCount,
@@ -636,13 +335,6 @@
             alert(`TEST SUBMITTED!\nRedirecting to your detailed Report Card...`);
             window.location.href = `result.html?id=${testId}`;
         }
-
-        // Attach Button Listeners
-        document.querySelector('.btn-prev').onclick = prevQuestion;
-        document.querySelector('.btn-next').onclick = nextQuestion;
-        document.querySelector('.btn-review').onclick = markForReview;
-        document.querySelector('.btn-clear').onclick = clearResponse;
     </script>
 </body>
-
 </html>

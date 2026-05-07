@@ -9,32 +9,21 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <link rel="stylesheet" href="css/style.css">
-    
-    <style>
-        body { background: #f8fafc; font-family: 'Manrope', sans-serif; margin: 0; padding-top: 100px; display: flex; flex-direction: column; min-height: 100vh;}
-        .container { max-width: 800px; margin: 0 auto; padding: 0 20px 80px; flex: 1; width: 100%; box-sizing: border-box; }
-        
-        .back-btn { display: inline-flex; align-items: center; gap: 8px; color: #2563eb; text-decoration: none; font-weight: 700; margin-bottom: 25px; font-size: 14px; transition: 0.2s;}
-        .back-btn:hover { color: #1d4ed8; transform: translateX(-5px); }
-
-        .article-header { text-align: center; margin-bottom: 30px; }
-        .article-title { font-family: 'Poppins'; color: #0f172a; font-size: clamp(1.8rem, 4vw, 2.5rem); margin: 0 0 15px; line-height: 1.3; }
-        
-        .article-meta { color: #64748b; font-size: 14px; font-weight: 600; display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; margin-bottom: 25px; }
-        .article-meta span { display: flex; align-items: center; gap: 5px; }
-        
-        .article-cover { width: 100%; max-height: 400px; object-fit: cover; border-radius: 16px; margin-bottom: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); background: #e2e8f0; }
-        .article-content { font-size: 17px; color: #334155; line-height: 1.8; white-space: pre-wrap; }
-        
-        .loader { text-align: center; padding: 100px 20px; color: #94a3b8; font-family: 'Poppins'; }
-        .error-state { text-align: center; padding: 50px; background: #fff; border-radius: 12px; border: 1px dashed #ef4444; color: #ef4444; font-family: 'Poppins'; }
-    </style>
 </head>
-<body>
+<body class="bg-slate-50 font-['Manrope'] m-0 pt-[100px] flex flex-col min-h-screen text-slate-800">
 
-    <div class="container">
-        <a href="articles.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i> Back to Articles</a>
-        <div id="article-container"><div class="loader"><i class="fa-solid fa-spinner fa-spin fa-2x"></i><br><br>Loading Article...</div></div>
+    <div class="max-w-[800px] mx-auto px-5 pb-20 flex-1 w-full box-border">
+        
+        <a href="articles.html" class="inline-flex items-center gap-2 text-blue-600 no-underline font-bold mb-[25px] text-[14px] transition duration-200 hover:text-blue-800 hover:-translate-x-1.5">
+            <i class="fa-solid fa-arrow-left"></i> Back to Articles
+        </a>
+        
+        <div id="article-container">
+            <div class="text-center py-[100px] px-5 text-slate-400 font-['Poppins']">
+                <i class="fa-solid fa-spinner fa-spin fa-2x mb-4 text-blue-600"></i><br>Loading Article...
+            </div>
+        </div>
+
     </div>
 
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
@@ -51,37 +40,102 @@
             const articleId = urlParams.get('id');
             const container = document.getElementById('article-container');
 
-            if(!articleId) { container.innerHTML = `<div class="error-state"><i class="fa-solid fa-circle-exclamation fa-2x"></i><br><br>Invalid Article ID.</div>`; return; }
+            if(!articleId) { 
+                container.innerHTML = `
+                    <div class="text-center p-[50px] bg-white rounded-xl border border-dashed border-red-500 text-red-500 font-['Poppins'] shadow-sm">
+                        <i class="fa-solid fa-circle-exclamation text-[32px] mb-4"></i><br>Invalid Article ID.
+                    </div>`; 
+                return; 
+            }
 
             try {
                 const doc = await db.collection('articles').doc(articleId).get();
                 const data = doc.exists ? doc.data() : {};
+                
                 if(!doc.exists || !(data.deleteStatus === 'Active' || !data.isDeleted)) {
-                    container.innerHTML = `<div class="error-state"><i class="fa-solid fa-file-circle-xmark fa-2x"></i><br><br>This article has been removed.</div>`; return;
+                    container.innerHTML = `
+                        <div class="text-center p-[50px] bg-white rounded-xl border border-dashed border-red-500 text-red-500 font-['Poppins'] shadow-sm">
+                            <i class="fa-solid fa-file-circle-xmark text-[32px] mb-4"></i><br>This article has been removed.
+                        </div>`; 
+                    return;
                 }
 
                 const dateStr = data.timestamp ? new Date(data.timestamp.seconds * 1000).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) : 'Recently Published';
-                const contentHtml = data.content ? data.content.replace(/\n/g, '<br>') : 'No content available.';
+                
+                let adMidInjected = false;
+                let adEndInjected = false;
+                let finalContent = 'No content available.';
+                if (data.content) {
+                    const paragraphs = data.content.split('\n');
+                    let contentWithAds = "";
+                    paragraphs.forEach((p, idx) => {
+                        contentWithAds += p + "<br>";
+                        if (idx === 1) { // After 2nd Paragraph
+                            contentWithAds += `
+                            <div class="w-full flex justify-center my-6 min-h-[50px]">
+                                <div id="ad-mid-container" class="w-full flex justify-center"></div>
+                            </div>`;
+                            adMidInjected = true;
+                        }
+                    });
+                    finalContent = contentWithAds;
+
+                    // Add ad at the end
+                    finalContent += `
+                    <div class="w-full flex justify-center my-6 min-h-[50px]">
+                        <div id="ad-end-container" class="w-full flex justify-center"></div>
+                    </div>`;
+                    adEndInjected = true;
+                }
 
                 document.title = `${data.title} | Xplainer Guru`;
 
-                // 🔒 VIEWS REMOVED FROM UI
                 container.innerHTML = `
-                    <div class="article-header">
-                        <h1 class="article-title">${data.title}</h1>
-                        <div class="article-meta">
-                            <span style="color:#2563eb;"><i class="fa-solid fa-pen-nib"></i> ${data.authorName || 'Xplainer Guru'}</span>
-                            <span><i class="fa-solid fa-calendar"></i> ${dateStr}</span>
+                    <div class="text-center mb-[30px]">
+                        <h1 class="font-['Poppins'] text-slate-900 text-[clamp(1.8rem,4vw,2.5rem)] m-0 mb-[15px] leading-snug">${data.title}</h1>
+                        <div class="text-slate-500 text-[14px] font-semibold flex justify-center gap-5 flex-wrap mb-[25px]">
+                            <span class="flex items-center gap-1.5 text-blue-600"><i class="fa-solid fa-pen-nib"></i> ${data.authorName || 'Xplainer Guru'}</span>
+                            <span class="flex items-center gap-1.5"><i class="fa-solid fa-calendar"></i> ${dateStr}</span>
                         </div>
                     </div>
-                    <img src="${data.cover || 'logo.png'}" class="article-cover" onerror="this.style.display='none'">
-                    <div class="article-content">${contentHtml}</div>
+                    
+                    <img src="${data.cover || 'logo.png'}" class="w-full max-h-[400px] object-cover rounded-2xl mb-[40px] shadow-[0_10px_30px_rgba(0,0,0,0.08)] bg-slate-200" onerror="this.style.display='none'">
+                    
+                    <div class="text-[17px] sm:text-[18px] text-slate-700 leading-relaxed whitespace-pre-wrap font-medium">
+                        ${finalContent}
+                    </div>
                 `;
 
-            } catch(e) { container.innerHTML = `<div class="error-state">Failed to load the article.</div>`; }
+                // Safe script injection for mid and end ads
+                const injectReaderAd = (targetId, pageLabel) => {
+                    const target = document.getElementById(targetId);
+                    if (target) {
+                        console.log(`Ad script initialized for: ${pageLabel}`);
+                        const container = document.createElement('div');
+                        container.id = "container-e9b12f5418d9e679de47d1e3b3183725";
+                        target.appendChild(container);
+
+                        const script = document.createElement('script');
+                        script.async = true;
+                        script.setAttribute('data-cfasync', 'false');
+                        script.src = "https://pl29365593.profitablecpmratenetwork.com/e9b12f5418d9e679de47d1e3b3183725/invoke.js";
+                        script.onerror = () => console.error(`Ad blocked: ${pageLabel}`);
+                        document.body.appendChild(script);
+                    }
+                };
+
+                if (adMidInjected) injectReaderAd('ad-mid-container', "Article Mid");
+                if (adEndInjected) injectReaderAd('ad-end-container', "Article End");
+
+            } catch(e) { 
+                container.innerHTML = `
+                    <div class="text-center p-[50px] bg-white rounded-xl border border-dashed border-red-500 text-red-500 font-['Poppins'] shadow-sm">
+                        <i class="fa-solid fa-triangle-exclamation text-[32px] mb-4"></i><br>Failed to load the article. Please check your connection.
+                    </div>`; 
+            }
         }
 
-        loadArticle();
+        window.addEventListener('DOMContentLoaded', loadArticle);
     </script>
 </body>
 </html>

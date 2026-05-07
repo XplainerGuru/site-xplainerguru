@@ -8,158 +8,79 @@
     
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Poppins:wght@600;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <link rel="stylesheet" href="css/style.css">
-    <style>
-        body { background: #f8fafc; font-family: 'Manrope', sans-serif; margin: 0; padding-top: 72px; display: flex; flex-direction: column; min-height: 100vh; overflow-x: hidden;}
-        
-        /* HERO SECTION */
-        .hero { padding: 40px 20px; text-align: center; background: linear-gradient(180deg, #eff6ff 0%, #f8fafc 100%); position: relative; }
-        .hero-badge { display: inline-block; background: #dbeafe; color: #2563eb; font-size: 11px; font-weight: 800; padding: 6px 15px; border-radius: 50px; text-transform: uppercase; margin-bottom: 15px; border: 1px solid #bfdbfe;}
-        .hero h1 { font-family: 'Poppins', sans-serif; font-size: clamp(2rem, 4vw, 3rem); font-weight: 900; color: #0f172a; margin: 0 0 15px; line-height: 1.2; letter-spacing: -1px; }
-        .hero h1 span { color: #2563eb; }
-        .hero p { font-size: clamp(0.9rem, 2vw, 1.1rem); color: #475569; max-width: 600px; margin: 0 auto 30px; line-height: 1.6; }
-        
-        .hero-btns { display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; margin-bottom: 20px;}
-        .btn { padding: 14px 25px; border-radius: 12px; font-family: 'Manrope'; font-weight: 800; font-size: 14px; text-decoration: none; transition: 0.3s; display: inline-flex; align-items: center; gap: 10px; cursor: pointer; border:none;}
-        .btn-primary { background: #2563eb; color: #fff; box-shadow: 0 10px 25px rgba(37,99,235,0.3); }
-        .btn-primary:hover { background: #1d4ed8; transform: translateY(-3px); }
-        .btn-secondary { background: #fff; color: #0f172a; border: 2px solid #e2e8f0; }
-        .btn-secondary:hover { border-color: #cbd5e1; background: #f1f5f9; transform: translateY(-3px); }
-
-        /* WHATSAPP BANNER */
-        .banner-link { width: 100%; max-width: 1000px; margin: 0 auto 20px; display: block; text-decoration: none; }
-        .banner-link img { width: 100%; height: auto; display: block; border-radius: 15px; }
-        .wa-box { max-width: 1000px; margin: 0 auto 40px; padding: 20px; background: #f0fdf4; border-radius: 15px; border: 1px solid #dcfce7; text-align: center; box-sizing: border-box;}
-
-        /* SLIDER */
-        .slider-wrapper { position: relative; width: 100%; max-width: 1000px; margin: 0 auto 40px; overflow: hidden; border-radius: 20px; background: #000; box-shadow: 0 10px 30px rgba(0,0,0,0.15); min-height: 200px; display: flex; align-items: center; justify-content: center; }
-        .slider-track { display: flex; transition: transform 0.5s ease-in-out; width: 100%; height: 100%; }
-        .slide { min-width: 100%; position: relative; cursor: pointer; }
-        .slide img { width: 100%; height: 100%; display: block; aspect-ratio: 16/9; object-fit: cover; opacity: 0.8; transition: 0.4s; }
-        .slide:hover img { opacity: 1; transform: scale(1.02); }
-        
-        .play-btn-overlay { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; z-index: 5; }
-        .play-btn-overlay i { color: #fff; font-size: 60px; filter: drop-shadow(0 4px 10px rgba(0,0,0,0.5)); transition: 0.3s; }
-        .slide:hover .play-btn-overlay i { transform: scale(1.2); color: #ff0000; }
-
-        .slide-info { position: absolute; bottom: 0; left: 0; right: 0; padding: 20px; background: linear-gradient(transparent, rgba(0,0,0,0.8)); color: #fff; }
-        .slide-info h4 { margin: 5px 0 0; font-family: 'Poppins'; font-size: 18px; }
-
-        .nav-btn { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.5); color: #fff; border: none; width: 45px; height: 45px; border-radius: 50%; cursor: pointer; z-index: 10; font-size: 18px; }
-        .nav-btn:hover { background: #2563eb; }
-
-        /* PLAYER */
-        .main-player-section { max-width: 1000px; margin: 0 auto 40px; padding: 0 15px; display: none; width: 100%; box-sizing: border-box;}
-        .player-container { background: #0f172a; padding: 20px; border-radius: 20px; }
-        .video-box { position: relative; padding-bottom: 56.25%; height: 0; border-radius: 12px; overflow: hidden; background: #000; }
-        .video-box iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
-        .now-playing-title { color: #fff; font-family: 'Poppins'; margin-bottom: 15px; font-size: 1.2rem; display: flex; align-items: center; gap: 10px; }
-
-        /* MAIN CONTAINER */
-        .container { max-width: 1000px; margin: 0 auto; padding: 0 15px 50px; flex: 1; width: 100%; box-sizing: border-box; }
-        
-        /* GRIDS */
-        .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
-        .card { background: #fff; border-radius: 12px; overflow: hidden; border: 1px solid #e2e8f0; cursor: pointer; transition: 0.3s; }
-        .card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.1); border-color:#2563eb;}
-        .thumb { position: relative; padding-bottom: 56.25%; background: #000; }
-        .thumb img { position: absolute; width: 100%; height: 100%; object-fit: cover; }
-        .card-body { padding: 12px; }
-        .card-body h4 { margin: 0; font-size: 13px; font-family: 'Poppins'; color: #0f172a; line-height: 1.4; }
-
-        .note-card { background: #fff; padding: 15px; border-radius: 12px; border: 1px solid #e2e8f0; display: flex; gap: 15px; align-items: center; transition: 0.3s; cursor: pointer; }
-        .note-card:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0,0,0,0.05); border-color: #10b981; }
-        .note-icon { background: #d1fae5; color: #10b981; width: 45px; height: 45px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0;}
-        .note-info { flex-grow: 1; text-align: left;}
-        .note-info h4 { margin: 0 0 5px; font-family: 'Poppins'; font-size: 14px; color: #0f172a; }
-
-        .article-card { display: flex; background: #fff; border-radius: 12px; border: 1px solid #e2e8f0; overflow: hidden; cursor: pointer; transition: 0.3s; align-items: center;}
-        .article-card:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0,0,0,0.05); border-color: #2563eb; }
-        .article-img { width: 100px; height: 100px; object-fit: cover; flex-shrink: 0; background: #cbd5e1; }
-        .article-body { padding: 12px; flex-grow: 1; text-align: left;}
-        .article-body h4 { margin: 0 0 5px; font-size: 14px; font-family: 'Poppins'; color: #0f172a; }
-        .article-body p { margin: 0; font-size: 12px; color: #64748b; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-
-        .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-        .section-header h2 { font-family: 'Poppins'; font-size: 22px; color: #0f172a; margin: 0; }
-        .view-all-link { font-size: 13px; font-weight: 700; color: #2563eb; text-decoration: none; display: flex; align-items: center; gap: 5px; padding: 5px 10px; border-radius: 5px; background: #eef2ff;}
-        .view-all-link:hover { background: #dbeafe; }
-
-        .empty-state-pro { text-align: center; padding: 40px 20px; background: #fff; border: 2px dashed #cbd5e1; border-radius: 15px; color: #64748b; font-family: 'Poppins'; grid-column: 1 / -1; font-size: 14px;}
-        .empty-state-pro i { font-size: 30px; color: #94a3b8; margin-bottom: 10px; }
-
-        @media (max-width: 600px) {
-            .hero { padding: 30px 15px; }
-            .slide-info h4 { font-size: 14px; }
-            .nav-btn { width: 35px; height: 35px; font-size: 14px; }
-            .grid { gap: 10px; } 
-            .card-body h4 { font-size: 12px; }
-            .section-header h2 { font-size: 18px; }
-            .article-img { width: 80px; height: 80px; }
-            .banner-link { margin: 5px 15px 20px; width: auto; }
-            .wa-box { margin: 0 15px 30px; }
-        }
-    </style>
 </head>
-<body>
+<body class="bg-slate-50 font-['Manrope'] pt-[72px] flex flex-col min-h-screen overflow-x-hidden text-slate-800">
 
-    <section class="hero">
-        <div class="hero-badge"><i class="fa-solid fa-bolt" style="color:#f59e0b;"></i> The Ultimate Learning Hub</div>
-        <h1>Master Your Exams<br>with <span>Xplainer Guru</span></h1>
-        <p>Access high-quality video classes, study notes, and mentor support securely.</p>
+    <section class="text-center bg-gradient-to-b from-blue-50 to-slate-50 relative py-[30px] px-[15px] sm:py-10 sm:px-5">
+        <div class="inline-block bg-blue-100 text-blue-600 text-[11px] font-extrabold px-[15px] py-1.5 rounded-full uppercase mb-[15px] border border-blue-200">
+            <i class="fa-solid fa-bolt text-amber-500"></i> The Ultimate Learning Hub
+        </div>
+        <h1 class="font-['Poppins'] text-[clamp(2rem,4vw,3rem)] font-black text-slate-900 m-0 mb-[15px] leading-[1.2] tracking-[-1px]">
+            Master Your Exams<br>with <span class="text-blue-600">Xplainer Guru</span>
+        </h1>
+        <p class="text-[clamp(0.9rem,2vw,1.1rem)] text-slate-600 max-w-[600px] mx-auto m-0 mb-[30px] leading-[1.6]">
+            Access high-quality video classes, study notes, and mentor support securely.
+        </p>
         
-        <div class="hero-btns">
-            <button onclick="document.getElementById('sliderTrack').scrollIntoView({behavior: 'smooth'})" class="btn btn-primary">Watch Classes <i class="fa-solid fa-play"></i></button>
-            <button onclick="checkAndRouteToNotes()" class="btn btn-secondary">Access Study Notes <i class="fa-solid fa-arrow-right"></i></button>
+        <div class="flex gap-[15px] justify-center flex-wrap mb-[20px]">
+            <button onclick="document.getElementById('sliderTrack').scrollIntoView({behavior: 'smooth'})" class="px-[25px] py-[14px] rounded-xl font-['Manrope'] font-extrabold text-[14px] no-underline transition duration-300 inline-flex items-center gap-[10px] cursor-pointer border-none bg-blue-600 text-white shadow-[0_10px_25px_rgba(37,99,235,0.3)] hover:bg-blue-800 hover:-translate-y-[3px]">
+                Watch Classes <i class="fa-solid fa-play"></i>
+            </button>
+            <button onclick="checkAndRouteToNotes()" class="px-[25px] py-[14px] rounded-xl font-['Manrope'] font-extrabold text-[14px] no-underline transition duration-300 inline-flex items-center gap-[10px] cursor-pointer bg-white text-slate-900 border-2 border-slate-200 hover:border-slate-300 hover:bg-slate-100 hover:-translate-y-[3px]">
+                Access Study Notes <i class="fa-solid fa-arrow-right"></i>
+            </button>
         </div>
     </section>
 
-    <a href="/about.html" class="banner-link" target="_blank" style="display:none;" id="dynamic-banner">
-        <img src="banner.jpeg" alt="Join Channel" onerror="this.parentElement.style.display='none'">
+    <a href="/about.html" class="block w-auto sm:w-full max-w-[1000px] mx-[15px] my-5 sm:mx-auto sm:mb-5 no-underline" target="_blank" style="display:none;" id="dynamic-banner">
+        <img src="banner.png" alt="Join Channel" class="w-full h-auto block rounded-[15px]" onerror="this.parentElement.style.display='none'">
     </a>
 
-    <div class="wa-box">
-        <h3 style="margin:0; font-family:'Poppins'; color:#166534; font-size:18px;"><i class="fa-brands fa-whatsapp"></i> Official WhatsApp Channel</h3>
-        <p style="margin:5px 0 0; font-size:13px; color:#15803d;">Get instant updates on new notes and live classes.</p>
-        <a href="https://whatsapp.com/channel/0029Vb7p4QV0QeadmOIpgx36" style="color:#25d366; font-weight:800; text-decoration:none; display:inline-block; margin-top:10px; background:#fff; padding:8px 20px; border-radius:50px; border:1px solid #bbf7d0;" target="_blank">Click to Follow &rarr;</a>
+    <div class="max-w-[1000px] mx-[15px] mb-[30px] sm:mx-auto sm:mb-[40px] p-5 bg-green-50 rounded-[15px] border border-green-200 text-center box-border">
+        <h3 class="m-0 font-['Poppins'] text-green-800 text-[18px]"><i class="fa-brands fa-whatsapp"></i> Official WhatsApp Channel</h3>
+        <p class="m-0 mt-[5px] text-[13px] text-green-700">Get instant updates on new notes and live classes.</p>
+        <a href="https://whatsapp.com/channel/0029Vb7p4QV0QeadmOIpgx36" class="text-green-500 font-extrabold no-underline inline-block mt-[10px] bg-white px-5 py-2 rounded-full border border-green-200" target="_blank">Click to Follow &rarr;</a>
     </div>
 
-    <div class="slider-wrapper">
-        <button class="nav-btn" style="left:10px; z-index:20;" onclick="move(-1)"><i class="fa-solid fa-chevron-left"></i></button>
-        <button class="nav-btn" style="right:10px; z-index:20;" onclick="move(1)"><i class="fa-solid fa-chevron-right"></i></button>
-        <div class="slider-track" id="sliderTrack">
-            <div style="width: 100%; text-align: center; color: #94a3b8; font-family: 'Poppins'; margin-top: 80px;">
+    <div class="relative w-full max-w-[1000px] mx-auto mb-[40px] overflow-hidden rounded-[20px] bg-black shadow-[0_10px_30px_rgba(0,0,0,0.15)] min-h-[200px] flex items-center justify-center">
+        <button class="absolute top-1/2 -translate-y-1/2 bg-black/50 text-white border-none w-[35px] h-[35px] sm:w-[45px] sm:h-[45px] rounded-full cursor-pointer z-20 text-[14px] sm:text-[18px] hover:bg-blue-600 left-[10px]" onclick="move(-1)"><i class="fa-solid fa-chevron-left"></i></button>
+        <button class="absolute top-1/2 -translate-y-1/2 bg-black/50 text-white border-none w-[35px] h-[35px] sm:w-[45px] sm:h-[45px] rounded-full cursor-pointer z-20 text-[14px] sm:text-[18px] hover:bg-blue-600 right-[10px]" onclick="move(1)"><i class="fa-solid fa-chevron-right"></i></button>
+        
+        <div class="flex transition-transform duration-500 ease-in-out w-full h-full" id="sliderTrack">
+            <div class="w-full text-center text-slate-400 font-['Poppins'] mt-[80px]">
                 <i class="fa-solid fa-circle-notch fa-spin fa-2x"></i><br><br>Setting up classes...
             </div>
         </div>
     </div>
 
-    <div class="main-player-section" id="playerView">
-        <div class="player-container">
-            <div class="now-playing-title"><i class="fa-solid fa-circle-play" style="color:#ff0000;"></i> <span id="playingTitle">Lecture</span></div>
-            <div class="video-box" id="mainVideoBox"></div>
+    <div class="max-w-[1000px] mx-auto mb-[40px] px-[15px] hidden w-full box-border" id="playerView">
+        <div class="bg-slate-900 p-5 rounded-[20px]">
+            <div class="text-white font-['Poppins'] mb-[15px] text-[1.2rem] flex items-center gap-[10px]"><i class="fa-solid fa-circle-play text-red-500"></i> <span id="playingTitle">Lecture</span></div>
+            <div class="relative pb-[56.25%] h-0 rounded-xl overflow-hidden bg-black" id="mainVideoBox"></div>
         </div>
     </div>
 
-    <div class="container">
+    <div class="max-w-[1000px] mx-auto px-[15px] pb-[50px] flex-1 w-full box-border">
         
-        <div class="section-header">
-            <h2>Video Classes</h2>
-            <a href="videos.html" class="view-all-link">All Videos <i class="fa-solid fa-arrow-right"></i></a>
+        <div class="flex justify-between items-center mb-5">
+            <h2 class="font-['Poppins'] text-[18px] sm:text-[22px] text-slate-900 m-0">Video Classes</h2>
+            <a href="videos.html" class="text-[13px] font-bold text-blue-600 no-underline flex items-center gap-[5px] px-[10px] py-[5px] rounded-md bg-indigo-50 hover:bg-blue-100">All Videos <i class="fa-solid fa-arrow-right"></i></a>
         </div>
-        <div class="grid" id="videoGrid"></div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-[10px] sm:gap-[15px]" id="videoGrid"></div>
 
-        <div class="section-header" style="margin-top: 50px;">
-            <h2>Study Notes</h2>
-            <a href="#" onclick="checkAndRouteToNotes()" class="view-all-link" style="color:#10b981; background:#d1fae5;">All Notes <i class="fa-solid fa-arrow-right"></i></a>
+        <div class="flex justify-between items-center mb-5 mt-[50px]">
+            <h2 class="font-['Poppins'] text-[18px] sm:text-[22px] text-slate-900 m-0">Study Notes</h2>
+            <a href="#" onclick="checkAndRouteToNotes()" class="text-[13px] font-bold text-emerald-600 no-underline flex items-center gap-[5px] px-[10px] py-[5px] rounded-md bg-emerald-100 hover:bg-emerald-200">All Notes <i class="fa-solid fa-arrow-right"></i></a>
         </div>
-        <div class="grid" id="notesGrid"></div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-[10px] sm:gap-[15px]" id="notesGrid"></div>
 
-        <div class="section-header" style="margin-top: 50px;">
-            <h2>Study Articles</h2>
-            <a href="articles.html" class="view-all-link">Read More <i class="fa-solid fa-arrow-right"></i></a>
+        <div class="flex justify-between items-center mb-5 mt-[50px]">
+            <h2 class="font-['Poppins'] text-[18px] sm:text-[22px] text-slate-900 m-0">Study Articles</h2>
+            <a href="articles.html" class="text-[13px] font-bold text-blue-600 no-underline flex items-center gap-[5px] px-[10px] py-[5px] rounded-md bg-indigo-50 hover:bg-blue-100">Read More <i class="fa-solid fa-arrow-right"></i></a>
         </div>
-        <div class="grid" id="articleGrid"></div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-[10px] sm:gap-[15px]" id="articleGrid"></div>
 
     </div>
 
@@ -181,102 +102,91 @@
         let idx = 0;
         let auto;
 
-        const bannerImg = new Image();
-        bannerImg.onload = function() { document.getElementById('dynamic-banner').style.display = 'block'; }
-        bannerImg.src = "banner.jpeg";
-
-        // SMART ROUTING LOGIC FOR NOTES
-        function checkAndRouteToNotes() {
-            firebase.auth().onAuthStateChanged((user) => {
-                if (user) { window.location.href = "notes.html"; } 
-                else {
-                    localStorage.setItem("redirectAfterLogin", "notes.html");
-                    window.location.href = "login.html";
-                }
-            });
-        }
-
         function extractYTId(url) {
-            if(!url) return "";
-            let match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((\w|-){11})/);
-            return (match && match[1]) ? match[1] : url;
+            if (!url) return "";
+            let cleanUrl = url.toString().trim().replace(/\s/g, '');
+            const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+            const match = cleanUrl.match(regExp);
+            if (match && match[2].length === 11) {
+                return match[2];
+            } else {
+                return cleanUrl.substring(0, 11);
+            }
         }
 
         async function initData() {
             try {
-                // Ensure db is available from firebase-init.js
                 const vSnap = await db.collection("videos").get();
                 const nSnap = await db.collection("notes").get(); 
                 const aSnap = await db.collection("articles").get();
-
                 let vData = [];
-                vSnap.forEach(doc => { if(doc.data().deleteStatus === 'Active' || !doc.data().isDeleted) vData.push(doc.data()); });
+                vSnap.forEach(doc => { 
+                    let d = doc.data();
+                    if(d.deleteStatus === 'Active' || !d.isDeleted) vData.push({...d, id: doc.id}); 
+                });
                 vData.sort((a,b) => (b.timestamp?.seconds || 0) - (a.timestamp?.seconds || 0));
-
-                let nData = [];
-                nSnap.forEach(doc => { if(doc.data().deleteStatus === 'Active' || !doc.data().isDeleted) nData.push({...doc.data(), id: doc.id}); });
-                nData.sort((a,b) => (b.timestamp?.seconds || 0) - (a.timestamp?.seconds || 0));
-
-                let aData = [];
-                aSnap.forEach(doc => { if(doc.data().deleteStatus === 'Active' || !doc.data().isDeleted) aData.push({...doc.data(), id: doc.id}); });
-                aData.sort((a,b) => (b.timestamp?.seconds || 0) - (a.timestamp?.seconds || 0));
 
                 track.innerHTML = ''; 
 
-                // VIDEOS RENDER
                 if(vData.length === 0) {
-                    track.innerHTML = `<div class="empty-state-pro" style="border:none; margin-top:50px;"><i class="fa-solid fa-video-slash" style="color:#fff;"></i><br><span style="color:#cbd5e1;">No classes published yet.</span></div>`;
-                    vGrid.innerHTML = `<div class="empty-state-pro"><i class="fa-solid fa-video-slash"></i><br>No video classes uploaded yet.</div>`;
+                    track.innerHTML = `<div class="col-span-full text-center py-10 px-5 text-slate-500">No classes published.</div>`;
+                    vGrid.innerHTML = `<div class="col-span-full text-center py-10 px-5 bg-white border-2 border-dashed border-slate-300 rounded-[15px]">No video classes uploaded yet.</div>`;
                 } else {
                     latestVideos = vData.slice(0, 5);
                     latestVideos.forEach(item => {
-                        const ytId = extractYTId(item.link);
+                        const ytId = extractYTId(item.link || item.url);
                         const slide = document.createElement('div');
-                        slide.className = 'slide';
+                        slide.className = 'min-w-full relative cursor-pointer group';
                         slide.onclick = () => play(ytId, item.title, item.id);
-                        slide.innerHTML = `<img src="https://img.youtube.com/vi/${ytId}/maxresdefault.jpg" onerror="this.src='https://img.youtube.com/vi/${ytId}/hqdefault.jpg'"><div class="play-btn-overlay"><i class="fa-solid fa-circle-play"></i></div><div class="slide-info"><span style="background:#2563eb; padding:3px 8px; border-radius:5px; font-size:10px; font-weight:bold;">LATEST</span><h4>${item.title}</h4></div>`;
+                        
+                        slide.innerHTML = `
+                            <img src="https://img.youtube.com/vi/${ytId}/maxresdefault.jpg" 
+                                 class="w-full h-full block aspect-video object-cover opacity-90 transition duration-400 group-hover:opacity-100" 
+                                 onload="this.style.opacity='1'"
+                                 onerror="this.src='https://img.youtube.com/vi/${ytId}/hqdefault.jpg'">
+                            <div class="absolute inset-0 flex items-center justify-center z-[5]">
+                                <i class="fa-solid fa-circle-play text-white text-[60px] drop-shadow-md transition duration-300 group-hover:scale-110 group-hover:text-red-500"></i>
+                            </div>
+                            <div class="absolute bottom-0 left-0 right-0 p-5 bg-gradient-to-t from-black/90 to-transparent text-white">
+                                <span class="bg-blue-600 px-2 py-1 rounded-[5px] text-[10px] font-bold text-white">LATEST</span>
+                                <h4 class="m-0 mt-1 font-['Poppins'] text-[14px] sm:text-[18px]">${item.title}</h4>
+                            </div>`;
                         track.appendChild(slide);
                     });
                     if(latestVideos.length > 1) auto = setInterval(() => move(1), 5000);
 
-                    vData.slice(0, 4).forEach(item => {
-                        const ytId = extractYTId(item.link);
+                    vData.slice(0, 4).forEach((item, index) => {
+                        const ytId = extractYTId(item.link || item.url);
+
+                        if (index === 2) {
+                            const adWrapper = document.createElement('div');
+                            adWrapper.className = "col-span-1 sm:col-span-2 w-full flex justify-center my-6 min-h-[50px]";
+                            adWrapper.innerHTML = `<div id="container-e9b12f5418d9e679de47d1e3b3183725"></div>`;
+                            vGrid.appendChild(adWrapper);
+
+                            const adScript = document.createElement('script');
+                            adScript.async = true;
+                            adScript.dataset.cfasync = "false";
+                            adScript.src = "https://pl29365593.profitablecpmratenetwork.com/e9b12f5418d9e679de47d1e3b3183725/invoke.js";
+                            document.body.appendChild(adScript);
+                        }
+
                         const card = document.createElement('div');
-                        card.className = 'card';
+                        card.className = 'bg-white rounded-xl overflow-hidden border border-slate-200 cursor-pointer transition duration-300 hover:-translate-y-1 hover:shadow-lg hover:border-blue-600';
                         card.onclick = () => play(ytId, item.title, item.id);
-                        card.innerHTML = `<div class="thumb"><img src="https://img.youtube.com/vi/${ytId}/hqdefault.jpg"></div><div class="card-body"><h4>${item.title}</h4></div>`;
+                        card.innerHTML = `
+                            <div class="relative pb-[56.25%] bg-black">
+                                <img src="https://img.youtube.com/vi/${ytId}/hqdefault.jpg" class="absolute w-full h-full object-cover">
+                            </div>
+                            <div class="p-3">
+                                <h4 class="m-0 text-[12px] sm:text-[13px] font-['Poppins'] text-slate-900 leading-[1.4]">${item.title}</h4>
+                            </div>`;
                         vGrid.appendChild(card);
                     });
                 }
 
-                // NOTES RENDER (CLEAN, NO LOCK)
-                if(nData.length === 0) {
-                    nGrid.innerHTML = `<div class="empty-state-pro"><i class="fa-solid fa-file-pdf"></i><br>Study Notes will be published here soon.</div>`;
-                } else {
-                    nData.slice(0, 4).forEach(item => {
-                        const card = document.createElement('div');
-                        card.className = 'note-card';
-                        card.onclick = () => checkAndRouteToNotes(); 
-                        card.innerHTML = `<div class="note-icon"><i class="fa-solid fa-file-pdf"></i></div><div class="note-info"><h4>${item.title}</h4></div>`;
-                        nGrid.appendChild(card);
-                    });
-                }
-
-                // ARTICLES RENDER
-                if(aData.length === 0) {
-                    aGrid.innerHTML = `<div class="empty-state-pro"><i class="fa-solid fa-newspaper"></i><br>No articles published yet.</div>`;
-                } else {
-                    aData.slice(0, 4).forEach(item => {
-                        const card = document.createElement('div');
-                        card.className = 'article-card';
-                        card.onclick = () => window.location.href = `read.html?id=${item.id}`;
-                        card.innerHTML = `<img src="${item.cover || 'logo.png'}" class="article-img" onerror="this.src='logo.png'"><div class="article-body"><h4>${item.title}</h4><p>${item.content ? item.content.substring(0, 80) : ''}...</p></div>`;
-                        aGrid.appendChild(card);
-                    });
-                }
-
             } catch(e) {
-                track.innerHTML = `<div class="empty-state-pro" style="color:#ef4444; border:none; margin-top:50px;">Failed to load data. Please check your internet connection.</div>`;
+                console.error("Fetch Error:", e);
             }
         }
 
@@ -284,12 +194,25 @@
         function move(s) { if(latestVideos.length > 0) { idx = (idx + s + latestVideos.length) % latestVideos.length; update(); } }
 
         function play(id, title, docId) {
+            if (!id || id === "") { alert("Video ID missing or invalid!"); return; }
+            
             clearInterval(auto); 
             const view = document.getElementById('playerView');
             const videoBox = document.getElementById('mainVideoBox');
+            
             document.getElementById('playingTitle').innerText = title;
+            view.classList.remove('hidden');
             view.style.display = 'block';
-            videoBox.innerHTML = `<iframe src="https://www.youtube.com/embed/${id}?autoplay=1&rel=0&playsinline=1&modestbranding=1" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
+            
+            // Iframe parameters are configured to prevent Error 153 (Origin Mismatch)
+            videoBox.innerHTML = `
+                <iframe 
+                    src="https://www.youtube.com/embed/${id}?autoplay=1&rel=0&modestbranding=1" 
+                    class="absolute top-0 left-0 w-full h-full border-none rounded-xl" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                    allowfullscreen>
+                </iframe>`;
+            
             view.scrollIntoView({ behavior: 'smooth', block: 'center' });
             
             if(docId) db.collection("videos").doc(docId).update({ views: firebase.firestore.FieldValue.increment(1) }).catch(()=>{});

@@ -4,330 +4,105 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Account Access | Xplainer Guru</title>
+    <link rel="icon" type="image/png" href="logo.png">
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;800&family=Poppins:wght@700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
+    
     <link rel="stylesheet" href="css/style.css">
-
-    <style>
-        .auth-container { background: white; padding: 40px; border-radius: 20px; box-shadow: 0 10px 40px rgba(0, 0, 128, 0.05); width: 100%; max-width: 420px; text-align: center; border: 1px solid #e2e8f0; margin: 50px auto 20px; position: relative;}
-        .auth-container h2 { font-family: 'Poppins', sans-serif; color: #0f172a; margin-bottom: 10px; font-size: 1.8rem; }
-        .auth-container p { color: #64748b; font-size: 14px; margin-bottom: 25px; line-height: 1.6; }
-        .input-group { position: relative; margin-bottom: 16px; text-align: left; }
-        .input-label { display: block; font-size: 11px; font-weight: 800; color: #94a3b8; text-transform: uppercase; margin-bottom: 6px; letter-spacing: 0.5px; }
-        .input-field { width: 100%; padding: 15px; border: 1px solid #e2e8f0; border-radius: 10px; box-sizing: border-box; font-family: 'Manrope', sans-serif; font-size: 14px; outline: none; transition: 0.3s; background: #f8fafc;}
-        .input-field:focus { border-color: #2563eb; background: #fff; box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1); }
-        select.input-field { cursor: pointer; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%2364748b' viewBox='0 0 16 16'%3E%3Cpath d='M8 11.5l-5-5h10l-5 5z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 15px center; }
-        .pass-icon { position: absolute; right: 15px; top: 38px; color: #94a3b8; cursor: pointer; transition: 0.2s; font-size: 16px; }
-        .pass-icon:hover { color: #0f172a; }
-        
-        .forgot-link { display: block; text-align: right; font-size: 13px; color: #2563eb; font-weight: 700; text-decoration: none; margin-bottom: 22px; cursor: pointer; }
-        .submit-btn { background: #2563eb; color: white; border: none; padding: 16px; width: 100%; border-radius: 10px; font-weight: 800; font-family: 'Manrope', sans-serif; cursor: pointer; transition: 0.3s; font-size: 15px; }
-        .submit-btn:hover { background: #1d4ed8; transform: translateY(-2px); }
-        .submit-btn:disabled { background: #94a3b8; cursor: not-allowed; transform: none; }
-        .toggle-text { margin-top: 24px; font-size: 14px; color: #64748b; }
-        .toggle-link { color: #2563eb; font-weight: 800; cursor: pointer; text-decoration: none; }
-        
-        .error-message { color: #ef4444; font-size: 13px; font-weight: 700; margin-bottom: 18px; display: none; background: #fef2f2; padding: 12px; border-radius: 8px; border: 1px solid #fecaca; text-align: left; }
-        .success-message { color: #16a34a; font-size: 13px; font-weight: 700; margin-bottom: 18px; display: none; background: #dcfce7; padding: 12px; border-radius: 8px; border: 1px solid #bbf7d0; text-align: left; }
-        .hidden { display: none !important; }
-        
-        /* MODALS */
-        .modal-overlay { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.7); display: flex; justify-content: center; align-items: center; z-index: 1000; opacity: 0; pointer-events: none; transition: 0.3s; padding: 20px; box-sizing: border-box; backdrop-filter: blur(4px);}
-        .modal-overlay.active { opacity: 1; pointer-events: all; }
-        .modal-box { background: #fff; padding: 30px; border-radius: 16px; max-width: 500px; width: 100%; transform: translateY(20px); transition: 0.3s; position: relative; max-height: 90vh; overflow-y: auto;}
-        .modal-overlay.active .modal-box { transform: translateY(0); }
-        .close-modal { position: absolute; top: 15px; right: 15px; background: none; border: none; font-size: 20px; color: #64748b; cursor: pointer; transition: 0.2s;}
-        .close-modal:hover { color: #ef4444; }
-
-        /* MULTI-COLUMN GROUP */
-        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        
-        /* TOKEN BOX & BADGE */
-        .token-box { background: #0f172a; color: #38bdf8; font-family: monospace; font-size: 18px; font-weight: 800; padding: 10px; border-radius: 8px; letter-spacing: 2px; margin: 15px 0; border: 2px dashed #475569; text-align: center;}
-        .special-mode-badge { background: #f3e8ff; color: #7e22ce; font-size: 11px; font-weight: 800; padding: 4px 10px; border-radius: 50px; display: inline-block; margin-bottom: 10px; border: 1px solid #d8b4fe;}
-
-        /* CHECKBOX STYLING */
-        .checkbox-group { display: flex; align-items: flex-start; gap: 10px; text-align: left; margin-bottom: 20px; }
-        .checkbox-group input { margin-top: 3px; cursor: pointer; }
-        .checkbox-group label { font-size: 12px; color: #64748b; line-height: 1.5; }
-        .info-link { color: #8b5cf6; font-weight: 800; cursor: pointer; text-decoration: underline; }
-        
-        /* HELPER TEXT LINK */
-        .help-instruction-link { font-size: 13px; color: #64748b; margin-bottom: 20px; display: block; text-decoration: none; transition: 0.2s; }
-        .help-instruction-link:hover { color: #2563eb; text-decoration: underline; }
-    </style>
 </head>
+<body class="bg-slate-50 font-['Manrope'] text-slate-800 m-0">
 
-<body>
-
-    <div class="auth-container" id="main-auth-box">
+    <div class="bg-white p-10 rounded-[20px] shadow-[0_10px_40px_rgba(0,0,128,0.05)] w-full max-w-[420px] text-center border border-slate-200 my-10 mx-auto relative box-border">
         
-        <a href="#" class="help-instruction-link" onclick="document.getElementById('setupModal').classList.add('active'); return false;">
-            <i class="fa-solid fa-circle-info"></i> Need help creating an account or applying for a role? Click here.
+        <a href="#" class="text-[13px] text-slate-500 mb-5 block no-underline transition duration-200 hover:text-blue-600 hover:underline" onclick="document.getElementById('setupModal').classList.remove('hidden'); document.getElementById('setupModal').classList.add('flex'); return false;">
+            <i class="fa-solid fa-circle-info"></i> Need help with login or roles? Click here.
         </a>
 
-        <div id="login-section">
-            <h2>Welcome Back</h2>
-            <p id="dynamic-login-msg">Log in to access your portal and materials.</p>
-            <div id="login-error" class="error-message"></div>
-            <div id="login-success" class="success-message"></div>
+        <div class="text-center mb-[25px]">
+            <img src="logo.png" alt="Xplainer Guru" class="w-[55px] h-[55px] rounded-full object-cover mb-[10px] shadow-[0_4px_10px_rgba(0,0,0,0.1)]" onerror="this.src='https://via.placeholder.com/55?text=XG'">
+            <h2 class="font-['Poppins'] text-slate-900 m-0 text-[1.6rem]">Welcome Back</h2>
+            <p class="text-slate-500 text-[13px] mt-[5px]">Log in to access your portal and materials.</p>
+        </div>
+        
+        <div id="login-error" class="hidden text-red-500 text-[13px] font-bold mb-[18px] bg-red-50 p-3 rounded-lg border border-red-200 text-left"></div>
+        <div id="login-success" class="hidden text-green-600 text-[13px] font-bold mb-[18px] bg-green-50 p-3 rounded-lg border border-green-200 text-left"></div>
 
-            <form id="loginForm">
-                <div class="input-group">
-                    <label class="input-label">Registered Email</label>
-                    <input type="email" id="loginId" class="input-field" placeholder="user@gmail.com" required>
-                </div>
-                <div class="input-group" id="passGroup">
-                    <label class="input-label">Password</label>
-                    <input type="password" id="loginPass" class="input-field" placeholder="Enter your password" style="padding-right: 45px;" required>
-                    <i class="fa-solid fa-eye-slash pass-icon" onclick="togglePassword('loginPass', this)"></i>
-                </div>
-                <a class="forgot-link" onclick="handleForgotPass()" id="forgotBtn">Forgot Password?</a>
-                
-                <button type="submit" class="submit-btn" id="loginBtn">Secure Log In</button>
-            </form>
-            <div class="toggle-text">Don't have an account? <span class="toggle-link" onclick="openSignupMode('student')">Sign Up Here</span></div>
+        <button type="button" class="w-full p-[14px] rounded-[10px] font-['Manrope'] text-[15px] font-bold cursor-pointer flex items-center justify-center gap-3 transition duration-300 bg-white text-slate-700 border border-slate-200 shadow-[0_4px_15px_rgba(0,0,0,0.03)] mb-5 hover:bg-slate-50 hover:border-slate-300 hover:-translate-y-0.5 hover:shadow-[0_6px_20px_rgba(0,0,0,0.06)]" onclick="window.triggerGoogleAuth()">
+            <svg class="w-5 h-5" viewBox="0 0 24 24">
+                <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+                <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+                <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+                <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+            </svg>
+            Continue with Google
+        </button>
+
+        <div class="flex items-center text-center my-2.5 mb-5 text-slate-400 text-[12px] font-extrabold uppercase tracking-widest before:content-[''] before:flex-1 before:border-b before:border-slate-200 before:mr-[15px] after:content-[''] after:flex-1 after:border-b after:border-slate-200 after:ml-[15px]">
+            OR USE EMAIL
         </div>
 
-        <div id="signup-section" class="hidden">
-            <div id="special-badge-area" class="hidden"><span class="special-mode-badge"><i class="fa-solid fa-shield-halved"></i> Team / Parent / Writer Application</span></div>
-            <h2 id="signup-title">Create Account</h2>
-            <p id="signup-subtitle">Join Xplainer Guru to start learning.</p>
-            <div id="signup-error" class="error-message"></div>
+        <form id="loginForm">
+            <div class="relative mb-4 text-left">
+                <label class="block text-[11px] font-extrabold text-slate-400 uppercase mb-1.5 tracking-wide">Registered Email</label>
+                <input type="email" id="loginId" class="w-full p-[15px] border border-slate-200 rounded-[10px] box-border font-['Manrope'] text-[14px] outline-none transition duration-300 bg-slate-50 focus:border-blue-600 focus:bg-white focus:shadow-[0_0_0_3px_rgba(37,99,235,0.1)]" placeholder="user@gmail.com" required>
+            </div>
+            
+            <div class="relative mb-4 text-left">
+                <label class="block text-[11px] font-extrabold text-slate-400 uppercase mb-1.5 tracking-wide">Password</label>
+                <input type="password" id="loginPass" class="w-full p-[15px] pr-[45px] border border-slate-200 rounded-[10px] box-border font-['Manrope'] text-[14px] outline-none transition duration-300 bg-slate-50 focus:border-blue-600 focus:bg-white focus:shadow-[0_0_0_3px_rgba(37,99,235,0.1)]" placeholder="Enter your password" required>
+                <i class="fa-solid fa-eye-slash absolute right-[15px] top-[38px] text-slate-400 cursor-pointer transition duration-200 text-[16px] hover:text-slate-900" onclick="togglePassword('loginPass', this)"></i>
+            </div>
+            
+            <a class="block text-right text-[13px] text-blue-600 font-bold no-underline mb-[22px] cursor-pointer hover:underline" onclick="handleForgotPass()" id="forgotBtn">Forgot Password?</a>
+            
+            <button type="submit" class="bg-blue-600 text-white border-none p-[16px] w-full rounded-[10px] font-extrabold font-['Manrope'] cursor-pointer transition duration-300 text-[15px] hover:bg-blue-700 hover:-translate-y-0.5 disabled:bg-slate-400 disabled:cursor-not-allowed disabled:transform-none" id="loginBtn">Secure Log In</button>
+        </form>
 
-            <form id="signupForm">
-                <div class="input-group hidden" id="roleSelectionGroup">
-                    <label class="input-label">Select Application Role <span style="color:#ef4444;">*</span></label>
-                    <select id="signRole" class="input-field" style="border-color: #8b5cf6;" onchange="handleRoleUI()">
-                        <option value="" disabled selected>-- Choose Role --</option>
-                        <option value="parent">🛡️ Parent / Guardian</option>
-                        <option value="student_writer">✍️ Student Article Writer</option>
-                        <option value="writer">✍️ Team Article Writer</option>
-                        <option value="mentor">📚 Mentor / Teacher</option>
-                        <option value="support">🎧 Support Team</option>
-                    </select>
-                </div>
-
-                <div class="input-group">
-                    <label class="input-label">Full Name</label>
-                    <input type="text" id="signName" class="input-field" placeholder="Enter your name" required>
-                </div>
-                
-                <div class="input-group">
-                    <label class="input-label">Email Address <span style="color:#ef4444;">*</span></label>
-                    <input type="email" id="signEmail" class="input-field" placeholder="Permanent Email (Mandatory)" required>
-                    <small class="form-text" style="color: #ef4444; font-size: 11px; margin-top: 4px; display: block;">* Note: This cannot be changed later without contacting Support.</small>
-                </div>
-                
-                <div class="grid-2">
-                    <div class="input-group">
-                        <label class="input-label">Phone <span id="phone-req-tag" style="color:#94a3b8;">(Opt)</span></label>
-                        <input type="tel" id="signPhone" class="input-field" placeholder="10-digits">
-                        <small class="form-text" style="color: #ef4444; font-size: 11px; margin-top: 4px; display: block;">* Note: This cannot be changed later.</small>
-                    </div>
-                    
-                    <div class="input-group hidden" id="ageBoxGroup">
-                        <label class="input-label">Your Age <span style="color:#ef4444;">*</span></label>
-                        <input type="number" id="signAge" class="input-field" placeholder="Age (15+)" min="10" max="99">
-                    </div>
-                </div>
-
-                <div class="input-group hidden" id="childIdGroup">
-                    <label class="input-label" style="color:#16a34a;">Verify Child's UID <span style="color:#ef4444;">*</span></label>
-                    <input type="text" id="signChildId" class="input-field" placeholder="e.g., exact 28-character Firebase UID" style="border-color:#16a34a;">
-                    <p style="font-size:10px; color:#64748b; margin:4px 0 0;">Ask your child to copy their secure system UID from their settings.</p>
-                </div>
-
-                <div class="input-group">
-                    <label class="input-label">Password</label>
-                    <input type="password" id="signPass" class="input-field" placeholder="Strong password" style="padding-right: 45px;" required minlength="6">
-                    <i class="fa-solid fa-eye-slash pass-icon" onclick="togglePassword('signPass', this)"></i>
-                </div>
-
-                <div class="input-group hidden" id="reasonBoxGroup">
-                    <label class="input-label" style="color:#8b5cf6;">Experience & Reason <span style="color:#ef4444;">*</span></label>
-                    <textarea id="signReason" class="input-field" style="min-height: 90px; resize: vertical; font-size:13px;" placeholder="What is your experience regarding this role? (Warning: Admin rejects blank answers)"></textarea>
-                </div>
-
-                <div class="checkbox-group">
-                    <input type="checkbox" id="legalAgreement" required>
-                    <label for="legalAgreement">
-                        I have read and agree to the <span class="info-link" onclick="document.getElementById('privacyModal').classList.add('active'); event.preventDefault();">Privacy Policy & Terms and Conditions</span>.
-                    </label>
-                </div>
-
-                <button type="submit" class="submit-btn" id="signupBtn">Create Account</button>
-            </form>
-
-            <div class="toggle-text">Already have an account? <span class="toggle-link" onclick="openLoginMode()">Log In Here</span></div>
-            <div class="toggle-text" id="specialSignupToggleBtn" style="margin-top: 5px;"><span class="toggle-link" style="color:#8b5cf6; font-size:12px;" onclick="openSpecialSignup()"><i class="fa-solid fa-shield-halved"></i> Apply for Special Role</span></div>
-            <div class="toggle-text hidden" id="backToStudentBtn" style="margin-top: 5px;"><span class="toggle-link" style="color:#64748b; font-size:12px;" onclick="openSignupMode('student')"><i class="fa-solid fa-arrow-left"></i> Back to Student Signup</span></div>
+        <div class="mt-6 text-[14px] text-slate-500">Don't have an account? <a href="signup.html" class="text-blue-600 font-extrabold cursor-pointer no-underline hover:underline">Sign Up Here</a></div>
+        <div class="mt-2.5">
+            <a href="signup.html" class="text-violet-500 text-[12px] no-underline font-bold hover:underline"><i class="fa-solid fa-briefcase"></i> Want to join our Team? Apply Here</a>
         </div>
     </div>
 
-    <div class="modal-overlay" id="setupModal">
-        <div class="modal-box">
-            <button class="close-modal" onclick="document.getElementById('setupModal').classList.remove('active')"><i class="fa-solid fa-xmark"></i></button>
-            <h3 style="font-family: 'Poppins'; color: #0f172a; margin: 0 0 10px 0;"><i class="fa-solid fa-clipboard-check" style="color: #8b5cf6;"></i> How to Create an Account</h3>
-            <p style="color: #64748b; font-size: 13px; margin-bottom: 20px;">Follow these instructions to set up your account or apply for a special role.</p>
+    <div class="hidden fixed inset-0 bg-slate-900/70 justify-center items-center z-[1000] p-5 box-border backdrop-blur-sm" id="setupModal">
+        <div class="bg-white p-[30px] rounded-[16px] max-w-[500px] w-full relative max-h-[90vh] overflow-y-auto text-left shadow-2xl">
+            <button class="absolute top-[15px] right-[15px] bg-transparent border-none text-[20px] text-slate-500 cursor-pointer transition duration-200 hover:text-red-500" onclick="document.getElementById('setupModal').classList.remove('flex'); document.getElementById('setupModal').classList.add('hidden')"><i class="fa-solid fa-xmark"></i></button>
+            <h3 class="font-['Poppins'] text-slate-900 m-0 mb-2.5 text-xl"><i class="fa-solid fa-clipboard-check text-violet-500"></i> Authentication Guide</h3>
+            <p class="text-slate-500 text-[13px] mb-5">Follow these instructions to set up your account or apply for roles.</p>
             
-            <div style="background:#f8fafc; border:1px solid #cbd5e1; padding:12px; border-radius:8px; margin-bottom:15px;">
-                <strong style="color:#0f172a; font-size:12px;"><i class="fa-solid fa-user-graduate"></i> FOR STUDENTS:</strong>
-                <p style="font-size:12px; color:#475569; margin: 5px 0 0; line-height: 1.5;">Click on "Sign Up Here", fill in your Name, Email, and Password, and click "Create Account". Your email must be verified before you can log in.</p>
+            <div class="bg-slate-50 border border-slate-300 p-3 rounded-lg mb-[15px]">
+                <strong class="text-slate-900 text-[12px]"><i class="fa-solid fa-user-graduate"></i> FOR STUDENTS:</strong>
+                <p class="text-[12px] text-slate-600 m-0 mt-1.5 leading-relaxed">You can instantly log in using <b>Continue with Google</b>. Alternatively, click "Sign Up Here" to create an email/password account.</p>
             </div>
 
-            <div style="background:#fef2f2; border:1px solid #fca5a5; padding:12px; border-radius:8px; margin-bottom:15px;">
-                <strong style="color:#dc2626; font-size:12px;"><i class="fa-solid fa-triangle-exclamation"></i> FOR TEAM MEMBERS (Mentors/Support/Writers):</strong>
-                <ul style="margin:5px 0 0; padding-left:20px; font-size:12px; color:#991b1b; font-weight:600; line-height: 1.6;">
-                    <li>Click "Apply for Special Role" at the bottom of the Sign Up form.</li>
-                    <li>You must be at least <b>15+ years old</b>.</li>
-                    <li>Mandatory 10-digit WhatsApp Number.</li>
-                    <li><b>Strict Rule:</b> Provide a solid reason explaining your background. Admin will review and approve.</li>
-                    <li>Team Writers are official members of the platform creating core content.</li>
+            <div class="bg-indigo-50 border border-green-300 p-3 rounded-lg mb-[15px]">
+                <strong class="text-green-800 text-[12px]"><i class="fa-solid fa-pen-nib"></i> FOR STUDENT ARTICLE WRITERS & TEAM:</strong>
+                <ul class="m-0 mt-1.5 pl-5 text-[12px] text-green-800 font-semibold leading-relaxed list-disc">
+                    <li>Use the <b>Sign Up</b> page and select your specific role.</li>
+                    <li>WhatsApp number and your Experience/Reason are <b>mandatory</b>.</li>
+                    <li>Your account will be kept "Pending" until Admin approves it.</li>
                 </ul>
             </div>
 
-            <div style="background:#e0e7ff; border:1px solid #86efac; padding:12px; border-radius:8px; margin-bottom:15px;">
-                <strong style="color:#166534; font-size:12px;"><i class="fa-solid fa-pen-nib"></i> FOR STUDENT ARTICLE WRITERS:</strong>
-                <ul style="margin:5px 0 0; padding-left:20px; font-size:12px; color:#166534; font-weight:600; line-height: 1.6;">
-                    <li>Select "Student Article Writer" under Special Roles.</li>
-                    <li>This is a separate role from Team Writers. You contribute articles as a student to the community.</li>
-                    <li>Provide a reason for wanting to write.</li>
-                </ul>
-            </div>
-
-            <div style="background:#f0fdf4; border:1px solid #86efac; padding:12px; border-radius:8px; margin-bottom:15px;">
-                <strong style="color:#166534; font-size:12px;"><i class="fa-solid fa-shield-halved"></i> FOR PARENTS / GUARDIANS:</strong>
-                <ul style="margin:5px 0 0; padding-left:20px; font-size:12px; color:#166534; font-weight:600; line-height: 1.6;">
-                    <li>Select "Parent / Guardian" under Special Roles.</li>
-                    <li>You must be at least <b>18+ years old</b>.</li>
+            <div class="bg-green-50 border border-green-300 p-3 rounded-lg mb-[15px]">
+                <strong class="text-green-800 text-[12px]"><i class="fa-solid fa-shield-halved"></i> FOR PARENTS / GUARDIANS:</strong>
+                <ul class="m-0 mt-1.5 pl-5 text-[12px] text-green-800 font-semibold leading-relaxed list-disc">
+                    <li>Select "Parent" on the Sign Up page.</li>
                     <li>You must provide your Child's <b>System Student ID</b> (e.g., XG-STU-123456).</li>
                 </ul>
             </div>
 
-            <div style="text-align: center; margin-top: 20px; font-size: 12px; color: #64748b;">
-                Need further assistance? Email us at:<br>
-                <a href="mailto:xplainerguru@gmail.com" style="color: #2563eb; font-weight: bold; text-decoration: none;">xplainerguru@gmail.com</a>
-            </div>
-
-            <button class="submit-btn" style="background: #8b5cf6; margin-top: 15px;" onclick="document.getElementById('setupModal').classList.remove('active');">Close Instructions</button>
+            <button class="bg-violet-500 hover:bg-violet-600 text-white border-none p-4 w-full rounded-lg font-extrabold font-['Manrope'] cursor-pointer transition duration-300 text-[15px] mt-[15px]" onclick="document.getElementById('setupModal').classList.remove('flex'); document.getElementById('setupModal').classList.add('hidden')">Close Instructions</button>
         </div>
     </div>
 
-    <div class="modal-overlay" id="privacyModal">
-        <div class="modal-box">
-            <button class="close-modal" onclick="document.getElementById('privacyModal').classList.remove('active')"><i class="fa-solid fa-xmark"></i></button>
-            <h3 style="font-family: 'Poppins'; color: #0f172a; margin: 0 0 10px 0;"><i class="fa-solid fa-file-contract" style="color: #2563eb;"></i> Privacy Policy & Terms</h3>
-            <p style="color: #64748b; font-size: 13px; margin-bottom: 20px;">By using Xplainer Guru, you agree to the following terms:</p>
-            
-            <div style="background:#f8fafc; border:1px solid #cbd5e1; padding:15px; border-radius:8px; margin-bottom:15px; font-size: 12px; color:#475569; line-height: 1.6;">
-                <strong>1. Data Collection:</strong> We collect information necessary to provide educational and community services, such as your name and email. If provided, phone numbers are kept confidential.<br><br>
-                <strong>2. Account Usage:</strong> You are responsible for maintaining the security of your account. Misuse of the platform may result in suspension.<br><br>
-                <strong>3. Special Roles:</strong> Applications for Parent, Writer, Mentor, or Support roles are subject to manual review and approval by administrators. Falsifying information will lead to rejection.<br><br>
-                <strong>4. Community Guidelines:</strong> Users must maintain respectful behavior. Any form of harassment or inappropriate content will not be tolerated.
-            </div>
-
-            <button class="submit-btn" style="background: #2563eb;" onclick="document.getElementById('privacyModal').classList.remove('active');">I Agree</button>
-        </div>
-    </div>
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
+    <script src="js/firebase-init.js"></script>
+    <script src="js/auth.js"></script>
 
     <script>
-        let isSpecialMode = false;
-
-        // --- UI NAVIGATION ---
-        function openLoginMode() {
-            document.getElementById('login-error').style.display = 'none'; 
-            document.getElementById('signup-section').classList.add('hidden');
-            document.getElementById('login-section').classList.remove('hidden');
-        }
-
-        function openSignupMode(modeType) {
-            document.getElementById('signup-error').style.display = 'none'; 
-            document.getElementById('login-section').classList.add('hidden');
-            document.getElementById('signup-section').classList.remove('hidden');
-
-            const roleGroup = document.getElementById('roleSelectionGroup');
-            const signRole = document.getElementById('signRole');
-            const badge = document.getElementById('special-badge-area');
-            const backBtn = document.getElementById('backToStudentBtn');
-            const specialBtn = document.getElementById('specialSignupToggleBtn');
-
-            if (modeType === 'special') {
-                isSpecialMode = true;
-                roleGroup.classList.remove('hidden');
-                badge.classList.remove('hidden');
-                backBtn.classList.remove('hidden');
-                specialBtn.classList.add('hidden');
-                document.getElementById('signup-title').innerText = "Submit Application";
-                document.getElementById('signup-subtitle').innerText = "Select your role to view requirements.";
-                signRole.value = ""; // Reset dropdown
-            } else {
-                isSpecialMode = false;
-                roleGroup.classList.add('hidden');
-                badge.classList.add('hidden');
-                backBtn.classList.add('hidden');
-                specialBtn.classList.remove('hidden');
-                document.getElementById('signup-title').innerText = "Create Account";
-                document.getElementById('signup-subtitle').innerText = "Join Xplainer Guru to start learning.";
-            }
-            handleRoleUI(); // Refresh UI blocks based on mode
-        }
-
-        function openSpecialSignup() {
-            openSignupMode('special');
-        }
-
-        // --- FIELD VISIBILITY ENGINE ---
-        function handleRoleUI() {
-            const role = isSpecialMode ? document.getElementById('signRole').value : 'student';
-            
-            const phoneInput = document.getElementById('signPhone');
-            const phoneTag = document.getElementById('phone-req-tag');
-            const ageGroup = document.getElementById('ageBoxGroup');
-            const ageInput = document.getElementById('signAge');
-            const reasonGroup = document.getElementById('reasonBoxGroup');
-            const reasonInput = document.getElementById('signReason');
-            const childGroup = document.getElementById('childIdGroup');
-            const childInput = document.getElementById('signChildId');
-
-            if (!isSpecialMode || role === 'student') {
-                // NORMAL STUDENT
-                phoneInput.required = false; phoneInput.placeholder = "10-digits"; phoneTag.innerHTML = '(Opt)';
-                ageGroup.classList.add('hidden'); ageInput.required = false; ageInput.value = "";
-                reasonGroup.classList.add('hidden'); reasonInput.required = false; reasonInput.value = ""; 
-                childGroup.classList.add('hidden'); childInput.required = false; childInput.value = "";
-            } 
-            else if (role === 'parent') {
-                // PARENT
-                phoneInput.required = true; phoneInput.placeholder = "Mandatory"; phoneTag.innerHTML = '<span style="color:#ef4444;">* Req</span>';
-                childGroup.classList.remove('hidden'); childInput.required = true;
-                ageGroup.classList.remove('hidden'); ageInput.required = true;
-                reasonGroup.classList.add('hidden'); reasonInput.required = false; reasonInput.value = "";
-            } 
-            else if (role === 'student_writer') {
-                // STUDENT WRITER
-                phoneInput.required = false; phoneInput.placeholder = "10-digits"; phoneTag.innerHTML = '(Opt)';
-                ageGroup.classList.remove('hidden'); ageInput.required = true;
-                reasonGroup.classList.remove('hidden'); reasonInput.required = true;
-                childGroup.classList.add('hidden'); childInput.required = false; childInput.value = "";
-            }
-            else if (role) {
-                // TEAM MEMBERS (mentor, writer, support)
-                phoneInput.required = true; phoneInput.placeholder = "Mandatory"; phoneTag.innerHTML = '<span style="color:#ef4444;">* Req</span>';
-                ageGroup.classList.remove('hidden'); ageInput.required = true;
-                reasonGroup.classList.remove('hidden'); reasonInput.required = true;
-                childGroup.classList.add('hidden'); childInput.required = false; childInput.value = "";
-            } 
-            else {
-                // SPECIAL MODE, BUT NO ROLE SELECTED YET
-                phoneInput.required = false; phoneInput.placeholder = "Select role first..."; phoneTag.innerHTML = '';
-                ageGroup.classList.add('hidden'); ageInput.required = false;
-                reasonGroup.classList.add('hidden'); reasonInput.required = false;
-                childGroup.classList.add('hidden'); childInput.required = false;
-            }
-        }
-
         function togglePassword(inputId, icon) {
             const input = document.getElementById(inputId);
             input.type = input.type === "password" ? "text" : "password";
@@ -337,7 +112,8 @@
         function showMessage(elementId, message, type="error") {
             const box = document.getElementById(elementId);
             box.innerHTML = type === "error" ? `<i class='fa-solid fa-circle-exclamation'></i> ${message}` : `<i class='fa-solid fa-check-circle'></i> ${message}`;
-            box.style.display = 'block';
+            box.classList.remove('hidden');
+            box.classList.add('block');
         }
 
         function handleForgotPass() {
@@ -348,129 +124,38 @@
             const btn = document.getElementById('forgotBtn'); btn.innerText = "Sending Link...";
             window.authManager.auth.sendPasswordResetEmail(email).then(() => {
                 showMessage("login-success", "Reset link sent! Please check your email inbox/spam.", "success");
-                document.getElementById('login-error').style.display = 'none'; btn.innerText = "Forgot Password?";
+                document.getElementById('login-error').classList.add('hidden'); 
+                document.getElementById('login-error').classList.remove('block');
+                btn.innerText = "Forgot Password?";
             }).catch(() => {
                 showMessage("login-error", "Failed to send link. Ensure email is registered."); btn.innerText = "Forgot Password?";
             });
         }
 
-        // ================= LOGIN LOGIC =================
         document.getElementById('loginForm').addEventListener('submit', (e) => {
             e.preventDefault();
-            if (!window.authManager) {
-                showMessage("login-error", "System modules are still loading. Please try again in a moment.");
-                return;
-            }
-
+            if (!window.authManager) return showMessage("login-error", "System loading. Please try again.");
             const btn = document.getElementById('loginBtn');
             const email = document.getElementById('loginId').value.trim();
             const pass = document.getElementById('loginPass').value;
             btn.disabled = true; btn.innerText = "Verifying...";
-
-            window.authManager.processLogin(email, pass, 
-                (user) => {
-                    const redirectUrl = localStorage.getItem("redirectAfterLogin") || "index.html"; 
-                    localStorage.removeItem("redirectAfterLogin"); 
-                    window.location.href = redirectUrl;
-                }, 
-                (errorMsg, type, userData) => {
-                    btn.disabled = false; btn.innerText = "Secure Log In";
-                    
-                    if (type === "suspended") {
-                        document.getElementById('main-auth-box').innerHTML = `<i class="fa-solid fa-user-lock" style="font-size:40px; color:#ef4444; margin-bottom:15px;"></i><h2 style="font-family:'Poppins'; color:#0f172a; margin:0 0 10px;">Account Suspended</h2><p style="font-size:13px; color:#64748b;">This account was scheduled for deletion.</p><button class="submit-btn" style="background:#16a34a;" onclick="window.authManager.handleLogout('login.html')">Logout</button>`;
-                    } else if (type === "pending") {
-                        document.getElementById('main-auth-box').innerHTML = `
-                            <i class="fa-solid fa-hourglass-half" style="font-size:40px; color:#f59e0b; margin-bottom:15px;"></i>
-                            <h2 style="font-family:'Poppins'; color:#0f172a; font-size:20px; margin:0 0 10px;">Application Under Review</h2>
-                            <p style="font-size:13px; color:#64748b; margin-bottom:15px; line-height:1.5;">Your application for <b>${(userData.requestedRole||'').toUpperCase()}</b> is being reviewed by the Admin.</p>
-                            <div style="background:#f8fafc; border:1px solid #e2e8f0; padding:10px; border-radius:8px; margin-bottom:20px;">
-                                <span style="font-size:11px; color:#94a3b8; font-weight:800;">YOUR REFERENCE TOKEN</span><br><span style="font-family:monospace; color:#2563eb; font-weight:800; font-size:15px;">${userData.requestToken}</span>
-                            </div><button class="submit-btn" onclick="window.authManager.handleLogout('login.html')">Logout for now</button>
-                        `;
-                    } else {
-                        showMessage("login-error", errorMsg);
-                    }
-                }
-            );
+            
+            window.authManager.processLogin(email, pass, 'student', {}, (errorMsg) => {
+                btn.disabled = false; btn.innerText = "Secure Log In";
+                showMessage("login-error", errorMsg);
+            });
         });
 
-        // ================= SIGNUP LOGIC =================
-        document.getElementById('signupForm').addEventListener('submit', (e) => {
-            e.preventDefault();
-            if (!window.authManager) {
-                showMessage("signup-error", "System modules are still loading. Please try again in a moment.");
-                return;
-            }
-
-            const btn = document.getElementById('signupBtn');
-            const role = isSpecialMode ? document.getElementById('signRole').value : 'student';
-            
-            if (isSpecialMode && !role) {
-                return showMessage("signup-error", "Please select a Role from the dropdown first.");
-            }
-
-            const signupData = {
-                role: role,
-                name: document.getElementById('signName').value.trim(),
-                email: document.getElementById('signEmail').value.toLowerCase().trim(),
-                pass: document.getElementById('signPass').value,
-                phone: document.getElementById('signPhone').value.trim(),
-                age: document.getElementById('signAge').value,
-                reason: document.getElementById('signReason').value.trim(),
-                childId: document.getElementById('signChildId').value.trim().toUpperCase(),
-                legalAgreementAccepted: document.getElementById('legalAgreement').checked
-            };
-
-            if(!signupData.legalAgreementAccepted) {
-                return showMessage("signup-error", "You must agree to the terms and privacy policy.");
-            }
-
-            // 🛑 STRICT VALIDATIONS
-            if (role === 'parent') {
-                if (!signupData.phone) return showMessage("signup-error", "WhatsApp number is strictly mandatory for Parents.");
-                if (!signupData.age || parseInt(signupData.age) < 18) return showMessage("signup-error", "Parents/Guardians must be 18 years or older.");
-                if (!signupData.childId.startsWith("XG-STU-") || signupData.childId.length < 10) return showMessage("signup-error", "Please provide a valid Child Student ID (e.g. XG-STU-123456).");
-            } else if (['mentor', 'writer', 'support', 'student_writer'].includes(role)) {
-                if (role !== 'student_writer' && !signupData.phone) return showMessage("signup-error", "WhatsApp number is strictly mandatory for Team applications.");
-                if (!signupData.age || parseInt(signupData.age) < 15) return showMessage("signup-error", "You must be at least 15 years old to apply.");
-                if (signupData.reason.length < 20) return showMessage("signup-error", "Application Rejected: Please provide a proper background/reason.");
-            }
-            
-            if (signupData.phone && !/^[6-9]\d{9}$/.test(signupData.phone)) return showMessage("signup-error", "Enter a valid 10-digit Indian mobile number.");
-            if (signupData.pass.length < 6) return showMessage("signup-error", "Password must be 6+ chars.");
-
-            btn.disabled = true; btn.innerText = "Processing...";
-
-            window.authManager.processSignup(signupData, 
-                (user, email, generatedToken) => {
-                    let tokenHtml = role !== 'student' ? `<div style="background: #f8fafc; padding: 15px; border-radius: 8px; margin-bottom: 15px; border: 1px solid #cbd5e1;"><p style="font-size:12px; color:#475569; margin:0 0 5px; font-weight:700;">Application Ticket Opened. Your Token:</p><div class="token-box">${generatedToken}</div><p style="font-size:11px; color:#ef4444; margin:0;">⚠️ Admin will review this token. Please verify your email while you wait.</p></div>` : "";
-
-                    document.getElementById('main-auth-box').innerHTML = `
-                        <i class="fa-solid fa-envelope-circle-check" style="font-size:50px; color:#2563eb; margin-bottom:15px;"></i>
-                        <h2 style="font-family:'Poppins'; color:#0f172a; margin:0 0 10px;">Verify Your Email</h2>
-                        <p style="font-size:14px; color:#475569; line-height:1.6; margin-bottom:15px;">A verification link has been sent to <b>${email}</b>. You must verify your email before logging in.</p>
-                        ${tokenHtml}
-                        <button class="submit-btn" style="margin-top:10px;" onclick="window.location.reload()">Return to Login</button>`;
-                },
-                (errorMsg) => {
-                    btn.disabled = false; btn.innerText = "Create Account";
-                    showMessage("signup-error", errorMsg);
-                }
-            );
-        });
-        
         window.onload = function() {
             const urlParams = new URLSearchParams(window.location.search);
             if(urlParams.get('email')) { document.getElementById('loginId').value = urlParams.get('email'); document.getElementById('loginPass').focus(); }
+            
+            if (window.authManager) {
+                window.authManager.initializeAuthListener((user, userData) => {
+                    if (user && userData) window.authManager.enforceRouting(user, userData);
+                });
+            }
         };
     </script>
-    
-    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
-    <script src="js/firebase-init.js"></script>
-    <script src="js/auth.js"></script>
-    <script src="js/master.js"></script>
-    <script src="js/smart-back.js"></script>
 </body>
 </html>
