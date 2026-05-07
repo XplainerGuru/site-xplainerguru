@@ -1,5 +1,5 @@
 // ==========================================
-// 1. GLOBAL CONFIGURATION (The ₹0 Cost Architecture)
+// js/master.js - PUBLIC GLOBAL CONFIGURATION 
 // ==========================================
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwq33obEvRjmPhOU-TDhsgrReHTXzL8RcKKey_UauwQBmHYpzeO7pmbluzZeMxd4mYQ/exec";
 
@@ -11,44 +11,29 @@ const CONFIG = {
     developer: { ig: "https://instagram.com/ashu7061a" }
 };
 
-// 🔥 FOUNDER LOCKS (Must match your Firebase Auth UID)
-const FOUNDER_AK_UID = "XCxglOl7FzLyRIFgl4SXNiW9VKA3"; // 🔒 URGENT: Isko Ashutosh Kaushal ke real Firebase UID se replace karein.
-const FOUNDER_SK_UID = "EZpI9ea4b0X8x8vOhxzar5KNzAw1";
-
 document.addEventListener("DOMContentLoaded", () => {
     if (document.getElementById('xg-injected')) return; 
 
-    // CLEAN MOBILE-FRIENDLY CSS + AVATAR DROPDOWN
     const masterCSS = `
     <style>
         body { margin: 0; padding-top: 72px; font-family: 'Manrope', sans-serif; background: #f8fafc; color: #334155; display: flex; flex-direction: column; min-height: 100vh; overflow-x: hidden; }
-        
-        header { background: rgba(255, 255, 255, 0.98); height: 72px; width: 100%; position: fixed; top: 0; left: 0; z-index: 9000; backdrop-filter: blur(8px); box-sizing: border-box; }
-        .nav-l { display: flex; align-items: center; gap: clamp(10px, 2vw, 20px); }
+        header { background: rgba(255, 255, 255, 0.98); height: 72px; width: 100%; position: fixed; top: 0; left: 0; z-index: 9000; backdrop-filter: blur(8px); box-sizing: border-box; border-bottom: 1px solid #e2e8f0; }
         .brand { font-family: 'Poppins', sans-serif; font-weight: 800; font-size: clamp(1.2rem, 4vw, 1.5rem); display: flex; align-items: center; gap: 8px; color: #0f172a; text-decoration: none; letter-spacing: -0.5px; }
         .brand img { height: 38px; width: 38px; border-radius: 50%; object-fit: cover; }
-        .nav-r { display: flex; align-items: center; }
-
-        /* PROFILE DROPDOWN (Header) */
+        
+        /* PROFILE DROPDOWN */
         .auth-wrapper { position: relative; display: flex; align-items: center;}
-        /* COMPACT LOGIN BUTTON FOR LESS SPACE */
         .login-btn { background: #2563eb; color: #fff; padding: 6px 16px; border-radius: 50px; text-decoration: none; font-weight: 700; font-size: 13px; transition: 0.3s; box-shadow: 0 4px 10px rgba(37,99,235,0.2); white-space: nowrap; }
         .login-btn:hover { background: #1d4ed8; transform: translateY(-2px); }
-        
         .profile-btn { cursor: pointer; border: none; background: none; padding: 0; display: flex; align-items: center; gap: 8px;}
         .profile-btn img { width: 40px; height: 40px; border-radius: 50%; border: 2px solid #e2e8f0; object-fit: cover; transition: 0.3s; }
         .profile-btn:hover img { border-color: #2563eb; }
-        
         .profile-dropdown { position: absolute; top: 60px; right: 0; background: #fff; box-shadow: 0 10px 30px rgba(0,0,0,0.15); border-radius: 15px; width: 220px; overflow: hidden; border: 1px solid #e2e8f0; display: none; flex-direction: column; z-index: 10000; transform-origin: top right; animation: scaleIn 0.2s ease;}
         .profile-dropdown.active { display: flex; }
         @keyframes scaleIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
-        
         .pd-header { padding: 15px; border-bottom: 1px solid #e2e8f0; background: #f8fafc; }
         .pd-name { font-family: 'Poppins'; font-size: 14px; color: #0f172a; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin:0 0 2px;}
         .pd-email { font-size: 11px; color: #64748b; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin:0;}
-        .pd-staff-id { font-size: 10px; color: #2563eb; font-family: monospace; font-weight: 800; background: #dbeafe; padding: 2px 6px; border-radius: 4px; display: inline-block; margin-top: 4px; }
-        .pd-owner-tag { font-size: 10px; color: #f59e0b; font-family: monospace; font-weight: 800; background: #0f172a; padding: 2px 6px; border-radius: 4px; display: inline-block; margin-top: 4px; }
-        
         .pd-link { padding: 12px 15px; text-decoration: none; color: #334155; font-size: 13px; font-weight: 600; transition: 0.2s; display: flex; align-items: center; gap: 10px;}
         .pd-link:hover { background: #f1f5f9; color: #2563eb; padding-left: 20px;}
         .pd-logout { color: #ef4444; border-top: 1px solid #e2e8f0; }
@@ -60,11 +45,9 @@ document.addEventListener("DOMContentLoaded", () => {
         #drawer-mask { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 10000; backdrop-filter: blur(4px); }
         .d-link { color: #94a3b8; padding: 18px 0; border-bottom: 1px solid rgba(255,255,255,0.05); font-family: 'Poppins', sans-serif; font-weight: 600; text-decoration: none; font-size: 16px; display: block; transition: 0.3s; }
         .d-link:hover { color: #fff; padding-left: 10px; border-color: rgba(255,255,255,0.2); }
-        
         .d-user-card { background: rgba(255,255,255,0.05); padding: 15px; border-radius: 12px; margin-bottom: 20px; display: flex; align-items: center; gap: 15px; border: 1px solid rgba(255,255,255,0.1); cursor: pointer; transition: 0.3s;}
         .d-user-card:hover { background: rgba(255,255,255,0.1); }
         .d-user-card img { width: 45px; height: 45px; border-radius: 50%; object-fit: cover;}
-
         .d-social-footer { margin-top: auto; padding-top: 30px; display: flex; gap: 15px; border-top: 1px solid rgba(255,255,255,0.1); }
         .s-btn { width: 42px; height: 42px; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: 0.3s; text-decoration:none; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
         .s-btn svg { width: 20px; fill: #fff; }
@@ -78,8 +61,7 @@ document.addEventListener("DOMContentLoaded", () => {
         .ft-header { color: #fff; margin-bottom: 25px; font-weight: 700; border-left: 4px solid #f59e0b; padding-left: 15px; font-family: 'Poppins', sans-serif; letter-spacing: 0.5px; font-size: 1.1rem; }
         .ft-link { display: block; margin-bottom: 14px; font-size: 14px; text-decoration: none; color: inherit; transition: 0.2s; }
         .ft-link:hover { color: #fff; transform: translateX(5px); }
-        .credits { text-align: center; margin-top: 60px; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 25px; font-size: 13px; font-family: 'Manrope', sans-serif; opacity: 0.8; }
-
+        .credits { text-align: center; margin-top: 60px; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 25px; font-size: 13px; opacity: 0.8; }
         #xg-injected { display: none; }
     </style>
     <div id="xg-injected"></div>
@@ -97,11 +79,9 @@ document.addEventListener("DOMContentLoaded", () => {
         </a>
         
         <div style="display: flex; align-items: center; gap: clamp(10px, 2vw, 20px);">
-            
             <div id="global-bell-trigger" style="position: relative; cursor: pointer; display: flex; align-items: center;" onclick="toggleGlobalNotif(event)">
                 <i class="fa-solid fa-bell" style="font-size: 20px; color: #64748b; transition: 0.3s;" onmouseover="this.style.color='#2563eb'" onmouseout="this.style.color='#64748b'"></i>
                 <span id="global-notif-badge" style="background: #ef4444; color: white; border-radius: 50%; padding: 2px 5px; font-size: 10px; font-weight: 800; position: absolute; top: -8px; right: -8px; display: none;">0</span>
-                
                 <div id="global-notif-dropdown" style="position: absolute; top: 40px; right: -10px; width: clamp(280px, 90vw, 320px); background: #fff; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.15); border: 1px solid #e2e8f0; display: none; flex-direction: column; z-index: 10000; text-align: left; cursor: default; transform-origin: top right; animation: scaleIn 0.2s ease;">
                     <div style="padding: 15px; border-bottom: 1px solid #e2e8f0; font-weight: 800; font-size: 14px; background: #f8fafc; color: #0f172a; border-radius: 12px 12px 0 0;">Notifications</div>
                     <div id="global-nd-body" style="max-height: 300px; overflow-y: auto;">
@@ -109,11 +89,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     </div>
                 </div>
             </div>
-
-            <div id="headerAuthContainer">
-                <a href="login.html" class="login-btn">Login</a>
-            </div>
-            
+            <div id="headerAuthContainer"><a href="login.html" class="login-btn">Login</a></div>
         </div>
     </header>
     `;
@@ -125,11 +101,9 @@ document.addEventListener("DOMContentLoaded", () => {
             <span style="color:#fff; font-family:'Poppins', sans-serif; font-size:1.5rem; font-weight:800;">Menu</span>
             <button onclick="toggleDrawer()" style="color:#fff; background:none; border:none; font-size:32px; cursor:pointer; opacity:0.8; transition:0.2s;">&times;</button>
         </div>
-        
         <div id="drawerAuthContainer">
             <a href="login.html" class="d-link" style="color:#2563eb; font-weight:800; border-bottom:1px solid rgba(255,255,255,0.1);">Login / Register</a>
         </div>
-
         <div style="flex:1;">
             <a href="index.html" class="d-link">Home</a>
             <a href="videos.html" class="d-link">Video Classes</a>
@@ -151,7 +125,7 @@ document.addEventListener("DOMContentLoaded", () => {
         <div class="ft-grid">
             <div class="ft-col">
                 <a href="index.html" class="brand" style="color:#fff; margin-bottom:20px; display:inline-block;">Xplainer<span style="color:#2563eb">Guru</span></a>
-                <p style="font-size:14px; line-height:1.7; opacity:0.8;">Empowering students with accessible, high-quality education and expert guidance.</p>
+                <p style="font-size:14px; line-height:1.7; opacity:0.8;">Empowering students with accessible, high-quality education.</p>
             </div>
             <div class="ft-col">
                 <h4 class="ft-header">Quick Access</h4>
@@ -160,23 +134,21 @@ document.addEventListener("DOMContentLoaded", () => {
                 <a href="notes.html" class="ft-link">Study Notes</a>
                 <a href="articles.html" class="ft-link">Study Articles</a>
                 <a href="tests.html" class="ft-link">Mock Tests</a>
+                <a href="about.html" class="ft-link">Our Team</a>
             </div>
             <div class="ft-col">
                 <h4 class="ft-header">Legal & Policies</h4>
                 <a href="privacy.html" class="ft-link">Privacy Policy</a>
                 <a href="terms.html" class="ft-link">Terms of Service</a>
-                <a href="refund.html" class="ft-link">Refund & Cancellation</a>
+                <a href="refund.html" class="ft-link">Refund Policy</a>
             </div>
             <div class="ft-col">
                 <h4 class="ft-header">Contact Us</h4>
                 <a href="mailto:${CONFIG.email}" class="ft-link">Email Support</a>
-                <a href="${CONFIG.ig}" target="_blank" class="ft-link">Official Instagram</a>
-                <a href="${CONFIG.waChannel}" target="_blank" class="ft-link">WhatsApp Channel</a>
+                <a href="${CONFIG.ig}" target="_blank" class="ft-link">Instagram</a>
             </div>
         </div>
-        <div class="credits">
-            Designed and Developed with ❤️ by <a href="${CONFIG.developer.ig}" target="_blank" style="color:#fff; font-weight:700; text-decoration:underline;">Ashutosh Kaushal</a> | &copy; 2026
-        </div>
+        <div class="credits"> Designed and Developed with ❤️ by <a href="${CONFIG.developer.ig}" target="_blank" style="color:#fff; font-weight:700;">Ashutosh Kaushal</a> | &copy; 2026 </div>
     </footer>
     `;
 
@@ -184,20 +156,37 @@ document.addEventListener("DOMContentLoaded", () => {
     document.body.insertAdjacentHTML('afterbegin', drawerHTML);
     document.body.insertAdjacentHTML('beforeend', footerHTML);
 
-    // INIT AUTH LISTENER & GLOBAL MIC
+    // --- ADSTERRA GLOBAL SOCIAL BAR ---
+    const forbiddenPages = ['login.html', 'signup.html', 'privacy.html', 'terms.html', 'refund.html'];
+    const isForbidden = forbiddenPages.some(page => window.location.pathname.includes(page));
+
+    if (!isForbidden) {
+        console.log("Ad script initialized for: Global Social Bar");
+        const socialBarScript = document.createElement('script');
+        socialBarScript.type = "text/javascript";
+        socialBarScript.src = "https://pl29365933.profitablecpmratenetwork.com/d9/ad/77/d9ad7765f13d86914dce64a5b431bd3b.js";
+        socialBarScript.async = true;
+        socialBarScript.setAttribute('data-cfasync', 'false');
+
+        socialBarScript.onerror = function() {
+            console.error("Adsterra Social Bar failed to load. Check for Ad-Blockers or CSP restrictions.");
+        };
+
+        document.body.appendChild(socialBarScript);
+    }
+
     checkAuthStatus();
-    loadGlobalMic(); // 📢 Global Mic call here
+    loadGlobalMic();
 });
 
 // ==========================================
-// SMART AUTHENTICATION ENGINE (Role & Staff ID Based)
+// SMART AUTHENTICATION ENGINE
 // ==========================================
 function checkAuthStatus() {
     const hAuth = document.getElementById('headerAuthContainer');
     const dAuth = document.getElementById('drawerAuthContainer');
 
     const renderLoggedOut = () => {
-        // Changed text from "Login / Sign Up" to "Login" so it takes minimal space in header
         if(hAuth) hAuth.innerHTML = `<a href="login.html" class="login-btn">Login</a>`;
         if(dAuth) dAuth.innerHTML = `<a href="login.html" class="d-link" style="color:#2563eb; font-weight:800; border-bottom:1px solid rgba(255,255,255,0.1);">Login / Register</a>`;
     };
@@ -211,53 +200,18 @@ function checkAuthStatus() {
 
             let name = user.displayName || "Learner";
             let role = "student"; 
-            let staffId = "";
             
             if (userData) { 
                 name = userData.name || name; 
                 role = userData.role || "student";
-                staffId = userData.staffId || "";
-            }
-            
-            // 👑 GOD MODE OVERRIDE IN MASTER JS
-            if (user.uid === FOUNDER_AK_UID) {
-                role = "founder";
-                name = "Ashutosh Kaushal";
-                staffId = "XG-F-AK";
-            } else if (user.uid === FOUNDER_SK_UID) {
-                role = "founder";
-                staffId = "XG-F-SK";
-            }
-
-            // 🎭 VIEW-AS OVERRIDE
-            const viewAsRole = sessionStorage.getItem("xg_view_as_role");
-            if ((role === "admin" || role === "founder") && viewAsRole) {
-                role = viewAsRole; // Temporary UI override
             }
 
             const email = user.email || "";
             const avatar = user.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=2563eb&color=fff&rounded=true&bold=true`;
             
-            // 🔥 STAFF BADGE LOGIC (Clean UI)
             let dashLink = `<a href="dashboard.html" class="pd-link" style="color:#2563eb; font-weight:800; background:#f1f5f9;"><i class="fa-solid fa-gauge-high"></i> Dashboard</a>`;
             let badgeHTML = `<div style="color:#94a3b8; font-size:12px; text-transform:capitalize;">${role}</div>`;
-            let pdStaffHtml = "";
-            
-            if (role === "admin" || role === "founder" || role === "mentor" || role === "support") {
-                badgeHTML = `<div style="color:#f59e0b; font-size:12px; font-weight:700; text-transform:capitalize;"><i class="fa-solid fa-shield-halved"></i> Team Admin</div>`;
-                
-                if(user.uid === FOUNDER_AK_UID || user.uid === FOUNDER_SK_UID) {
-                    pdStaffHtml = `<span class="pd-owner-tag"><i class="fa-solid fa-crown"></i> OWNER</span>`;
-                } else {
-                    // Dynamic Hash Generation Masking
-                    const displayRole = role.toUpperCase();
-                    const prefix = displayRole === 'STUDENT' ? 'STU' : (displayRole === 'PARENT' ? 'PRN' : (displayRole === 'MENTOR' ? 'MNT' : 'ADM'));
-                    const uiDisplayId = "XG-" + prefix + "-" + user.uid.substring(0,6).toUpperCase();
-                    pdStaffHtml = `<span class="pd-staff-id">${uiDisplayId}</span>`;
-                }
-            }
 
-            // 1. Header Dropdown UI
             if (hAuth) {
                 hAuth.innerHTML = `
                     <div class="auth-wrapper">
@@ -265,23 +219,18 @@ function checkAuthStatus() {
                             <img src="${avatar}" alt="Profile">
                             <i class="fa-solid fa-chevron-down" style="font-size:12px; color:#64748b;"></i>
                         </button>
-                        
                         <div class="profile-dropdown" id="profileDropdown">
                             <div class="pd-header">
                                 <h4 class="pd-name">${name}</h4>
                                 <p class="pd-email">${email}</p>
-                                ${pdStaffHtml}
                             </div>
-                            
                             ${dashLink}
-                            <a href="#" class="pd-link" onclick="globalSwitchAccountTrigger()"><i class="fa-solid fa-users-gear"></i> Switch Account</a>
                             <a href="#" class="pd-link pd-logout" onclick="logoutUser()"><i class="fa-solid fa-arrow-right-from-bracket"></i> Logout</a>
                         </div>
                     </div>
                 `;
             }
 
-            // 2. Mobile Drawer UI
             if (dAuth) {
                 dAuth.innerHTML = `
                     <div class="d-user-card" onclick="window.location.href='dashboard.html'">
@@ -296,64 +245,29 @@ function checkAuthStatus() {
             }
         }, renderLoggedOut);
     } else {
-        console.warn("Auth module not loaded. Header auth state disabled.");
         renderLoggedOut();
     }
 }
 
-// ==========================================
-// 🎭 VIEW-AS FEATURE (Super Admin & Founder)
-// ==========================================
-window.setRoleView = function(targetRole) {
-    const validRoles = ["student", "parent", "support", "mentor", "writer", "admin", "founder", "reset"];
-    if (!validRoles.includes(targetRole)) {
-        console.error("Invalid role view target.");
-        return;
-    }
-    
-    if (targetRole === "reset") {
-        sessionStorage.removeItem("xg_view_as_role");
-        console.log("View-As mode disabled. Reverting to original role.");
-    } else {
-        sessionStorage.setItem("xg_view_as_role", targetRole);
-        console.log(`View-As mode enabled: Viewing as ${targetRole}`);
-    }
-    window.location.reload(); // Reload to apply UI changes globally
-};
-
-// 🌐 GLOBAL SWITCH ACCOUNT TRIGGER 
-window.globalSwitchAccountTrigger = function() {
-    if(typeof window.openSwitchModal === 'function') {
-        window.openSwitchModal();
-    } else {
-        if (window.authManager) window.authManager.handleLogout("login.html");
-    }
-}
-
+// 🌐 UI TOGGLES
 window.toggleProfileDropdown = function(e) {
     e.stopPropagation();
     const dropdown = document.getElementById('profileDropdown');
     if(dropdown) dropdown.classList.toggle('active');
 };
 
-// GLOBAL NOTIFICATION TOGGLE
 window.toggleGlobalNotif = function(e) {
     e.stopPropagation();
     const notifDropdown = document.getElementById('global-notif-dropdown');
-    if (notifDropdown) {
-        notifDropdown.style.display = notifDropdown.style.display === 'flex' ? 'none' : 'flex';
-    }
+    if (notifDropdown) notifDropdown.style.display = notifDropdown.style.display === 'flex' ? 'none' : 'flex';
 };
 
 document.addEventListener('click', () => {
     const dropdown = document.getElementById('profileDropdown');
-    if (dropdown && dropdown.classList.contains('active')) {
-        dropdown.classList.remove('active');
-    }
+    if (dropdown && dropdown.classList.contains('active')) dropdown.classList.remove('active');
+    
     const notifDropdown = document.getElementById('global-notif-dropdown');
-    if (notifDropdown && notifDropdown.style.display === 'flex') {
-        notifDropdown.style.display = 'none';
-    }
+    if (notifDropdown && notifDropdown.style.display === 'flex') notifDropdown.style.display = 'none';
 });
 
 window.logoutUser = function() {
@@ -393,149 +307,71 @@ window.syncToSheet = (data) => {
 };
 
 const postData = (data) => {
-    fetch(SCRIPT_URL, { method: "POST", mode: 'no-cors', body: JSON.stringify(data) })
-    .catch(e => console.log(e));
+    fetch(SCRIPT_URL, { method: "POST", mode: 'no-cors', body: JSON.stringify(data) }).catch(e => console.log(e));
 };
 
 // ==========================================
-// 📢 THE GLOBAL MIC (ANNOUNCEMENT SYSTEM)
+// 📢 THE GLOBAL MIC (Announcements)
 // ==========================================
 async function loadGlobalMic() {
+    const baseUrl = window.BASE_URL || 'https://xplainerguru-backend.onrender.com';
     try {
-        const db = firebase.firestore();
-        db.settings({ experimentalForceLongPolling: true, experimentalAutoDetectLongPolling: false, merge: true });
-        // Database se current announcement fetch karo
-        const doc = await db.collection("system_settings").doc("global_mic").get();
+        const response = await fetch(`${baseUrl}/system/global-mic`);
+        const result = await response.json();
         
-        if (doc.exists) {
-            const data = doc.data();
-            
-            // Agar announcement ACTIVE hai, tabhi dikhao
-            if (data.active) {
-                const micHTML = `
-                <div id="xg-global-mic" style="background: linear-gradient(90deg, #2563eb, #8b5cf6); color: white; text-align: center; padding: 10px 20px; font-size: 14px; font-family: 'Poppins', sans-serif; position: relative; z-index: 10005; display: flex; justify-content: center; align-items: center; gap: 10px; flex-wrap: wrap; box-shadow: 0 4px 15px rgba(37,99,235,0.3);">
-                    <span style="background: #fde68a; color: #d97706; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 800; letter-spacing: 0.5px; text-transform: uppercase;"><i class="fa-solid fa-bolt"></i> ${data.tag || 'UPDATE'}</span>
-                    <span style="font-weight: 600; line-height: 1.4;">${data.message}</span>
-                    ${data.link ? `<a href="${data.link}" style="background: rgba(255,255,255,0.2); color: white; padding: 4px 12px; border-radius: 50px; font-weight: 700; text-decoration: none; font-size: 12px; transition: 0.2s; white-space: nowrap;" onmouseover="this.style.background='rgba(255,255,255,0.3)'" onmouseout="this.style.background='rgba(255,255,255,0.2)'">Explore <i class="fa-solid fa-arrow-right"></i></a>` : ''}
-                    <button onclick="document.getElementById('xg-global-mic').style.display='none'" style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); background: none; border: none; color: white; cursor: pointer; font-size: 16px; opacity: 0.8;"><i class="fa-solid fa-xmark"></i></button>
-                </div>
-                `;
-                // Website ke sabse upar (Header se bhi upar) chipka do
-                document.body.insertAdjacentHTML('afterbegin', micHTML);
-            }
+        if (result.status === 'success' && result.data.active) {
+            const data = result.data;
+            const micHTML = `
+            <div id="xg-global-mic" style="background: linear-gradient(90deg, #2563eb, #8b5cf6); color: white; text-align: center; padding: 10px 20px; font-size: 14px; font-family: 'Poppins', sans-serif; position: relative; z-index: 10005; display: flex; justify-content: center; align-items: center; gap: 10px; flex-wrap: wrap; box-shadow: 0 4px 15px rgba(37,99,235,0.3);">
+                <span style="background: #fde68a; color: #d97706; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 800; letter-spacing: 0.5px; text-transform: uppercase;"><i class="fa-solid fa-bolt"></i> ${data.tag || 'UPDATE'}</span>
+                <span style="font-weight: 600; line-height: 1.4;">${data.message}</span>
+                ${data.link ? `<a href="${data.link}" style="background: rgba(255,255,255,0.2); color: white; padding: 4px 12px; border-radius: 50px; font-weight: 700; text-decoration: none; font-size: 12px; transition: 0.2s; white-space: nowrap;">Explore <i class="fa-solid fa-arrow-right"></i></a>` : ''}
+                <button onclick="document.getElementById('xg-global-mic').style.display='none'" style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); background: none; border: none; color: white; cursor: pointer; font-size: 16px; opacity: 0.8;"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            `;
+            document.body.insertAdjacentHTML('afterbegin', micHTML);
         }
-    } catch(e) {
-        console.log("Global Mic Offline");
-    }
+    } catch(e) {}
 }
 
 // ==========================================
-// 🚀 XPLAINER GURU: GLOBAL UNIVERSAL WAITLIST ENGINE
+// 🚀 UNIVERSAL WAITLIST ENGINE
 // ==========================================
 document.addEventListener('DOMContentLoaded', () => {
-    // Ye function poori website par click ko track karega
     document.body.addEventListener('click', async (e) => {
         const waitlistBtn = e.target.closest('.xg-waitlist');
-        if (!waitlistBtn) return; // Agar click waitlist button pe nahi hai toh ignore karo
+        if (!waitlistBtn) return; 
 
         e.preventDefault();
-        
-        // Button disable karke loading dikhana
         const originalHtml = waitlistBtn.innerHTML;
         waitlistBtn.disabled = true;
         waitlistBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Processing...`;
 
-        // Pata lagao ki bacche ne kis feature ke liye click kiya hai
         const featureName = waitlistBtn.getAttribute('data-feature') || "New Exclusive Feature";
-
-        // 1. Check Auth Status (Kya baccha logged in hai?)
         const user = firebase.auth().currentUser;
+
         if (!user) {
-            // Agar login nahi hai, toh page yaad rakho aur login pe bhejo
             localStorage.setItem("redirectAfterLogin", window.location.href);
             window.location.href = "login.html";
             return;
         }
 
         try {
-            const db = firebase.firestore();
-            db.settings({ experimentalForceLongPolling: true, experimentalAutoDetectLongPolling: false, merge: true });
-            
-            // 2. Fetch User Data
-            const userDoc = await db.collection("users").doc(user.uid).get();
-            let userData = userDoc.exists ? userDoc.data() : { name: user.displayName || "Learner", email: user.email };
-            
-            // 3. Save to Firebase Database (Global Waitlist Collection)
-            await db.collection("global_waitlists").add({
-                uid: user.uid,
-                name: userData.name,
-                email: userData.email,
-                featureRequested: featureName,
-                status: "Confirmed",
-                timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-                sourcePage: window.location.pathname
+            const response = await fetch(`${window.BASE_URL}/system/waitlist/join`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ uid: user.uid, name: user.displayName || "Learner", email: user.email, featureRequested: featureName, sourcePage: window.location.pathname })
             });
+            
+            const result = await response.json();
+            if (!response.ok) throw new Error(result.message || "Failed to join waitlist.");
 
-            // 4. Send the Branded Email (Brand Identity System)
-            await db.collection("mail").add({
-                to: userData.email,
-                message: {
-                    subject: `🎉 Waitlist Confirmed: ${featureName} | Xplainer Guru`,
-                    text: `You are on the waitlist for ${featureName}.`,
-                    html: `
-                        <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
-                            <div style="background: #2563eb; padding: 30px; text-align: center;">
-                                <h1 style="color: #ffffff; margin: 0; font-size: 26px; letter-spacing: -0.5px;">Xplainer Guru</h1>
-                            </div>
-                            <div style="padding: 35px; background: #ffffff; color: #334155;">
-                                <h2 style="color: #0f172a; margin-top: 0;">Hello ${userData.name},</h2>
-                                <p style="font-size: 16px; line-height: 1.6; color: #475569;">You have successfully secured your spot on the <b>VIP Waitlist</b> for <b>${featureName}</b>.</p>
-                                <p style="font-size: 16px; line-height: 1.6; color: #475569;">Our team is working hard behind the scenes. As a waitlisted member, you will get exclusive early-bird access as soon as we launch!</p>
-                                
-                                <div style="background: #f8fafc; padding: 20px; border-left: 4px solid #10b981; margin: 30px 0; border-radius: 4px;">
-                                    <b style="color: #0f172a;">Waitlist Status:</b> <span style="color: #10b981; font-weight: bold;">Confirmed 🟢</span><br>
-                                    <b style="color: #0f172a; margin-top: 8px; display: inline-block;">Requested Feature:</b> ${featureName}
-                                </div>
-                                
-                                <p style="font-size: 16px; line-height: 1.6; color: #475569;">Keep learning and stay tuned!</p>
-                                <br>
-                                <p style="font-size: 15px; color: #0f172a; margin-bottom: 5px;">Verified by,</p>
-                                <p style="font-size: 14px; color: #64748b; margin-top: 0;"><b>Xplainer Guru Official</b></p>
-                                
-                                <hr style="border: none; border-top: 1px solid #e2e8f0; margin: 30px 0;">
-                                
-                                <p style="font-size: 13px; color: #64748b; text-align: center;">
-                                    Have a question? Reach out to us at <a href="mailto:xplainerguru@gmail.com" style="color: #2563eb; font-weight: bold; text-decoration: none;">xplainerguru@gmail.com</a>
-                                </p>
-                            </div>
-                            <div style="background: #f1f5f9; padding: 15px; text-align: center; font-size: 12px; color: #94a3b8;">
-                                This is an automated message. Please do not reply directly to this email.
-                            </div>
-                        </div>
-                    `,
-                    replyTo: "no-reply@xplainerguru.com"
-                }
-            });
-
-            // 5. Send to Google Sheets (Zero Cost Backup)
-            if (typeof window.syncToSheet === "function") {
-                window.syncToSheet({ 
-                    name: userData.name, 
-                    email: userData.email, 
-                    whatsapp: userData.whatsapp || "N/A", 
-                    interest: `${featureName} Waitlist`, 
-                    source: window.location.pathname 
-                });
-            }
-
-            // 6. Success Feedback to User
-            waitlistBtn.style.background = "#16a34a"; // Green color
+            waitlistBtn.style.background = "#16a34a"; 
             waitlistBtn.style.color = "white";
             waitlistBtn.innerHTML = `<i class="fa-solid fa-check-circle"></i> Added to Waitlist`;
-            alert(`Success! You are on the waitlist for ${featureName}. Check your email.`);
+            alert(result.message || `Success! You are on the waitlist for ${featureName}.`);
 
         } catch (error) {
-            console.error("Waitlist Error:", error);
             alert("An error occurred. Please check your connection and try again.");
             waitlistBtn.disabled = false;
             waitlistBtn.innerHTML = originalHtml;

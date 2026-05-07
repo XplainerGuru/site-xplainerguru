@@ -1,5 +1,5 @@
 // ==========================================
-// js/dashboard.js - UI Routing & Dashboard Controller
+// js/dashboard.js - PUBLIC UI Routing & Dashboard Controller
 // ==========================================
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -10,10 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
         console.error("Auth module not loaded! Ensure js/auth.js is included.");
     }
 
-    // 2. Setup God Mode Switcher
-    setupGodMode();
-
-    // 3. Setup Logout Navigation
+    // 2. Setup Logout Navigation
     const logoutBtn = document.getElementById('logoutBtn');
     if (logoutBtn) {
         logoutBtn.addEventListener('click', () => {
@@ -21,7 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // 4. Setup Sidebar Accordion Logic (Mobile/Tablet)
+    // 3. Setup Sidebar Accordion Logic (Mobile/Tablet)
     const menuToggles = document.querySelectorAll('.menu-toggle');
     menuToggles.forEach(toggle => {
         toggle.addEventListener('click', function(e) {
@@ -39,30 +36,31 @@ document.addEventListener('DOMContentLoaded', () => {
             if (parentLi) parentLi.classList.toggle('active');
         });
     });
+
     // --- MOBILE SIDEBAR TOGGLE LOGIC ---
     const hamburgerBtn = document.querySelector('.hamburger-btn');
     const sidebar = document.querySelector('.sidebar');
     
     if (hamburgerBtn && sidebar) {
-        // Create an overlay div dynamically
         let overlay = document.createElement('div');
         overlay.className = 'sidebar-overlay';
         document.body.appendChild(overlay);
 
-        // Open Sidebar
         hamburgerBtn.addEventListener('click', () => {
             sidebar.classList.add('open');
             overlay.classList.add('active');
-            document.body.style.overflow = 'hidden'; // Scroll lock
+            document.body.style.overflow = 'hidden'; 
         });
 
-        // Close Sidebar when clicking outside (on the overlay)
         overlay.addEventListener('click', () => {
             sidebar.classList.remove('open');
             overlay.classList.remove('active');
-            document.body.style.overflow = ''; // Remove scroll lock
+            document.body.style.overflow = ''; 
         });
     }
+
+    // Trigger Notification Popup (Safe for public)
+    triggerNotificationPrompt();
 });
 
 function handleUserUnauthenticated() {
@@ -82,49 +80,22 @@ function handleUserLoaded(user, userData, error) {
     let role = "student";
     let pic = `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=2563eb&color=fff&bold=true`;
 
-    // Hydrate from Firestore User Document
     if (userData) {
         name = userData.name || name;
         email = userData.email || email;
         role = userData.role ? userData.role.toLowerCase() : "student";
         if (userData.pic) pic = userData.pic;
-    } else {
-        console.warn("⚠️ Warning: Firestore user document does not exist. Using fallback auth data.");
     }
     
     // DYNAMIC UI MASKING ENGINE
     const displayRole = role.toUpperCase();
-    const prefix = displayRole === 'STUDENT' ? 'STU' : (displayRole === 'PARENT' ? 'PRN' : (displayRole === 'MENTOR' ? 'MNT' : 'ADM'));
+    const prefix = displayRole === 'STUDENT' ? 'STU' : (displayRole === 'PARENT' ? 'PRN' : 'USR');
     let displayId = "XG-" + prefix + "-" + user.uid.substring(0,6).toUpperCase();
 
-   // STEALTH FOUNDER OVERRIDE (Hardcoded UID Security)
-    const founder1_UID = 'XCxglOl7FzLyRIFgl4SXNiW9VKA3'; 
-    const founder2_UID = 'EZpI9ea4b0X8x8vOhxzar5KNzAw1'; 
-
-    if (user.uid === founder1_UID || user.uid === founder2_UID) {
-        role = 'founder';
-        name = (user.uid === founder1_UID) ? 'Ashutosh Kaushal' : 'Shiwendu Kaushal';
-        displayId = (user.uid === founder1_UID) ? 'XG-F-AK' : 'XG-F-SK';
-        
-        const controls = document.getElementById('founder-controls');
-        if (controls) controls.style.display = 'block';
-        
-        // 🔥 THE FIX: Tell CSS that God Mode banner is taking 40px space
-        document.documentElement.style.setProperty('--god-mode-height', '40px');
-        
-        // Developer Console Trick applied (View As)
-        const viewAsRole = sessionStorage.getItem('viewAs');
-        if (viewAsRole) {
-            role = viewAsRole; 
-            console.warn(`[God Mode] Viewing UI as: ${role.toUpperCase()}`);
-        }
-    }
-
-    // Save current user data globally so other scripts can access it easily
     window.dashboardManager = window.dashboardManager || {};
     window.dashboardManager.currentUserData = { uid: user.uid, name, email, role, displayId };
 
-    // 4. Update Global DOM Elements safely
+    // Update UI Elements
     setElText('display-name', name);
     setElText('u-name', name);
     setElText('u-id', displayId);
@@ -137,47 +108,16 @@ function handleUserLoaded(user, userData, error) {
 
     updatePortalTitle(role);
 
-    // 5. ROLE-BASED ROUTING LOGIC
+    // Strict Public Routing
     routeDashboard(role);
-    
-    // 5.1 🔥 TEAM WORKFLOW TRIGGER (Connects to ticket-workflow.js)
-    if (role.startsWith('mentor') || role.startsWith('support')) {
-        if (window.workflowManager) {
-            window.workflowManager.loadSharedPool(role);
-            window.workflowManager.loadActiveDesk(user.uid, role);
-        } else {
-            console.error("Workflow Manager missing! Ensure ticket-workflow.js is loaded BEFORE dashboard.js");
-        }
-    }
-    
-    // 5.5 INJECT MEGAPHONE (Higher Authority Only)
-    const isHigherAuthority = role === 'founder' || role.startsWith('admin') || role.endsWith('_sr');
-    if (isHigherAuthority) {
-        const actionsContainer = document.querySelector('.workspace-actions');
-        if (actionsContainer && !document.getElementById('open-bcast-btn')) {
-            const btn = document.createElement('button');
-            btn.id = 'open-bcast-btn';
-            btn.className = 'auth-btn';
-            btn.style.background = '#f59e0b';
-            btn.style.color = '#0f172a';
-            btn.innerHTML = '<i class="fa-solid fa-bullhorn"></i> Broadcast';
-            btn.onclick = () => { document.getElementById('broadcast-modal').style.display = 'flex'; };
-            
-            // Ye broadcast button ko notification bell ke pehle daal dega
-            actionsContainer.prepend(btn);
-        }
-    }
 
-    // 6. TICKETING SYSTEM INIT 
     if (window.ticketingManager && typeof window.ticketingManager.initCategories === 'function') {
         window.ticketingManager.initCategories(role);
     }
 
-    // 7. Reveal Dashboard & Hide Loader
     setElDisplay('loader', 'none');
-    setElDisplay('dashboard-content', 'block');
+    setElDisplay('dashboard-main-content', 'block');
     
-    // 8. Load External Stats (Parent & Student)
     if (role === 'parent' && userData && userData.linkedChildId) {
         loadParentDashboard(userData.linkedChildId);
     }
@@ -185,7 +125,6 @@ function handleUserLoaded(user, userData, error) {
         loadStudentDashboardData(user.uid);
     }
 
-    // 9. Initialize Notifications & Listeners
     if (window.notificationManager) {
         window.notificationManager.initializeNotifications(role, user.uid);
     }
@@ -204,122 +143,97 @@ function updatePortalTitle(role) {
     const portalTitle = document.getElementById('portal-title');
     if (!portalTitle) return;
     
-    if (role === 'founder') portalTitle.innerText = 'Founder God-Mode';
-    else if (role.startsWith('admin')) portalTitle.innerText = 'Admin Headquarters';
-    else if (role.startsWith('mentor')) portalTitle.innerText = 'Mentor Workspace';
-    else if (role.startsWith('support')) portalTitle.innerText = 'Support Helpdesk';
-    else if (role === 'parent') portalTitle.innerText = 'Parent Portal';
-    else if (role === 'student_writer' || role === 'writer') portalTitle.innerText = 'Writer Portal';
+    if (role === 'parent') portalTitle.innerText = 'Parent Portal';
+    else if (role === 'student_writer') portalTitle.innerText = 'Writer Portal';
     else portalTitle.innerText = 'Student Portal';
 }
 
 function hideAllViews() {
-    const views = ['student-view', 'parent-view', 'writer-tools', 'mentor-view', 'support-view', 'admin-view', 'fallback-banner', 'help-desk-section'];
+    const views = ['student-view', 'parent-view', 'writer-tools', 'creator-studio-widget', 'fallback-banner', 'help-desk-section'];
     views.forEach(view => setElDisplay(view, 'none'));
 }
 
-// THE STRICT RBAC ROUTING ENGINE
+// THE STRICT PUBLIC RBAC ROUTING ENGINE
 function routeDashboard(role) {
     hideAllViews();
     
-    // --- NON-TEAM ROLES ---
     if (role === 'student') {
         setElDisplay('student-view', 'block');
-        setElDisplay('help-desk-section', 'block'); // Let students raise tickets
+        setElDisplay('help-desk-section', 'block'); 
     } 
     else if (role === 'parent') {
         setElDisplay('parent-view', 'block');
-        setElDisplay('help-desk-section', 'block'); // Let parents raise tickets
+        setElDisplay('help-desk-section', 'block'); 
     } 
     else if (role === 'student_writer') {
         setElDisplay('student-view', 'block');
-        setElDisplay('writer-tools', 'block'); // Dual role access
-        setElDisplay('help-desk-section', 'block');
-    } 
-    
-    // --- TEAM ROLES ---
-    else if (role === 'writer') {
         setElDisplay('writer-tools', 'block'); 
-        setElDisplay('help-desk-section', 'block'); // Internal team ticketing
-    } 
-    else if (role === 'mentor_jr' || role === 'mentor_sr') {
-        setElDisplay('mentor-view', 'block');
+        setElDisplay('creator-studio-widget', 'block');
         setElDisplay('help-desk-section', 'block');
     } 
-    else if (role === 'support_jr' || role === 'support_sr') {
-        setElDisplay('support-view', 'block');
-        setElDisplay('help-desk-section', 'block');
-    } 
-    
-    // --- EXECUTIVE ROLES ---
-    else if (role.startsWith('admin') || role === 'founder') {
-        setElDisplay('admin-view', 'block');
-        
-        // DEPARTMENT ISOLATION FOR ADMINS
-        const btnMnt = document.getElementById('btn-admin-mnt');
-        const btnSup = document.getElementById('btn-admin-sup');
-        
-        if (btnMnt && btnSup) {
-            if (role === 'admin_mentor') {
-                btnMnt.style.display = 'flex';
-                btnSup.style.display = 'none';
-            } else if (role === 'admin_support') {
-                btnMnt.style.display = 'none';
-                btnSup.style.display = 'flex';
-            } else { 
-                // Admin Global & Founder can see both
-                btnMnt.style.display = 'flex';
-                btnSup.style.display = 'flex';
-            }
-        }
-    }
-    
-    // --- FALLBACK (If role doesn't match) ---
     else {
         setElDisplay('student-view', 'block'); 
         setElDisplay('fallback-banner', 'flex');
-        let displayRole = role.charAt(0).toUpperCase() + role.slice(1);
-        setElText('fallback-text', `Unrecognized Role or Dashboard under construction. Defaulting to Student View.`);
+        setElText('fallback-text', `Unrecognized Role. Defaulting to Student View.`);
     }
 }
 
-function setupGodMode() {
-    const godModeSwitch = document.getElementById('god-mode-switch');
-    if (godModeSwitch) {
-        godModeSwitch.value = sessionStorage.getItem('viewAs') || '';
-        godModeSwitch.addEventListener('change', (event) => {
-            if (event.target.value) {
-                sessionStorage.setItem('viewAs', event.target.value);
-            } else {
-                sessionStorage.removeItem('viewAs');
-            }
-            location.reload();
+async function submitCreatorContent(e) {
+    e.preventDefault();
+    const btn = document.getElementById('cs-submit-btn');
+    const titleInput = document.getElementById('cs-title');
+    const contentInput = document.getElementById('cs-content');
+    
+    const userData = window.dashboardManager?.currentUserData;
+    if (!userData) return alert("Session Error: User data not found.");
+
+    const originalText = btn.innerHTML;
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Submitting...';
+
+    try {
+        // 🟢 FIX: Seedha Firebase Database me Article "Pending Review" status ke sath push kar diya!
+        const db = firebase.firestore();
+        await db.collection("articles").add({
+            title: titleInput.value.trim(),
+            content: contentInput.value.trim(),
+            authorId: userData.uid,
+            authorName: userData.name,
+            type: "student_submission",
+            status: "Pending Review", 
+            deleteStatus: "Inactive", // Public ko abhi nahi dikhega
+            timestamp: firebase.firestore.FieldValue.serverTimestamp()
         });
+
+        alert('✅ Success! Article submitted for Admin review.');
+        document.getElementById('creator-submit-form').reset();
+    } catch (error) {
+        console.error("Submission Error:", error);
+        alert("Failed to submit article. Please check your connection and try again.");
+    } finally {
+        btn.disabled = false;
+        btn.innerHTML = originalText;
     }
 }
 
-// Data bridge fetchers
 async function loadParentDashboard(linkedChildId) {
     const placeholder = document.getElementById('child-stats-placeholder');
     if (!placeholder) return;
 
     if (!linkedChildId) {
-        placeholder.innerHTML = `<div style="color:#ef4444; padding: 10px;"><i class="fa-solid fa-triangle-exclamation"></i> No linked Student ID found in your profile. Please contact Support.</div>`;
+        placeholder.innerHTML = `<div style="color:#ef4444; padding: 10px;"><i class="fa-solid fa-triangle-exclamation"></i> No linked Student ID found. Please contact Support.</div>`;
         return;
     }
 
     placeholder.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Fetching data for Student ID: <b>${linkedChildId}</b>...`;
 
     try {
-        const db = window.authManager ? window.authManager.db : firebase.firestore();
-        const childQuery = await db.collection('users').where('customId', '==', linkedChildId).get();
-        
-        if (childQuery.empty) {
-            placeholder.innerHTML = `<div style="color:#ef4444; padding: 10px;"><i class="fa-solid fa-circle-xmark"></i> Student ID (${linkedChildId}) not found in the database.</div>`;
-            return;
-        }
+        const response = await fetch(`${window.BASE_URL}/parent/child-data?child_id=${linkedChildId}`);
+        const result = await response.json();
 
-        const childData = childQuery.docs[0].data();
+        if (result.status !== 'success') throw new Error(result.message || "Student ID not found.");
+
+        const childData = result.data;
         const childName = childData.name || 'Student';
         const childAvatar = childData.pic || `https://ui-avatars.com/api/?name=${encodeURIComponent(childName)}&background=16a34a&color=fff&bold=true`;
         
@@ -332,7 +246,6 @@ async function loadParentDashboard(linkedChildId) {
                         <div style="font-family: monospace; font-size: 12px; color: #16a34a; font-weight: 700; background: #f0fdf4; padding: 2px 8px; border-radius: 4px; display: inline-block; margin-top: 4px;">ID: ${childData.customId}</div>
                     </div>
                 </div>
-                
                 <h5 style="margin: 0 0 15px 0; font-family: 'Poppins'; font-size: 14px; color: var(--text-main);"><i class="fa-solid fa-chart-line" style="color: #10b981;"></i> ${childName}'s Learning Progress</h5>
                 
                 <div class="progress-group">
@@ -342,10 +255,6 @@ async function loadParentDashboard(linkedChildId) {
                 <div class="progress-group">
                     <div class="progress-header"><span>Mock Test Average</span> <span style="color:#d97706;">Pending</span></div>
                     <div class="progress-track"><div class="progress-fill" style="background: #cbd5e1; width: 0%;"></div></div>
-                </div>
-                
-                <div style="margin-top: 15px; font-size: 12px; color: var(--text-muted); display: flex; align-items: center; gap: 5px;">
-                    <i class="fa-solid fa-circle-info"></i> Full analytics will unlock when the Mock Test Engine goes live.
                 </div>
             </div>
         `;
@@ -357,185 +266,103 @@ async function loadParentDashboard(linkedChildId) {
 
 async function loadStudentDashboardData(uid) {
     const ticketCountEl = document.getElementById('active-tickets-count');
-    if (!ticketCountEl || !window.authManager) return;
+    if (!ticketCountEl) return;
 
     try {
-        const db = window.authManager.db;
-        const ticketsQuery = await db.collection('tickets')
-            .where('uid', '==', uid)
-            .where('status', '==', 'Open')
-            .get();
-        
-        ticketCountEl.innerText = ticketsQuery.size;
+        const response = await fetch(`${window.BASE_URL}/student/stats?uid=${uid}`);
+        const result = await response.json();
+        if (result.status === 'success') ticketCountEl.innerText = result.data.open_tickets_count || 0;
     } catch (error) {
-        console.error("Error fetching student tickets:", error);
         ticketCountEl.innerHTML = '<i class="fa-solid fa-triangle-exclamation" style="font-size:14px;"></i>';
     }
 }
 
-// Expose globally to window if other scripts need routing control
+// Global Exports
 window.dashboardManager = window.dashboardManager || {};
-Object.assign(window.dashboardManager, { routeDashboard, hideAllViews, updatePortalTitle, loadParentDashboard, loadStudentDashboardData });
+Object.assign(window.dashboardManager, { routeDashboard, hideAllViews, updatePortalTitle, loadParentDashboard, loadStudentDashboardData, submitCreatorContent });
+window.submitCreatorContent = submitCreatorContent;
 
-window.triggerManualBroadcast = async function() {
-    const title = document.getElementById('bcast-title').value.trim();
-    const body = document.getElementById('bcast-body-text').value.trim();
-    const target = document.getElementById('bcast-target').value;
-    const dept = document.getElementById('bcast-dept').value;
-
-    if (!title || !body) return alert("Title and Message are required.");
-
-    const btn = document.querySelector('.bcast-send-btn');
-    const ogText = btn.innerHTML;
-    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Sending...'; 
-    btn.disabled = true;
-
-    if (window.notificationManager && typeof window.notificationManager.sendManualBroadcast === 'function') {
-        await window.notificationManager.sendManualBroadcast(target, title, body, dept);
-    } else {
-        alert("Notification Manager not loaded.");
-    }
-
-    btn.innerHTML = ogText; 
-    btn.disabled = false;
-    document.getElementById('broadcast-modal').style.display = 'none';
-    document.getElementById('bcast-title').value = '';
-    document.getElementById('bcast-body-text').value = '';
-};
 
 // ==========================================
-// NOTIFICATION CENTER LOGIC
+// NOTIFICATION LOGIC (Public Version)
 // ==========================================
-function listenToNotifications(uid) {
-    const db = window.authManager.db;
-    db.collection('users').doc(uid).collection('notifications')
-      .orderBy('timestamp', 'desc').limit(20)
-      .onSnapshot(snapshot => {
-          const badge = document.getElementById('notif-badge');
-          const bellIcon = document.getElementById('bell-icon');
-          const dropBody = document.getElementById('nd-body-content');
-          
-          if (!badge || !bellIcon || !dropBody) return;
-          
-          let unreadCount = 0;
-          let html = '';
-          
-          snapshot.forEach(doc => {
-              const data = doc.data();
-              if (!data.read) unreadCount++;
-              
-              const timeStr = new Date(data.timestamp).toLocaleString([], { dateStyle: 'short', timeStyle: 'short' });
-              const unreadClass = data.read ? '' : 'unread';
-              
-              html += `
-                  <div class="nd-item ${unreadClass}">
-                      <div class="nd-title">${data.title}</div>
-                      <div class="nd-text">${data.body}</div>
-                      <div class="nd-time">${timeStr}</div>
-                  </div>
-              `;
-          });
-          
-          if (snapshot.empty) html = '<div class="nd-empty">No notifications yet</div>';
-          dropBody.innerHTML = html;
-          
-          if (unreadCount > 0) {
-              badge.style.display = 'inline-block';
-              badge.innerText = unreadCount > 9 ? '9+' : unreadCount;
-              bellIcon.classList.add('bell-ringing');
-          } else {
-              badge.style.display = 'none';
-              bellIcon.classList.remove('bell-ringing');
-          }
-      });
+async function listenToNotifications(uid) {
+    const fetchUnread = async () => {
+        try {
+            const response = await fetch(`${window.BASE_URL}/notifications/unread?uid=${uid}`);
+            const result = await response.json();
+            if (result.status !== 'success') return;
+
+            const badge = document.getElementById('notif-badge');
+            const bellIcon = document.getElementById('bell-icon');
+            const dropBody = document.getElementById('nd-body-content');
+            
+            if (!badge || !bellIcon || !dropBody) return;
+            
+            let unreadCount = result.unread_count || 0;
+            let html = '';
+            
+            if (result.data && result.data.length > 0) {
+                result.data.forEach(notif => {
+                    const timeStr = new Date(notif.timestamp).toLocaleString([], { dateStyle: 'short', timeStyle: 'short' });
+                    const unreadClass = notif.read ? '' : 'unread';
+                    html += `<div class="nd-item ${unreadClass}"><div class="nd-title">${notif.title}</div><div class="nd-text">${notif.body}</div><div class="nd-time">${timeStr}</div></div>`;
+                });
+            } else {
+                html = '<div class="nd-empty">No notifications yet</div>';
+            }
+            
+            dropBody.innerHTML = html;
+            
+            if (unreadCount > 0) {
+                badge.style.display = 'inline-block';
+                badge.innerText = unreadCount > 9 ? '9+' : unreadCount;
+                bellIcon.classList.add('bell-ringing');
+            } else {
+                badge.style.display = 'none';
+                bellIcon.classList.remove('bell-ringing');
+            }
+        } catch (error) {}
+    };
+    fetchUnread();
+    setInterval(fetchUnread, 180000);
 }
 
-window.toggleNotifications = function(e) {
+window.toggleNotifications = async function(e) {
     e.stopPropagation();
     const dropdown = document.getElementById('notification-dropdown');
     if (!dropdown) return;
     
     dropdown.classList.toggle('active');
-    
-    // Mark as read when opened
     if (dropdown.classList.contains('active')) {
         const bellIcon = document.getElementById('bell-icon');
         if (bellIcon) bellIcon.classList.remove('bell-ringing');
         
-        const user = window.authManager.auth.currentUser;
+        const user = window.authManager?.auth?.currentUser;
         if (!user) return;
-        const db = window.authManager.db;
         
-        db.collection('users').doc(user.uid).collection('notifications')
-          .where('read', '==', false)
-          .get().then(snap => {
-              const batch = db.batch();
-              snap.forEach(doc => batch.update(doc.ref, { read: true }));
-              batch.commit();
-          });
+        await fetch(`${window.BASE_URL}/notifications/mark-read`, {
+            method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ uid: user.uid })
+        });
     }
 };
 
-// Close dropdown when clicking outside
 document.addEventListener('click', (event) => {
     const bellWrapper = document.getElementById('bell-icon-wrapper');
     const dropdown = document.getElementById('notification-dropdown');
-    if (dropdown && dropdown.classList.contains('active')) {
-        if (!bellWrapper.contains(event.target)) {
-            dropdown.classList.remove('active');
-        }
+    if (dropdown && dropdown.classList.contains('active') && !bellWrapper.contains(event.target)) {
+        dropdown.classList.remove('active');
     }
 });
-// ==========================================
-// DASHBOARD UI LOGIC (Broadcast & Notifications)
-// ==========================================
 
-// 1. Check Role and Show/Hide Broadcast Button
-function setupBroadcastButton(role) {
-    const bcastBtn = document.getElementById('open-bcast-btn');
-    const allowedAdminRoles = ['admin', 'founder', 'admin_global', 'admin_mentor', 'admin_support'];
-    
-    if (bcastBtn) {
-        // Agar selected role 'allowedAdminRoles' ki list mein hai, toh 'flex' (show) karo, varna 'none' (hide)
-        if (allowedAdminRoles.includes(role)) {
-            bcastBtn.style.display = 'flex';
-        } else {
-            bcastBtn.style.display = 'none';
-        }
-    }
-}
-
-// 2. Trigger Notification Permission Popup
 function triggerNotificationPrompt() {
-    // Check agar user ne pehle dismiss nahi kiya hai
     if (!localStorage.getItem('notif_prompt_shown')) {
         setTimeout(() => {
             const prompt = document.getElementById('push-soft-prompt');
             if (prompt) {
                 prompt.style.display = 'flex';
-                // Mark as shown so it doesn't annoy them on every refresh
                 localStorage.setItem('notif_prompt_shown', 'true'); 
             }
-        }, 3000); // Page load hone ke 3 second baad aayega
+        }, 3000);
     }
 }
-
-// 3. Auto-Connect with Dashboard Events
-document.addEventListener('DOMContentLoaded', () => {
-    // Notification popup trigger karo
-    triggerNotificationPrompt();
-
-    // God Mode Dropdown ke change hone par Broadcast button update karo
-    const godModeSwitch = document.getElementById('god-mode-switch');
-    if (godModeSwitch) {
-        godModeSwitch.addEventListener('change', (e) => {
-            const selectedRole = e.target.value;
-            setupBroadcastButton(selectedRole);
-        });
-    }
-});
-
-// 4. Global Export (Agar auth.js se call karna pade future mein)
-window.dashboardUI = {
-    applyRoleFeatures: setupBroadcastButton
-};

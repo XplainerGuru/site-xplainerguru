@@ -1,233 +1,38 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mock Tests | Xplainer Guru</title>
 
-    <link
-        href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;800&family=Poppins:wght@700;800&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;800&family=Poppins:wght@700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <link rel="stylesheet" href="css/style.css">
-
-    <style>
-        /* SAFE AREA FOR MASTER.JS */
-        .dashboard-container {
-            max-width: 1200px;
-            margin: 40px auto;
-            padding: 0 20px;
-            min-height: 80vh;
-            font-family: 'Manrope', sans-serif;
-        }
-
-        /* LIVE SEARCH BAR CSS */
-        .live-search-container {
-            position: relative;
-            width: 100%;
-            max-width: 600px;
-            margin: 0 auto 40px auto;
-        }
-
-        .live-search-container i {
-            position: absolute;
-            left: 18px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #94a3b8;
-            font-size: 16px;
-        }
-
-        .live-search-input {
-            width: 100%;
-            padding: 15px 15px 15px 45px;
-            border-radius: 50px;
-            border: 1px solid #cbd5e1;
-            outline: none;
-            font-family: 'Manrope';
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-            font-size: 15px;
-            transition: 0.2s;
-            box-sizing: border-box;
-        }
-
-        .live-search-input:focus {
-            border-color: #2563eb;
-            box-shadow: 0 4px 20px rgba(37, 99, 235, 0.15);
-        }
-
-        /* TEST CARDS GRID */
-        .test-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-        }
-
-        .test-card {
-            background: white;
-            border-radius: 16px;
-            padding: 25px;
-            border: 1px solid #e2e8f0;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
-            display: flex;
-            flex-direction: column;
-            transition: 0.3s;
-        }
-
-        .test-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
-            border-color: #bfdbfe;
-        }
-
-        .test-meta {
-            display: flex;
-            gap: 15px;
-            margin: 10px 0 20px;
-            font-size: 13px;
-            color: #64748b;
-            font-weight: 600;
-        }
-
-        .start-btn {
-            background: #0f172a;
-            color: white;
-            border: none;
-            padding: 12px;
-            border-radius: 8px;
-            font-weight: 700;
-            cursor: pointer;
-            text-align: center;
-            text-decoration: none;
-            font-family: 'Manrope';
-            transition: 0.2s;
-            display: block;
-            width: 100%;
-            box-sizing: border-box;
-        }
-
-        .start-btn:hover {
-            background: #1e293b;
-        }
-
-        .loader-full {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 60vh;
-            color: #94a3b8;
-            font-family: 'Poppins';
-        }
-    </style>
 </head>
 
-<body>
+<body class="bg-slate-50 font-['Manrope'] m-0">
 
-    <div id="loader-ui" class="loader-full">
-        <i class="fa-solid fa-circle-notch fa-spin fa-2x" style="color: #2563eb; margin-bottom: 15px;"></i>
-        <h3 style="margin: 0; color: #0f172a;">Loading Test Engine...</h3>
+    <div id="loader-ui" class="flex flex-col items-center justify-center min-h-[60vh] text-slate-400 font-['Poppins']">
+        <i class="fa-solid fa-circle-notch fa-spin fa-2x text-blue-600 mb-[15px]"></i>
+        <h3 class="m-0 text-slate-900 text-xl">Loading Test Engine...</h3>
     </div>
 
-    <div id="main-ui" class="dashboard-container" style="display: none;">
+    <div id="main-ui" class="max-w-[1200px] mx-auto my-10 px-5 min-h-[80vh] hidden w-full box-border">
 
-        <div style="text-align: center; margin-bottom: 30px;">
-            <h1 style="font-family: 'Poppins'; color: #0f172a; margin-bottom: 10px;"><i class="fa-solid fa-laptop-code"
-                    style="color: #2563eb;"></i> Mock Test Portal</h1>
-            <p style="color: #64748b; font-size: 15px;">Practice computer-based tests, track your time, and analyze your
-                performance.</p>
+        <div class="text-center mb-[30px]">
+            <h1 class="font-['Poppins'] text-slate-900 mb-2.5 text-2xl sm:text-3xl"><i class="fa-solid fa-laptop-code text-blue-600"></i> Mock Test Portal</h1>
+            <p class="text-slate-500 text-[15px] m-0">Practice computer-based tests, track your time, and analyze your performance.</p>
         </div>
 
-        <div class="live-search-container">
-            <i class="fa-solid fa-magnifying-glass"></i>
-            <input type="text" id="test-search" class="live-search-input" onkeyup="liveSearchTests()"
-                placeholder="Search by subject, chapter, or test name...">
+        <div class="relative w-full max-w-[600px] mx-auto mb-10">
+            <i class="fa-solid fa-magnifying-glass absolute left-[18px] top-1/2 -translate-y-1/2 text-slate-400 text-[16px]"></i>
+            <input type="text" id="test-search" class="w-full p-[15px_15px_15px_45px] rounded-full border border-slate-300 outline-none font-['Manrope'] shadow-[0_4px_15px_rgba(0,0,0,0.05)] text-[15px] transition duration-200 box-border focus:border-blue-600 focus:shadow-[0_4px_20px_rgba(37,99,235,0.15)] bg-white" onkeyup="liveSearchTests()" placeholder="Search by subject, chapter, or test name...">
         </div>
 
-        <div class="test-grid" id="test-list-container">
-            <script>
-                // 1. PUBLIC VISIBILITY LOGIC & FETCH TRIGGER
-                document.addEventListener('DOMContentLoaded', () => {
-                    // Master.js ko thoda time dene ke baad UI dikhao
-                    setTimeout(() => {
-                        document.getElementById('loader-ui').style.display = 'none';
-                        document.getElementById('main-ui').style.display = 'block';
+        <div class="grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-5" id="test-list-container">
+            </div>
 
-                        // 🟢 Jaise hi page load ho, Firebase se tests mangwao!
-                        fetchLiveTests();
-                    }, 800);
-                });
-
-                // 2. 🚀 FIREBASE REAL-TIME FETCH ENGINE
-                async function fetchLiveTests() {
-                    const container = document.getElementById('test-list-container');
-                    container.innerHTML = '<p style="text-align:center; color:#64748b; grid-column: 1 / -1;"><i class="fa-solid fa-spinner fa-spin"></i> Fetching live tests from server...</p>';
-
-                    try {
-                        // 'mock_tests' collection se data nikalna
-                        const snapshot = await firebase.firestore().collection('mock_tests').orderBy('timestamp', 'desc').get();
-
-                        if (snapshot.empty) {
-                            container.innerHTML = '<p style="text-align:center; color:#64748b; grid-column: 1 / -1; font-weight:600;"><i class="fa-solid fa-ghost"></i> No tests available at the moment. Please check back later!</p>';
-                            return;
-                        }
-
-                        container.innerHTML = ''; // Loader hatao
-
-                        // Har ek test ke liye naya card banao
-                        snapshot.forEach(doc => {
-                            const test = doc.data();
-                            const testId = doc.id;
-
-                            // Smart labels (Agar time nahi hai toh Practice Mode)
-                            const durationText = test.duration ? `${test.duration} Mins` : `No Time Limit`;
-                            const modeText = test.duration ? `${test.qCount || 0} Questions` : `Practice Mode`;
-                            const subject = test.subject || "General";
-
-                            const cardHTML = `
-                        <div class="test-card">
-                            <span style="background: #e0e7ff; color: #4f46e5; font-size: 10px; font-weight: 800; padding: 4px 8px; border-radius: 4px; align-self: flex-start; text-transform: uppercase;">${subject}</span>
-                            <h3 style="margin: 15px 0 0; font-family: 'Poppins'; color: #0f172a; font-size: 18px;">${test.title || 'Untitled Test'}</h3>
-                            <div class="test-meta">
-                                <span><i class="fa-regular fa-circle-question"></i> ${modeText}</span>
-                                <span><i class="fa-regular fa-clock"></i> ${durationText}</span>
-                            </div>
-                            <button onclick="startExamEngine('${testId}')" class="start-btn"><i class="fa-solid fa-play"></i> Start CBT Test</button>
-                        </div>
-                    `;
-                            container.innerHTML += cardHTML;
-                        });
-                    } catch (error) {
-                        console.error("Fetch Error:", error);
-                        container.innerHTML = '<p style="text-align:center; color:#ef4444; grid-column: 1 / -1; font-weight:800;">Failed to load tests. Please check your internet connection.</p>';
-                    }
-                }
-
-                // 3. LIVE SEARCH LOGIC
-                function liveSearchTests() {
-                    let filter = document.getElementById('test-search').value.toLowerCase();
-                    let cards = document.querySelectorAll('.test-card');
-
-                    cards.forEach(card => {
-                        let text = card.innerText.toLowerCase();
-                        if (text.includes(filter)) {
-                            card.style.display = '';
-                        } else {
-                            card.style.display = 'none';
-                        }
-                    });
-                }
-
-                // 4. START ENGINE LOGIC (Routes to exam.html with Real Firebase ID)
-                function startExamEngine(testId) {
-                    window.location.href = `exam.html?id=${testId}`;
-                }
-            </script>
-        </div>
-
-    </div>
     </div>
 
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
@@ -236,39 +41,109 @@
     <script src="js/firebase-init.js"></script>
     <script src="js/auth.js"></script>
     <script src="js/master.js"></script>
+    
     <script>
-        // 1. PUBLIC VISIBILITY LOGIC (Replaced Strict Auth Gate)
-        // Since tests.html is public, we just hide loader and show UI.
+        // 1. PUBLIC VISIBILITY LOGIC & FETCH TRIGGER
         document.addEventListener('DOMContentLoaded', () => {
-            // Give master.js a moment to load the header/footer
+            // Master.js ko thoda time dene ke baad UI dikhao
             setTimeout(() => {
                 document.getElementById('loader-ui').style.display = 'none';
+                document.getElementById('main-ui').classList.remove('hidden');
                 document.getElementById('main-ui').style.display = 'block';
+
+                // 🟢 Jaise hi page load ho, Firebase se tests mangwao!
+                fetchLiveTests();
             }, 800);
         });
 
-        // 2. LIVE SEARCH LOGIC
+        // 2. 🚀 FIREBASE REAL-TIME FETCH ENGINE WITH GROUPING
+        async function fetchLiveTests() {
+            const container = document.getElementById('test-list-container');
+            container.innerHTML = '<p class="text-center text-slate-500 col-span-full"><i class="fa-solid fa-spinner fa-spin"></i> Fetching live tests from server...</p>';
+
+            try {
+                // 'mock_tests' collection se data nikalna
+                const snapshot = await firebase.firestore().collection('mock_tests').get();
+
+                if (snapshot.empty) {
+                    container.innerHTML = '<p class="text-center text-slate-500 col-span-full font-semibold"><i class="fa-solid fa-ghost text-2xl mb-2"></i><br>No tests available at the moment. Please check back later!</p>';
+                    return;
+                }
+
+                let tData = [];
+                snapshot.forEach(doc => { tData.push({...doc.data(), id: doc.id}); });
+
+                // 🟢 Group By Subject
+                const groupedTests = tData.reduce((acc, item) => {
+                    const subject = item.subject || 'General';
+                    if (!acc[subject]) acc[subject] = [];
+                    acc[subject].push(item);
+                    return acc;
+                }, {});
+
+                let html = '';
+                // 🟢 Generate Subject-Wise Sections dynamically
+                for (const [subject, testArray] of Object.entries(groupedTests)) {
+                    // Sort tests in this subject by newest first
+                    testArray.sort((a,b) => (b.timestamp?.seconds || 0) - (a.timestamp?.seconds || 0));
+                    
+                    html += `<div class="col-span-full mt-10 mb-4 border-b-2 border-slate-200 pb-2"><h2 class="font-['Poppins'] text-slate-900 text-xl m-0">${subject}</h2></div>`;
+
+                    testArray.forEach(test => {
+                        const durationText = test.duration ? `${test.duration} Mins` : `No Limit`;
+                        const modeText = test.duration ? `${test.qCount || 0} Qs` : `Practice`;
+                        const safeSearchTitle = test.title ? test.title.toLowerCase().replace(/"/g, '&quot;') : '';
+                        
+                        html += `
+                        <div class="search-item bg-white rounded-[16px] p-[25px] border border-slate-200 shadow-[0_4px_15px_rgba(0,0,0,0.02)] flex flex-col transition duration-300 hover:-translate-y-1 hover:shadow-[0_10px_25px_rgba(0,0,0,0.05)] hover:border-blue-300" data-title="${safeSearchTitle}">
+                            <span class="bg-indigo-50 text-indigo-600 text-[10px] font-extrabold px-2 py-1 rounded-[4px] self-start uppercase">${subject}</span>
+                            <h3 class="m-0 mt-[15px] font-['Poppins'] text-slate-900 text-[18px] leading-tight">${test.title || 'Untitled Test'}</h3>
+                            <div class="flex gap-[15px] my-2.5 mb-5 text-[13px] text-slate-500 font-semibold">
+                                <span><i class="fa-regular fa-circle-question"></i> ${modeText}</span>
+                                <span><i class="fa-regular fa-clock"></i> ${durationText}</span>
+                            </div>
+                            <button onclick="handleTestClick('${test.id}')" class="mt-auto bg-slate-900 text-white border-none p-3 rounded-lg font-bold cursor-pointer text-center no-underline font-['Manrope'] transition duration-200 block w-full hover:bg-slate-800"><i class="fa-solid fa-play"></i> Start CBT Test</button>
+                        </div>`;
+                    });
+                }
+                container.innerHTML = html;
+
+            } catch (error) {
+                console.error("Fetch Error:", error);
+                container.innerHTML = '<p class="text-center text-red-500 col-span-full font-extrabold">Failed to load tests. Please check your internet connection.</p>';
+            }
+        }
+
+        // 3. LIVE SEARCH LOGIC
         function liveSearchTests() {
-            let filter = document.getElementById('test-search').value.toLowerCase();
-            let cards = document.querySelectorAll('.test-card');
+            let input = document.getElementById('test-search').value.toLowerCase();
+            let cards = document.querySelectorAll('.search-item');
+            
+            // Also handle subject headers dynamically
+            let headers = document.querySelectorAll('.col-span-full'); 
+            let visibleCount = 0;
 
             cards.forEach(card => {
-                let text = card.innerText.toLowerCase();
-                if (text.includes(filter)) {
+                let title = card.getAttribute('data-title') || card.innerText.toLowerCase();
+                if (title.includes(input)) {
                     card.style.display = '';
+                    visibleCount++;
                 } else {
                     card.style.display = 'none';
                 }
             });
         }
 
-        // 3. START ENGINE LOGIC (Routes to exam.html)
-        function startExamEngine(testId) {
-            // exam.html is the strict "Focus Jail" page. It will handle the Auth check.
-            // If user isn't logged in, exam.html will redirect them to login.
-            window.location.href = `exam.html?id=${testId}`;
+        // 4. 🔒 ACTION-LEVEL AUTH GUARD
+        function handleTestClick(testId) {
+            const user = firebase.auth().currentUser;
+            if(!user) {
+                localStorage.setItem("redirectAfterLogin", `exam.html?id=${testId}`);
+                window.location.href = "login.html";
+            } else {
+                window.location.href = `exam.html?id=${testId}`;
+            }
         }
     </script>
 </body>
-
 </html>

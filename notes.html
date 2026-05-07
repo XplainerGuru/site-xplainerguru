@@ -9,85 +9,32 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <link rel="stylesheet" href="css/style.css">
-    
-    <style>
-        body { background: #f8fafc; font-family: 'Manrope', sans-serif; margin: 0; padding-top: 100px; display: flex; flex-direction: column; min-height: 100vh;}
-        .container { max-width: 1000px; margin: 0 auto; padding: 0 20px 50px; flex: 1; width: 100%; box-sizing: border-box; }
-        
-        .page-header { margin-bottom: 20px; display: flex; justify-content: space-between; align-items: flex-end;}
-        .page-header h1 { font-family: 'Poppins'; color: #0f172a; margin: 0 0 5px; font-size: 2rem;}
-        .page-header p { color: #64748b; margin: 0; font-size: 14px;}
-
-        /* 🟢 NEW: LIVE SEARCH BAR CSS 🟢 */
-        .search-container { position: relative; width: 100%; margin-bottom: 30px; }
-        .search-container i { position: absolute; left: 18px; top: 50%; transform: translateY(-50%); color: #94a3b8; font-size: 16px; }
-        .live-search-input { width: 100%; padding: 14px 15px 14px 45px; border-radius: 12px; border: 1px solid #cbd5e1; outline: none; font-family: 'Manrope'; box-shadow: 0 4px 15px rgba(0,0,0,0.02); font-size: 15px; transition: 0.2s; box-sizing: border-box; background: #fff; }
-        .live-search-input:focus { border-color: #10b981; box-shadow: 0 4px 20px rgba(16, 185, 129, 0.15); }
-
-        /* CONSISTENT CARD STYLES */
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
-        
-        .note-card {
-            background: white;
-            border-radius: 16px;
-            padding: 25px;
-            border: 1px solid #e2e8f0;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
-            display: flex;
-            flex-direction: column;
-            transition: 0.3s;
-        }
-        .note-card:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05); border-color: #10b981; }
-        
-        .note-meta { display: flex; gap: 15px; margin: 10px 0 20px; font-size: 13px; color: #64748b; font-weight: 600; }
-        
-        .start-btn {
-            background: #0f172a;
-            color: white;
-            border: none;
-            padding: 12px;
-            border-radius: 8px;
-            font-weight: 700;
-            cursor: pointer;
-            text-align: center;
-            text-decoration: none;
-            font-family: 'Manrope';
-            transition: 0.2s;
-            display: block;
-            width: 100%;
-            box-sizing: border-box;
-            margin-top: auto;
-        }
-        .start-btn:hover { background: #1e293b; }
-
-        .loader { text-align: center; padding: 50px; color: #94a3b8; font-family: 'Poppins'; grid-column: 1/-1;}
-        
-        /* Message shown when search yields no results */
-        .no-search-results { grid-column: 1/-1; text-align: center; padding: 40px; background: #fff; border-radius: 12px; border: 1px dashed #cbd5e1; color: #64748b; display: none; }
-    </style>
 </head>
-<body>
+<body class="bg-slate-50 font-['Manrope'] m-0 pt-[100px] flex flex-col min-h-screen text-slate-800">
 
-    <div class="container" id="main-ui" style="display:none;">
-        <div class="page-header">
+    <div class="max-w-[1000px] mx-auto px-5 pb-[50px] flex-1 w-full box-border" id="main-ui">
+        
+        <div class="mb-5 flex justify-between items-end flex-wrap gap-4">
             <div>
-                <h1><i class="fa-solid fa-file-pdf" style="color: #10b981;"></i> Study Notes</h1>
-                <p>Download chapter-wise revision notes.</p>
+                <h1 class="font-['Poppins'] text-slate-900 m-0 mb-1 text-3xl"><i class="fa-solid fa-file-pdf text-emerald-500"></i> Study Notes</h1>
+                <p class="text-slate-500 m-0 text-[14px]">Download chapter-wise revision notes.</p>
             </div>
         </div>
 
-        <div class="search-container">
-            <i class="fa-solid fa-magnifying-glass"></i>
-            <input type="text" id="notes-search-box" class="live-search-input" onkeyup="filterNotes()" placeholder="Search notes by chapter, topic, or title...">
+        <div class="relative w-full mb-[30px]">
+            <i class="fa-solid fa-magnifying-glass absolute left-[18px] top-1/2 -translate-y-1/2 text-slate-400 text-[16px]"></i>
+            <input type="text" id="notes-search-box" class="w-full p-[14px_15px_14px_45px] rounded-xl border border-slate-300 outline-none font-['Manrope'] shadow-[0_4px_15px_rgba(0,0,0,0.02)] text-[15px] transition duration-200 box-border bg-white focus:border-emerald-500 focus:shadow-[0_4px_20px_rgba(16,185,129,0.15)]" onkeyup="filterNotes()" placeholder="Search notes by chapter, topic, or title...">
         </div>
 
-        <div id="contentGrid" class="grid">
-            <div class="loader"><i class="fa-solid fa-spinner fa-spin fa-2x"></i><br><br>Loading Notes...</div>
+        <div id="contentGrid" class="grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-5">
+            <div class="col-span-full text-center py-[50px] px-5 text-slate-400 font-['Poppins']">
+                <i class="fa-solid fa-spinner fa-spin fa-2x mb-4"></i><br>Loading Notes...
+            </div>
         </div>
         
-        <div id="no-results-msg" class="no-search-results">
-            <i class="fa-solid fa-folder-open" style="font-size: 30px; color: #cbd5e1; margin-bottom: 10px;"></i>
-            <p style="margin: 0; font-family: 'Manrope';">No notes found matching your search.</p>
+        <div id="no-results-msg" class="hidden col-span-full text-center p-10 bg-white rounded-xl border border-dashed border-slate-300 text-slate-500 mt-5 shadow-sm">
+            <i class="fa-solid fa-folder-open text-[30px] text-slate-300 mb-2.5"></i>
+            <p class="m-0 font-['Manrope'] font-medium">No notes found matching your search.</p>
         </div>
     </div>
 
@@ -102,15 +49,9 @@
     <script>
         const grid = document.getElementById('contentGrid');
 
-        // 🔒 AUTH GUARD (Uses global 'auth' from your JS files or firebase directly)
-        firebase.auth().onAuthStateChanged((user) => {
-            if (!user) {
-                localStorage.setItem("redirectAfterLogin", "notes.html");
-                window.location.href = "login.html";
-            } else {
-                document.getElementById('main-ui').style.display = 'block';
-                loadNotes();
-            }
+        // Let the page load immediately for everyone
+        document.addEventListener('DOMContentLoaded', () => {
+            loadNotes();
         });
 
         function loadNotes() {
@@ -120,71 +61,120 @@
                     let d = doc.data(); d.id = doc.id;
                     if(d.deleteStatus === 'Active' || !d.isDeleted) nData.push(d); 
                 });
-                nData.sort((a,b) => (b.timestamp?.seconds || 0) - (a.timestamp?.seconds || 0));
 
                 if(nData.length === 0) {
                     grid.innerHTML = `
-                        <div style="grid-column: 1/-1; text-align:center; padding: 60px 20px; background:#fff; border-radius:16px; border:2px dashed #cbd5e1;">
-                            <i class="fa-solid fa-folder-open" style="font-size: 40px; color: #94a3b8; margin-bottom: 15px;"></i>
-                            <h4 style="margin: 0 0 8px; color: #0f172a; font-family: 'Poppins'; font-size: 18px;">No Notes Available</h4>
-                            <p style="margin: 0; color: #64748b; font-size: 14px;">Study materials will be uploaded here soon.</p>
+                        <div class="col-span-full text-center p-[60px_20px] bg-white rounded-[16px] border-2 border-dashed border-slate-300">
+                            <i class="fa-solid fa-folder-open text-[40px] text-slate-400 mb-[15px]"></i>
+                            <h4 class="m-0 mb-2 text-slate-900 font-['Poppins'] text-[18px]">No Notes Available</h4>
+                            <p class="m-0 text-slate-500 text-[14px]">Study materials will be uploaded here soon.</p>
                         </div>`;
                     return;
                 }
 
+                // 🟢 Group Notes By Subject dynamically
+                const groupedNotes = nData.reduce((acc, item) => {
+                    const subject = item.subject || 'General Notes';
+                    if (!acc[subject]) acc[subject] = [];
+                    acc[subject].push(item);
+                    return acc;
+                }, {});
+
                 let html = '';
-                nData.forEach(item => {
-                    const dateStr = item.timestamp ? new Date(item.timestamp.seconds*1000).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) : 'Recently Added';
-                    const subject = item.subject || 'General';
-                    const safeSearchTitle = item.title ? item.title.toLowerCase().replace(/"/g, '&quot;') : '';
-                    const safeLink = item.link ? item.link.replace(/'/g, "\\'") : '#';
+                let globalCardCount = 0;
+                
+                // 🟢 Generate HTML for each subject grouping
+                for (const [subject, notesArray] of Object.entries(groupedNotes)) {
+                    // Sort notes in this specific subject by newest first
+                    notesArray.sort((a,b) => (b.timestamp?.seconds || 0) - (a.timestamp?.seconds || 0));
+
+                    html += `<div class="col-span-full search-item" data-title="${subject.toLowerCase()}"><h2 class="font-['Poppins'] text-slate-900 mt-10 mb-4 border-b-2 border-slate-200 pb-2.5 text-[22px]">${subject}</h2></div>`;
                     
-                    html += `
-                    <div class="note-card search-item" data-title="${safeSearchTitle}">
-                        <span style="background: #ecfdf5; color: #10b981; font-size: 10px; font-weight: 800; padding: 4px 8px; border-radius: 4px; align-self: flex-start; text-transform: uppercase;">${subject}</span>
-                        <h3 style="margin: 15px 0 5px; font-family: 'Poppins'; color: #0f172a; font-size: 16px; line-height: 1.4;">${item.title}</h3>
-                        <div class="note-meta">
-                            <span><i class="fa-regular fa-calendar"></i> ${dateStr}</span>
-                        </div>
-                        <button onclick="openNote('${safeLink}', '${item.id}')" class="start-btn"><i class="fa-solid fa-file-pdf"></i> View PDF</button>
-                    </div>`;
-                });
+                    notesArray.forEach(item => {
+                        const dateStr = item.timestamp ? new Date(item.timestamp.seconds*1000).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) : 'Recently Added';
+                        const safeSearchTitle = item.title ? item.title.toLowerCase().replace(/"/g, '&quot;') : '';
+                        const safeLink = item.link ? item.link.replace(/'/g, "\\'") : '#';
+                        
+                        globalCardCount++;
+
+                        // Inject Ad between 2nd and 3rd card globally
+                        if (globalCardCount === 3) {
+                            html += `
+                            <div class="col-span-full w-full flex justify-center my-6 min-h-[50px]">
+                                <div id="container-e9b12f5418d9e679de47d1e3b3183725"></div>
+                            </div>`;
+                        }
+
+                        html += `
+                        <div class="note-card search-item bg-white rounded-[16px] p-[25px] border border-slate-200 shadow-[0_4px_15px_rgba(0,0,0,0.02)] flex flex-col transition duration-300 hover:-translate-y-1 hover:shadow-lg hover:border-emerald-500" data-title="${safeSearchTitle} ${subject.toLowerCase()}">
+                            <span class="bg-emerald-50 text-emerald-500 text-[10px] font-extrabold px-2 py-1 rounded-[4px] self-start uppercase tracking-wider">${subject}</span>
+                            <h3 class="m-0 mt-[15px] mb-[5px] font-['Poppins'] text-slate-900 text-[16px] leading-[1.4]">${item.title}</h3>
+                            <div class="flex gap-[15px] my-[10px] mb-[20px] text-[13px] text-slate-500 font-semibold">
+                                <span><i class="fa-regular fa-calendar"></i> ${dateStr}</span>
+                            </div>
+                            <button onclick="handleNoteClick('${safeLink}', '${item.id}')" class="mt-auto bg-slate-900 text-white border-none p-3 rounded-lg font-bold cursor-pointer text-center no-underline font-['Manrope'] transition duration-200 block w-full hover:bg-slate-800"><i class="fa-solid fa-lock-open"></i> View PDF</button>
+                        </div>`;
+                    });
+                }
+                
                 grid.innerHTML = html;
+
+                // Inject script after DOM is ready
+                if (globalCardCount >= 3) {
+                    console.log("Ad script initialized for: Notes Listing");
+                    const adScript = document.createElement('script');
+                    adScript.async = true;
+                    adScript.setAttribute('data-cfasync', 'false');
+                    adScript.src = "https://pl29365593.profitablecpmratenetwork.com/e9b12f5418d9e679de47d1e3b3183725/invoke.js";
+                    adScript.onerror = () => console.error("Native Ad (Notes) blocked.");
+                    document.body.appendChild(adScript);
+                }
             }, e => { 
                 console.error("Firebase error: ", e);
-                grid.innerHTML = `<div style="color:red; grid-column:1/-1; text-align:center; padding: 20px;">Error loading notes. Retrying...</div>`; 
+                grid.innerHTML = `<div class="col-span-full text-center p-5 text-red-500 font-bold bg-red-50 rounded-xl border border-red-200">Error loading notes. Retrying...</div>`; 
             });
         }
 
-        function openNote(link, docId) {
-            window.open(link, '_blank');
-            if(docId) db.collection("notes").doc(docId).update({ views: firebase.firestore.FieldValue.increment(1) }).catch(()=>{});
+        // 🔒 ACTION-LEVEL AUTH GUARD
+        function handleNoteClick(link, docId) {
+            const user = firebase.auth().currentUser;
+            if(!user) {
+                localStorage.setItem("redirectAfterLogin", "notes.html");
+                window.location.href = "login.html";
+            } else {
+                window.location.href = `download.html?file=${encodeURIComponent(link)}`;
+                if(docId) db.collection("notes").doc(docId).update({ views: firebase.firestore.FieldValue.increment(1) }).catch(()=>{});
+            }
         }
 
-        // 🟢 NEW: LIVE SEARCH FUNCTION LOGIC 🟢
+        // 🟢 LIVE SEARCH FUNCTION LOGIC
         function filterNotes() {
             let input = document.getElementById('notes-search-box').value.toLowerCase();
-            let cards = document.querySelectorAll('.search-item');
+            let items = document.querySelectorAll('.search-item');
             let visibleCount = 0;
             let noResultsMsg = document.getElementById('no-results-msg');
 
-            cards.forEach(card => {
-                let title = card.getAttribute('data-title');
-                
-                // If input matches title, show card; else hide it
+            items.forEach(item => {
+                let title = item.getAttribute('data-title');
                 if (title.includes(input)) {
-                    card.style.display = 'flex'; // Uses standard flexbox display to not break your grid
-                    visibleCount++;
+                    if(item.classList.contains('note-card')) {
+                        item.style.display = 'flex';
+                        visibleCount++;
+                    } else {
+                        item.style.display = 'block'; // for subject headers
+                    }
                 } else {
-                    card.style.display = 'none';
+                    item.style.display = 'none';
                 }
             });
 
             // Show "No Results" message if everything is hidden
-            if (visibleCount === 0 && cards.length > 0) {
-                noResultsMsg.style.display = 'block';
+            if (visibleCount === 0 && items.length > 0) {
+                noResultsMsg.classList.remove('hidden');
+                noResultsMsg.classList.add('block');
             } else {
-                noResultsMsg.style.display = 'none';
+                noResultsMsg.classList.add('hidden');
+                noResultsMsg.classList.remove('block');
             }
         }
     </script>

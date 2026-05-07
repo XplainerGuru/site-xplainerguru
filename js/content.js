@@ -60,3 +60,64 @@ const studyNotes = [
         size: "PDF" 
     }
 ];
+
+// ==========================================
+// 🎥 YOUTUBE INTEGRATION ENGINE (Fixes Error 153)
+// ==========================================
+
+/**
+ * Generates a secure YouTube Embed URL with correct Origin headers
+ * @param {string} videoId 
+ * @returns {string}
+ */
+function buildSecureYouTubeUrl(videoId) {
+    const params = new URLSearchParams({
+        'enablejsapi': '1',
+        'origin': window.location.origin, // CRITICAL: Fixes Error 153
+        'rel': '0',
+        'modestbranding': '1',
+        'showinfo': '0',
+        'autoplay': '1',
+        'widget_referrer': window.location.href
+    });
+    return `https://www.youtube.com/embed/${videoId}?${params.toString()}`;
+}
+
+/**
+ * Renders the Video Gallery on the 'video' page
+ */
+window.initVideoGallery = function(containerId) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+
+    container.innerHTML = contentDatabase.map(video => `
+        <div class="video-card" onclick="window.playVideoInModal('${video.id}')">
+            <div class="thumb-wrapper">
+                <img src="https://img.youtube.com/vi/${video.id}/mqdefault.jpg" alt="${video.title}">
+                <div class="play-overlay"><i class="fa-solid fa-play"></i></div>
+            </div>
+            <div class="video-info">
+                <span class="video-tag">${video.tag}</span>
+                <h4>${video.title}</h4>
+            </div>
+        </div>
+    `).join('');
+};
+
+/**
+ * Plays a video in the global player container (Used on both Index & Video pages)
+ */
+window.playVideoInModal = function(videoId) {
+    const playerFrame = document.getElementById('main-video-player');
+    const playerWrapper = document.getElementById('video-modal-wrapper');
+
+    if (playerFrame) {
+        playerFrame.src = buildSecureYouTubeUrl(videoId);
+        if (playerWrapper) playerWrapper.style.display = 'flex';
+    } else {
+        console.error("Player container not found. Ensure an iframe with id 'main-video-player' exists.");
+    }
+};
+
+// Export for global use
+window.videoManager = { buildSecureYouTubeUrl };

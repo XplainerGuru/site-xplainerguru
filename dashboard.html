@@ -1,430 +1,152 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
     <title>Xplainer Guru | Student Dashboard</title>
-
     <link rel="icon" href="data:,">
-    <link
-        href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Poppins:wght@600;700;800&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="../../css/style.css">
-
-    <style>
-        /* SAFE AREA FOR MASTER.JS UNIVERSAL HEADER & FOOTER */
-        .dashboard-container {
-            max-width: 1200px;
-            margin: 40px auto;
-            padding: 0 20px;
-            min-height: 80vh;
-            font-family: 'Manrope', sans-serif;
-        }
-
-        .page-header-row {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-bottom: 25px;
-            width: 100%;
-        }
-
-        .portal-tag {
-            display: inline-block;
-            font-weight: 800;
-            color: #2563eb;
-            font-size: 20px;
-            background: #eff6ff;
-            padding: 10px 20px;
-            border-radius: 50px;
-            border: 1px solid #bfdbfe;
-        }
-
-        /* --- TEST ANALYSIS TABLE CSS --- */
-        .test-analysis-card {
-            background: #fff;
-            border-radius: 16px;
-            padding: clamp(15px, 3vw, 25px);
-            border: 1px solid #e2e8f0;
-            margin-top: 20px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
-        }
-
-        .test-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 15px;
-        }
-
-        .test-table th {
-            text-align: left;
-            padding: 12px;
-            border-bottom: 2px solid #f1f5f9;
-            color: #64748b;
-            font-weight: 800;
-            font-size: 11px;
-            text-transform: uppercase;
-        }
-
-        .test-table td {
-            padding: 12px;
-            border-bottom: 1px solid #f1f5f9;
-            font-weight: 600;
-            font-size: 14px;
-            color: #0f172a;
-        }
-
-        .score-pill {
-            padding: 4px 10px;
-            border-radius: 50px;
-            font-weight: 800;
-            font-size: 12px;
-        }
-
-        .score-high {
-            background: #dcfce7;
-            color: #16a34a;
-        }
-
-        .score-low {
-            background: #fee2e2;
-            color: #ef4444;
-        }
-
-        /* --- CHATBOT & MODAL CSS --- */
-        .xg-bot-fab {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            width: 60px;
-            height: 60px;
-            background: #2563eb;
-            color: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.4);
-            cursor: pointer;
-            z-index: 9999;
-            transition: 0.3s;
-        }
-
-        .xg-bot-fab:hover {
-            transform: scale(1.1);
-            background: #1d4ed8;
-        }
-
-        .xg-bot-modal {
-            position: fixed;
-            bottom: 90px;
-            right: 20px;
-            width: clamp(280px, 90vw, 350px);
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-            display: none;
-            flex-direction: column;
-            z-index: 10000;
-            overflow: hidden;
-            border: 1px solid #e2e8f0;
-        }
-
-        .xg-bot-header {
-            background: #1e293b;
-            color: white;
-            padding: 15px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .xg-bot-header h3 {
-            margin: 0;
-            font-size: 15px;
-            font-family: 'Poppins', sans-serif;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .xg-bot-actions {
-            display: flex;
-            gap: 15px;
-        }
-
-        .xg-bot-actions button {
-            background: none;
-            border: none;
-            color: white;
-            cursor: pointer;
-            font-size: 16px;
-            opacity: 0.7;
-            transition: 0.2s;
-            padding: 0;
-        }
-
-        .xg-bot-actions button:hover {
-            opacity: 1;
-            color: #ef4444;
-        }
-
-        .xg-bot-body {
-            padding: 20px;
-            height: 380px;
-            overflow-y: auto;
-            background: #f8fafc;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            scroll-behavior: smooth;
-        }
-
-        .xg-bot-footer {
-            padding: 12px 15px;
-            text-align: center;
-            background: white;
-            border-top: 1px solid #e2e8f0;
-            font-size: 10px;
-            color: #94a3b8;
-            font-family: 'Manrope';
-        }
-
-        .push-prompt-overlay {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(15, 23, 42, 0.8);
-            z-index: 11000;
-            justify-content: center;
-            align-items: center;
-            backdrop-filter: blur(4px);
-        }
-    </style>
+    
+    <link rel="stylesheet" href="css/style.css">
 </head>
 
-<body>
-    <div class="page-header-row"><span>For beter experience on mobile please use desktop site</span></div>
-    <div id="loader"
-        style="position: fixed; inset: 0; background: white; z-index: 99999; display: flex; flex-direction: column; justify-content: center; align-items: center;">
-        <i class="fa-solid fa-spinner fa-spin fa-2x" style="color: #2563eb;"></i>
-        <p style="margin-top: 15px; font-weight: 700; color: #2563eb; font-family: 'Manrope';">Verifying Session...</p>
+<body class="bg-slate-50 font-['Manrope'] text-slate-800 m-0">
+
+    <div class="flex justify-center items-center w-full bg-slate-900 text-slate-300 py-1.5 text-[12px]">
+        <span>For better experience on mobile please use desktop site</span>
+    </div>
+    
+    <div id="loader" class="fixed inset-0 bg-white z-[99999] flex flex-col justify-center items-center">
+        <i class="fa-solid fa-spinner fa-spin fa-2x text-blue-600"></i>
+        <p class="mt-[15px] font-bold text-blue-600 font-['Manrope']">Verifying Session...</p>
     </div>
 
-    <div class="dashboard-container" id="dashboard-main-content" style="display: none;">
-
-        <div class="page-header-row">
-            <span class="portal-tag" id="portal-title">Student Portal</span>
+    <div class="max-w-[1200px] mx-auto my-10 px-5 min-h-[80vh] hidden" id="dashboard-main-content">
+        
+        <div class="flex justify-center items-center mb-[25px] w-full">
+            <span class="inline-block font-extrabold text-blue-600 text-[20px] bg-blue-50 px-5 py-2.5 rounded-full border border-blue-200" id="portal-title">Student Portal</span>
         </div>
 
         <div id="dynamic-views-container">
-
-            <div id="student-view" style="display: none;">
-                <div class="welcome-banner"
-                    style="background: linear-gradient(135deg, #2563eb, #8b5cf6); color: white; padding: clamp(20px, 4vw, 30px); border-radius: 16px; margin-bottom: 20px;">
-                    <h1 style="margin: 0 0 8px; font-family: 'Poppins', sans-serif; font-size: clamp(20px, 3vw, 26px);">
-                        Welcome, <span id="display-name">Learner</span>! 👋</h1>
-                    <p style="margin: 0; font-size: clamp(12px, 1.5vw, 14px); opacity: 0.9;">Ready to continue your
-                        learning journey?</p>
+            
+            <div id="student-view" class="hidden">
+                
+                <div class="bg-gradient-to-br from-blue-600 to-violet-500 text-white p-[clamp(20px,4vw,30px)] rounded-2xl mb-5 shadow-lg">
+                    <h1 class="m-0 mb-2 font-['Poppins'] text-[clamp(20px,3vw,26px)] leading-tight">Welcome, <span id="display-name">Learner</span>! 👋</h1>
+                    <p class="m-0 text-[clamp(12px,1.5vw,14px)] opacity-90">Ready to continue your learning journey?</p>
                 </div>
 
-                <div
-                    style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; width: 100%;">
-
-                    <div
-                        style="background: white; border-radius: 16px; padding: clamp(15px, 3vw, 25px); border: 1px solid #e2e8f0; box-shadow: 0 4px 15px rgba(0,0,0,0.02);">
-                        <h3
-                            style="margin: 0 0 15px; font-family: 'Poppins', sans-serif; display: flex; align-items: center; gap: 10px; font-size: clamp(15px, 2vw, 17px);">
-                            <i class="fa-solid fa-user" style="color: #2563eb;"></i> My Profile
-                        </h3>
-                        <div style="display: flex; align-items: center; gap: 15px; flex-wrap: wrap;">
-                            <img id="p-img" src="" alt="Profile" onerror="this.src='https://ui-avatars.com/api/?name=S'"
-                                style="width: 55px; height: 55px; background: #e2e8f0; border-radius: 50%; object-fit: cover;">
+                <div class="grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-5 w-full">
+                    
+                    <div class="bg-white rounded-2xl p-[clamp(15px,3vw,25px)] border border-slate-200 shadow-sm">
+                        <h3 class="m-0 mb-[15px] font-['Poppins'] flex items-center gap-[10px] text-[clamp(15px,2vw,17px)]"><i class="fa-solid fa-user text-blue-600"></i> My Profile</h3>
+                        <div class="flex items-center gap-[15px] flex-wrap">
+                            <img id="p-img" src="" alt="Profile" onerror="this.src='https://ui-avatars.com/api/?name=S'" class="w-[55px] h-[55px] bg-slate-200 rounded-full object-cover border-2 border-white shadow-sm">
                             <div>
-                                <div id="p-name" style="font-weight: 700; font-size: 16px;">Loading...</div>
-                                <div id="p-id"
-                                    style="font-family: monospace; font-size: 12px; color: #2563eb; font-weight: 800; margin-bottom: 2px;">
-                                    ID: Loading...</div>
-                                <div id="p-email"
-                                    style="font-size: 13px; color: #64748b; margin-bottom: 6px; word-break: break-all;">
-                                    Loading...</div>
-                                <div id="p-role"
-                                    style="background: #dbeafe; color: #2563eb; font-size: 10px; font-weight: 800; padding: 4px 8px; border-radius: 4px; display: inline-block; text-transform: uppercase;">
-                                    STUDENT</div>
+                                <div id="p-name" class="font-bold text-[16px] text-slate-900">Loading...</div>
+                                <div id="p-id" class="font-mono text-[12px] text-blue-600 font-extrabold mb-0.5">ID: Loading...</div>
+                                <div id="p-email" class="text-[13px] text-slate-500 mb-1.5 break-all">Loading...</div>
+                                <div id="p-role" class="bg-blue-100 text-blue-600 text-[10px] font-extrabold px-2 py-1 rounded-md inline-block uppercase tracking-wide">STUDENT</div>
                             </div>
                         </div>
                     </div>
 
-                    <div
-                        style="background: white; border-radius: 16px; padding: clamp(15px, 3vw, 25px); border: 1px solid #e2e8f0; box-shadow: 0 4px 15px rgba(0,0,0,0.02);">
-                        <h3
-                            style="margin: 0 0 15px; font-family: 'Poppins', sans-serif; display: flex; align-items: center; gap: 10px; font-size: clamp(15px, 2vw, 17px);">
-                            <i class="fa-solid fa-clock-rotate-left" style="color: #10b981;"></i> Learning Materials
-                        </h3>
-                        <p style="color: #64748b; font-size: 14px; margin-bottom: 15px;">Access your recent study
-                            materials and notes.</p>
-                        <div style="display: flex; flex-direction: column; gap: 10px;">
-                            <a href="notes.html"
-                                style="color: #0f172a; background: #f8fafc; border: 1px solid #e2e8f0; padding: 12px 15px; border-radius: 8px; font-weight: 600; text-decoration: none; font-size: 14px; display: flex; align-items: center; gap: 10px;"><i
-                                    class="fa-solid fa-file-pdf"></i> My Notes</a>
-                            <a href="videos.html"
-                                style="color: #0f172a; background: #f8fafc; border: 1px solid #e2e8f0; padding: 12px 15px; border-radius: 8px; font-weight: 600; text-decoration: none; font-size: 14px; display: flex; align-items: center; gap: 10px;"><i
-                                    class="fa-solid fa-play"></i> Video Classes</a>
+                    <div class="bg-white rounded-2xl p-[clamp(15px,3vw,25px)] border border-slate-200 shadow-sm">
+                        <h3 class="m-0 mb-[15px] font-['Poppins'] flex items-center gap-[10px] text-[clamp(15px,2vw,17px)]"><i class="fa-solid fa-clock-rotate-left text-emerald-500"></i> Learning Materials</h3>
+                        <div class="flex flex-col gap-[10px]">
+                            <a href="notes.html" class="text-slate-900 bg-slate-50 border border-slate-200 px-[15px] py-3 rounded-lg font-semibold no-underline text-[14px] flex items-center gap-[10px] transition hover:bg-slate-100 hover:border-slate-300"><i class="fa-solid fa-file-pdf text-red-500"></i> My Notes</a>
+                            <a href="videos.html" class="text-slate-900 bg-slate-50 border border-slate-200 px-[15px] py-3 rounded-lg font-semibold no-underline text-[14px] flex items-center gap-[10px] transition hover:bg-slate-100 hover:border-slate-300"><i class="fa-solid fa-play text-blue-500"></i> Video Classes</a>
                         </div>
                     </div>
                 </div>
 
-                <div class="test-analysis-card">
-                    <h3
-                        style="margin: 0 0 15px; font-family: 'Poppins', sans-serif; display: flex; align-items: center; gap: 10px; font-size: clamp(15px, 2vw, 17px);">
-                        <i class="fa-solid fa-chart-line" style="color: #8b5cf6;"></i> Performance Analysis
-                    </h3>
-                    <div style="overflow-x: auto;">
-                        <table class="test-table">
+                <div class="bg-white rounded-2xl p-[clamp(15px,3vw,25px)] border border-slate-200 mt-5 shadow-sm overflow-hidden">
+                    <h3 class="m-0 mb-[15px] font-['Poppins'] flex items-center gap-[10px] text-[clamp(15px,2vw,17px)]"><i class="fa-solid fa-chart-line text-violet-500"></i> Performance Analysis</h3>
+                    <div class="overflow-x-auto">
+                        <table class="w-full border-collapse mt-[15px]">
                             <thead>
                                 <tr>
-                                    <th>Subject / Topic</th>
-                                    <th>Date</th>
-                                    <th>Accuracy</th>
-                                    <th>Score</th>
+                                    <th class="text-left p-3 border-b-2 border-slate-100 text-slate-500 font-extrabold text-[11px] uppercase tracking-wider">Subject / Topic</th>
+                                    <th class="text-left p-3 border-b-2 border-slate-100 text-slate-500 font-extrabold text-[11px] uppercase tracking-wider">Date</th>
+                                    <th class="text-left p-3 border-b-2 border-slate-100 text-slate-500 font-extrabold text-[11px] uppercase tracking-wider">Accuracy</th>
+                                    <th class="text-left p-3 border-b-2 border-slate-100 text-slate-500 font-extrabold text-[11px] uppercase tracking-wider">Score</th>
                                 </tr>
                             </thead>
                             <tbody id="performance-table-body">
-                                <tr>
-                                    <td colspan="4" style="text-align:center; color:#64748b; padding: 20px;">
-                                        <i class="fa-solid fa-spinner fa-spin"></i> Loading recent performance...
-                                    </td>
-                                </tr>
+                                <tr><td colspan="4" class="text-center text-slate-500 p-5"><i class="fa-solid fa-spinner fa-spin text-blue-500"></i> Loading recent performance...</td></tr>
                             </tbody>
                         </table>
                     </div>
                 </div>
             </div>
 
-            <div id="parent-view" style="display: none; margin-top: 20px;">
-                <div
-                    style="background: linear-gradient(135deg, #16a34a, #22c55e); color: white; padding: clamp(20px, 4vw, 30px); border-radius: 16px; margin-bottom: 20px;">
-                    <h1 style="margin: 0 0 8px; font-family: 'Poppins', sans-serif; font-size: clamp(20px, 3vw, 26px);">
-                        Parent Portal 🛡️</h1>
-                    <p style="margin: 0; font-size: clamp(12px, 1.5vw, 14px); opacity: 0.9;">Monitor your child's
-                        academic progress securely.</p>
+            <div id="parent-view" class="hidden mt-5">
+                <div class="bg-gradient-to-br from-emerald-600 to-emerald-500 text-white p-[clamp(20px,4vw,30px)] rounded-2xl mb-5 shadow-lg">
+                    <h1 class="m-0 mb-2 font-['Poppins'] text-[clamp(20px,3vw,26px)] leading-tight">Parent Portal 🛡️</h1>
+                    <p class="m-0 text-[clamp(12px,1.5vw,14px)] opacity-90">Monitor your child's academic progress securely.</p>
                 </div>
-                <div
-                    style="background: white; border-radius: 16px; padding: clamp(15px, 3vw, 25px); border: 1px solid #e2e8f0; box-shadow: 0 4px 15px rgba(0,0,0,0.02);">
-                    <h3
-                        style="margin: 0 0 15px; font-family: 'Poppins', sans-serif; display: flex; align-items: center; gap: 10px; font-size: clamp(15px, 2vw, 17px);">
-                        <i class="fa-solid fa-children" style="color: #16a34a;"></i> Child Performance Tracker
-                    </h3>
-                    <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-                        <input type="text" id="child-id-input" placeholder="e.g., XG-STU-12345"
-                            style="padding: 12px 15px; border: 1px solid #e2e8f0; border-radius: 8px; flex: 1; font-family: monospace; text-transform: uppercase; font-size: 14px; outline: none; min-width: 200px;">
-                        <button
-                            style="background: #16a34a; color: white; border: none; padding: 12px 25px; border-radius: 8px; font-weight: 700; cursor: pointer; font-family: 'Manrope';"><i
-                                class="fa-solid fa-magnifying-glass"></i> Track</button>
+                <div id="child-stats-placeholder"></div>
+            </div>
+
+            <div id="creator-studio-widget" class="hidden mt-5">
+                <div class="bg-white rounded-2xl p-[clamp(15px,3vw,25px)] border border-slate-200 shadow-sm">
+                    <h3 class="m-0 mb-[15px] font-['Poppins'] flex items-center gap-[10px] text-[clamp(15px,2vw,17px)]"><i class="fa-solid fa-wand-magic-sparkles text-blue-600"></i> Creator Studio</h3>
+                    <form id="creator-submit-form" onsubmit="submitCreatorContent(event)">
+                        <div class="mb-[15px]"><input type="text" id="cs-title" placeholder="Article Title" required class="w-full p-3 border border-slate-200 rounded-lg outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition"></div>
+                        <div class="mb-[20px]"><textarea id="cs-content" placeholder="Write your article content here..." required class="w-full p-3 min-h-[150px] border border-slate-200 rounded-lg outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition"></textarea></div>
+                        <button type="submit" id="cs-submit-btn" class="bg-blue-600 hover:bg-blue-700 text-white border-none py-3 px-6 rounded-lg font-bold cursor-pointer flex items-center justify-center gap-2 transition duration-200 w-full sm:w-auto"><i class="fa-solid fa-paper-plane"></i> Submit for Review</button>
+                    </form>
+                </div>
+            </div>
+
+            <div id="help-desk-section" class="hidden mt-5">
+                <div class="bg-white rounded-2xl p-[clamp(15px,3vw,25px)] border border-slate-200 shadow-sm">
+                    <h3 class="m-0 mb-[15px] font-['Poppins'] flex items-center gap-[10px] text-[clamp(15px,2vw,17px)]"><i class="fa-solid fa-headset text-red-500"></i> Help Desk & Support</h3>
+                    <form id="ticket-form" onsubmit="submitTicket(event)">
+                        <div class="mb-[15px]"><input type="text" id="t-subject" placeholder="Ticket Subject (e.g., Chapter 4 Doubt)" required class="w-full p-3 border border-slate-200 rounded-lg outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition"></div>
+                        <div class="mb-[15px]">
+                            <select id="t-category" required class="w-full p-3 border border-slate-200 rounded-lg outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition bg-white cursor-pointer appearance-none" style="background-image: url('data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' fill=\'none\' viewBox=\'0 0 24 24\' stroke=\'%2364748b\'%3E%3Cpath stroke-linecap=\'round\' stroke-linejoin=\'round\' stroke-width=\'2\' d=\'M19 9l-7 7-7-7\'%3E%3C/path%3E%3C/svg%3E'); background-repeat: no-repeat; background-position: right 1rem center; background-size: 1.5em 1.5em;">
+                                </select>
+                        </div>
+                        <div class="mb-[15px]"><textarea id="t-desc" placeholder="Describe your issue..." required class="w-full p-3 min-h-[100px] border border-slate-200 rounded-lg outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition"></textarea></div>
+                        <button type="submit" id="submit-ticket-btn" class="bg-blue-600 hover:bg-blue-700 text-white border-none py-3 px-5 rounded-lg font-bold cursor-pointer w-full flex items-center justify-center gap-2 transition duration-200"><i class="fa-solid fa-paper-plane"></i> Submit Ticket</button>
+                    </form>
+                </div>
+                
+                <div class="mt-[30px] border-t-2 border-dashed border-slate-200 pt-[20px]">
+                    <h4 class="m-0 mb-[15px] font-['Poppins'] text-slate-900"><i class="fa-solid fa-clock-rotate-left text-slate-500"></i> My Recent Tickets</h4>
+                    <div id="my-tickets-list" class="flex flex-col gap-[15px]">
+                        <div class="text-center text-slate-500 p-[15px] bg-slate-50 rounded-lg"><i class="fa-solid fa-spinner fa-spin text-blue-500"></i> Loading your tickets...</div>
                     </div>
                 </div>
             </div>
-
-            <div id="writer-tools" style="display: none; margin-top: 20px;">
-                <div
-                    style="background: #fdf2f8; border-radius: 16px; padding: clamp(15px, 3vw, 25px); border: 1px solid #fbcfe8; box-shadow: 0 4px 15px rgba(0,0,0,0.02);">
-                    <h3
-                        style="margin: 0 0 15px; font-family: 'Poppins', sans-serif; display: flex; align-items: center; gap: 10px; font-size: clamp(15px, 2vw, 17px);">
-                        <i class="fa-solid fa-pen-nib" style="color: #db2777;"></i> Writer Portal
-                    </h3>
-                    <p style="font-size: 14px; color: #831843; margin-bottom: 15px;">Contribute to the library by
-                        writing articles.</p>
-                    <button
-                        style="background: #db2777; color: white; border: none; padding: 10px 15px; border-radius: 8px; font-weight: bold; cursor: pointer; font-family: 'Manrope';"><i
-                            class="fa-solid fa-plus"></i> Create New Article</button>
-                </div>
-            </div>
-
-           <div id="help-desk-section" style="display: none; margin-top: 20px;">
-        <div style="background: white; border-radius: 16px; padding: clamp(15px, 3vw, 25px); border: 1px solid #e2e8f0; box-shadow: 0 4px 15px rgba(0,0,0,0.02);">
-            <h3 style="margin: 0 0 15px; font-family: 'Poppins', sans-serif; display: flex; align-items: center; gap: 10px; font-size: clamp(15px, 2vw, 17px);"><i class="fa-solid fa-headset" style="color: #ef4444;"></i> Help Desk & Support</h3>
-            <form id="ticket-form" onsubmit="submitTicket(event)">
-                <div style="margin-bottom: 15px;">
-                    <input type="text" id="t-subject" placeholder="Ticket Subject (e.g., Chapter 4 Doubt)" required style="width: 100%; padding: 12px; border: 1px solid #e2e8f0; border-radius: 8px; font-family: inherit; box-sizing: border-box;">
-                </div>
-                <div style="margin-bottom: 15px;">
-                    <select id="t-category" required style="width: 100%; padding: 12px; border: 1px solid #e2e8f0; border-radius: 8px; font-family: inherit; box-sizing: border-box; cursor: pointer;">
-                        <option value="" disabled selected>-- Select Category --</option>
-                        <option value="academic">Academic Doubt</option>
-                        <option value="technical">Technical Issue</option>
-                    </select>
-                </div>
-                <div style="margin-bottom: 15px;">
-                    <textarea id="t-desc" placeholder="Describe your issue in detail..." required style="min-height: 100px; resize: vertical; width: 100%; padding: 12px; border: 1px solid #e2e8f0; border-radius: 8px; font-family: inherit; box-sizing: border-box;"></textarea>
-                </div>
-                <button type="submit" id="submit-ticket-btn" style="background: #2563eb; color: white; border: none; padding: 12px 20px; border-radius: 8px; font-weight: 700; cursor: pointer; width: 100%; display: flex; justify-content: center; align-items: center; gap: 8px;"><i class="fa-solid fa-paper-plane"></i> Submit Ticket</button>
-            </form>
-        </div>
-        
-        <div style="margin-top: 30px; border-top: 2px dashed #e2e8f0; padding-top: 20px;">
-            <h4 style="margin: 0 0 15px; font-family: 'Poppins'; color: #0f172a;"><i class="fa-solid fa-clock-rotate-left"></i> My Recent Tickets</h4>
-            <div id="my-tickets-list" style="display: flex; flex-direction: column; gap: 15px;">
-                <div style="text-align:center; color:#64748b; padding: 15px; background: #f8fafc; border-radius: 8px;">
-                    <i class="fa-solid fa-spinner fa-spin"></i> Loading your tickets...
-                </div>
-            </div>
         </div>
     </div>
 
-        </div>
-    </div>
-
-    <div id="push-soft-prompt" class="push-prompt-overlay">
-        <div
-            style="background: white; width: 90%; max-width: 400px; border-radius: 20px; padding: 30px; text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.3);">
-            <div style="font-size: 40px; color: #2563eb; margin-bottom: 15px;"><i
-                    class="fa-solid fa-bell-concierge"></i></div>
-            <h3 style="margin-bottom: 10px; font-family: 'Poppins';">Stay Updated!</h3>
-            <p style="margin-bottom: 25px; font-size: 14px; color: #64748b;">Enable push notifications to instantly
-                receive important updates.</p>
-            <div style="display: flex; gap: 10px;">
-                <button
-                    style="flex: 1; padding: 12px; border: none; border-radius: 10px; background: #e2e8f0; cursor: pointer; font-weight: bold; font-family: 'Manrope';"
-                    onclick="document.getElementById('push-soft-prompt').style.display='none'">Not Now</button>
-                <button
-                    style="flex: 1; padding: 12px; border: none; border-radius: 10px; background: #2563eb; color: white; cursor: pointer; font-weight: bold; font-family: 'Manrope';"
-                    onclick="window.notificationManager.triggerNativePushPrompt()">Enable Notifications</button>
+    <div id="push-soft-prompt" class="hidden fixed inset-0 bg-slate-900/80 z-[11000] justify-center items-center backdrop-blur-sm">
+        <div class="bg-white w-[90%] max-w-[400px] rounded-[20px] p-[30px] text-center shadow-2xl scale-100 transform transition-transform">
+            <div class="text-[40px] text-blue-600 mb-[15px]"><i class="fa-solid fa-bell-concierge"></i></div>
+            <h3 class="mb-[10px] font-['Poppins'] text-slate-900 text-xl">Stay Updated!</h3>
+            <p class="mb-[25px] text-[14px] text-slate-500">Enable push notifications to instantly receive important updates.</p>
+            <div class="flex gap-[10px]">
+                <button class="flex-1 p-3 border-none rounded-xl bg-slate-100 text-slate-600 hover:bg-slate-200 font-bold font-['Manrope'] cursor-pointer transition" onclick="document.getElementById('push-soft-prompt').style.display='none'">Not Now</button>
+                <button class="flex-1 p-3 border-none rounded-xl bg-blue-600 text-white hover:bg-blue-700 font-bold font-['Manrope'] cursor-pointer transition shadow-md" onclick="window.notificationManager.triggerNativePushPrompt()">Enable</button>
             </div>
         </div>
-    </div>
-
-    <div id="xg-bot-fab" class="xg-bot-fab" onclick="if(window.chatbotManager) window.chatbotManager.toggleBot()">
-        <i class="fa-solid fa-comment-dots"></i>
-    </div>
-
-    <div id="xg-bot-modal" class="xg-bot-modal">
-        <div class="xg-bot-header">
-            <h3><i class="fa-solid fa-robot" style="color: #38bdf8;"></i> XG Assistant</h3>
-            <div class="xg-bot-actions">
-                <button onclick="if(window.chatbotManager) window.chatbotManager.minimizeBot()"><i
-                        class="fa-solid fa-minus"></i></button>
-                <button onclick="if(window.chatbotManager) window.chatbotManager.strictCloseBot()"><i
-                        class="fa-solid fa-xmark"></i></button>
-            </div>
-        </div>
-        <div id="xg-bot-body" class="xg-bot-body"></div>
-        <div class="xg-bot-footer">* XG Assistant is automated and can make mistakes.</div>
     </div>
 
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
 
-    <script src="../../js/firebase-init.js"></script>
-    <script src="../../js/api/ticketApi.js"></script>
-    <script src="../../js/auth.js"></script>
-    <script src="../../js/master.js"></script>
-    <script src="../../js/notification.js"></script>
-    <script src="../../js/ticketing.js"></script>
-    <script src="../../js/chatbot.js"></script>
+    <script src="js/firebase-init.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/master.js"></script>
+    <script src="js/notification.js"></script>
+    <script src="js/ticketing.js"></script>
+    <script src="js/dashboard.js"></script>
+    <script src="js/chatbot.js"></script>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
@@ -439,17 +161,12 @@
                     document.getElementById('p-name').innerText = user.displayName || userData?.name || "Learner";
 
                     let roleKey = (userData?.role || 'student').toUpperCase();
-                    let prefix = roleKey === 'STUDENT' ? 'STU' : (roleKey === 'PARENT' ? 'PRN' : (roleKey === 'MENTOR' ? 'MNT' : 'ADM'));
+                    let prefix = roleKey === 'STUDENT' ? 'STU' : (roleKey === 'PARENT' ? 'PRN' : 'USR');
 
-                    // Dynamic Hash Generation 
+                    // Clean Dynamic Hash Generation (Admin locks removed)
                     let customId = `XG-${prefix}-${user.uid.substring(0, 6).toUpperCase()}`;
 
-                    // Founder Exception
-                    if (user.uid === 'XCxglOl7FzLyRIFgl4SXNiW9VKA3') customId = 'XG-F-AK';
-                    if (user.uid === 'EZpI9ea4b0X8x8vOhxzar5KNzAw1') customId = 'XG-F-SK';
-
                     document.getElementById('p-id').innerText = `ID: ${customId}`;
-
                     document.getElementById('p-email').innerText = user.email;
 
                     if (userData && userData.role) {
@@ -459,19 +176,23 @@
                     setupRoleViews(userData?.role || 'student');
 
                     const role = userData?.role || 'student';
-                    if (role === 'student' || role === 'admin' || role === 'founder') {
+                    if (role === 'student' || role === 'student_writer') {
                         fetchRecentPerformance(user.uid);
-                        // 🟢 NEW: Fetch Student's Doubt Tickets
                         fetchMyTickets(user.uid);
                     }
 
                     setTimeout(() => {
                         document.getElementById('loader').style.display = 'none';
-                        document.getElementById('dashboard-main-content').style.display = 'block';
+                        document.getElementById('dashboard-main-content').classList.remove('hidden');
+                        document.getElementById('dashboard-main-content').style.display = 'block'; // Fallback
 
                         if (!localStorage.getItem('notif_prompt_shown')) {
                             const p = document.getElementById('push-soft-prompt');
-                            if (p) { p.style.display = 'flex'; localStorage.setItem('notif_prompt_shown', 'true'); }
+                            if (p) { 
+                                p.classList.remove('hidden');
+                                p.style.display = 'flex'; 
+                                localStorage.setItem('notif_prompt_shown', 'true'); 
+                            }
                         }
                     }, 1000);
                 });
@@ -481,7 +202,7 @@
         function setupRoleViews(role) {
             document.getElementById('student-view').style.display = 'none';
             document.getElementById('parent-view').style.display = 'none';
-            document.getElementById('writer-tools').style.display = 'none';
+            document.getElementById('creator-studio-widget').style.display = 'none';
             document.getElementById('help-desk-section').style.display = 'none';
 
             if (role === 'student') {
@@ -489,19 +210,16 @@
                 document.getElementById('student-view').style.display = 'block';
                 document.getElementById('help-desk-section').style.display = 'block';
             }
+            else if (role === 'student_writer') {
+                document.getElementById('portal-title').innerText = 'Student Writer Portal';
+                document.getElementById('student-view').style.display = 'block';
+                document.getElementById('creator-studio-widget').style.display = 'block';
+                document.getElementById('help-desk-section').style.display = 'block';
+            }
             else if (role === 'parent') {
                 document.getElementById('portal-title').innerText = 'Parent Portal';
                 document.getElementById('parent-view').style.display = 'block';
                 document.getElementById('help-desk-section').style.display = 'block';
-            }
-            else if (role === 'writer') {
-                document.getElementById('portal-title').innerText = 'Writer Workspace';
-                document.getElementById('writer-tools').style.display = 'block';
-            }
-            else if (role === 'admin' || role === 'founder') {
-                document.getElementById('portal-title').innerText = 'Admin Oversight';
-                document.getElementById('student-view').style.display = 'block';
-                document.getElementById('writer-tools').style.display = 'block';
             }
         }
 
@@ -511,21 +229,18 @@
 
             try {
                 const db = firebase.firestore();
-
-                const snapshot = await db.collection('test_results')
-                    .where('uid', '==', uid)
-                    .get();
+                const snapshot = await db.collection('test_results').where('uid', '==', uid).get();
 
                 if (snapshot.empty) {
                     tableHead.style.display = 'none';
                     tableBody.innerHTML = `
                         <tr>
-                            <td colspan="4" style="text-align:center; padding: 40px 20px; border-bottom: none;">
-                                <div style="background: #f8fafc; border: 2px dashed #cbd5e1; border-radius: 16px; padding: 30px; max-width: 400px; margin: 0 auto;">
-                                    <i class="fa-solid fa-flask-vial" style="font-size: 40px; color: #94a3b8; margin-bottom: 15px;"></i>
-                                    <h4 style="margin: 0 0 8px; color: #0f172a; font-family: 'Poppins'; font-size: 18px;">No Data Found</h4>
-                                    <p style="margin: 0 0 20px; color: #64748b; font-size: 14px;">You haven't attempted any mock tests yet. Give it a try to see your analysis here!</p>
-                                    <a href="tests.html" style="background: #0f172a; color: white; padding: 12px 25px; border-radius: 8px; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; font-size: 14px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+                            <td colspan="4" class="text-center p-10 border-none">
+                                <div class="bg-slate-50 border-2 border-dashed border-slate-300 rounded-2xl p-[30px] max-w-[400px] mx-auto transition hover:bg-slate-100">
+                                    <i class="fa-solid fa-flask-vial text-[40px] text-slate-400 mb-[15px]"></i>
+                                    <h4 class="m-0 mb-2 text-slate-900 font-['Poppins'] text-[18px]">No Data Found</h4>
+                                    <p class="m-0 mb-5 text-slate-500 text-[14px]">You haven't attempted any mock tests yet. Give it a try to see your analysis here!</p>
+                                    <a href="tests.html" class="bg-slate-900 text-white px-6 py-3 rounded-xl font-bold no-underline inline-flex items-center gap-2 text-[14px] shadow-md hover:bg-slate-800 transition">
                                         <i class="fa-solid fa-play"></i> Take a Mock Test
                                     </a>
                                 </div>
@@ -535,12 +250,9 @@
                     return;
                 }
 
-                tableHead.style.display = '';
-
+                tableHead.style.display = 'table-header-group'; // Tailwind way
                 let testHistory = [];
-                snapshot.forEach(doc => {
-                    testHistory.push(doc.data());
-                });
+                snapshot.forEach(doc => { testHistory.push(doc.data()); });
 
                 testHistory.sort((a, b) => {
                     let timeA = a.timestamp ? a.timestamp.toMillis() : 0;
@@ -549,7 +261,6 @@
                 });
 
                 testHistory = testHistory.slice(0, 5);
-
                 tableBody.innerHTML = '';
 
                 testHistory.forEach(data => {
@@ -559,38 +270,37 @@
                         dateStr = dateObj.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
                     }
 
-                    let accClass = data.accuracy >= 70 ? 'score-high' : (data.accuracy < 40 ? 'score-low' : '');
-                    let accHTML = `<span class="score-pill ${accClass}">${data.accuracy}%</span>`;
+                    let accClass = data.accuracy >= 70 ? 'bg-green-100 text-green-600' : (data.accuracy < 40 ? 'bg-red-100 text-red-600' : 'bg-amber-100 text-amber-600');
+                    let accHTML = `<span class="px-2.5 py-1 rounded-full font-extrabold text-[12px] ${accClass}">${data.accuracy}%</span>`;
 
                     const row = `
-                        <tr>
-                            <td>
-                                <div style="font-weight: 800; color: #0f172a;">${data.testTitle}</div>
-                                <div style="font-size: 11px; color: #64748b;">${Math.floor(data.timeSpent / 60)}m ${data.timeSpent % 60}s spent</div>
+                        <tr class="hover:bg-slate-50 transition">
+                            <td class="p-3 border-b border-slate-100">
+                                <div class="font-extrabold text-slate-900">${data.testTitle}</div>
+                                <div class="text-[11px] text-slate-500">${Math.floor(data.timeSpent / 60)}m ${data.timeSpent % 60}s spent</div>
                             </td>
-                            <td style="color: #475569; font-size: 13px;">${dateStr}</td>
-                            <td>${accHTML}</td>
-                            <td style="font-weight: 800; font-family: monospace; font-size: 16px;">${data.score}</td>
+                            <td class="p-3 border-b border-slate-100 text-slate-600 text-[13px]">${dateStr}</td>
+                            <td class="p-3 border-b border-slate-100">${accHTML}</td>
+                            <td class="p-3 border-b border-slate-100 font-extrabold font-mono text-[16px] text-slate-900">${data.score}</td>
                         </tr>
                     `;
                     tableBody.innerHTML += row;
                 });
 
             } catch (error) {
-                console.error("Error fetching performance:", error);
-                tableBody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:#ef4444; padding: 20px;">Failed to load data. Please refresh.</td></tr>`;
+                tableBody.innerHTML = `<tr><td colspan="4" class="text-center text-red-500 p-5">Failed to load data. Please refresh.</td></tr>`;
             }
         }
 
-        // 🟢 API-FIRST FETCH: Student's Doubt Tickets
         async function fetchMyTickets(uid) {
             const ticketList = document.getElementById('my-tickets-list');
 
             try {
-                const tickets = await window.TicketAPI.getMyTickets(uid);
+                const db = firebase.firestore();
+                const snapshot = await db.collection('tickets').where('uid', '==', uid).get();
 
-                if (!tickets || tickets.length === 0) {
-                    ticketList.innerHTML = `<div style="text-align:center; color:#64748b; padding: 15px; background: #f8fafc; border-radius: 8px; border: 1px dashed #cbd5e1;">No tickets raised yet. Need help? Ask above!</div>`;
+                if (snapshot.empty) {
+                    ticketList.innerHTML = `<div class="text-center text-slate-500 p-[15px] bg-slate-50 rounded-lg border border-dashed border-slate-300">No tickets raised yet. Need help? Ask above!</div>`;
                     return;
                 }
 
@@ -604,27 +314,27 @@
 
                     let isSolved = ticket.status === 'solved';
                     let statusBadge = isSolved
-                        ? `<span style="background:#dcfce7; color:#16a34a; font-size:10px; font-weight:800; padding:4px 8px; border-radius:4px;"><i class="fa-solid fa-check-circle"></i> SOLVED</span>`
-                        : `<span style="background:#fef3c7; color:#d97706; font-size:10px; font-weight:800; padding:4px 8px; border-radius:4px;"><i class="fa-solid fa-clock"></i> PENDING</span>`;
+                        ? `<span class="bg-green-100 text-green-600 text-[10px] font-extrabold px-2 py-1 rounded text-center"><i class="fa-solid fa-check-circle"></i> SOLVED</span>`
+                        : `<span class="bg-amber-100 text-amber-600 text-[10px] font-extrabold px-2 py-1 rounded text-center"><i class="fa-solid fa-clock"></i> PENDING</span>`;
 
                     let replyBox = '';
                     if (isSolved && ticket.reply) {
                         replyBox = `
-                            <div style="margin-top: 15px; padding: 15px; background: #eff6ff; border-left: 3px solid #3b82f6; border-radius: 0 8px 8px 0;">
-                                <div style="font-size: 11px; font-weight: 800; color: #2563eb; margin-bottom: 5px; text-transform: uppercase;">Reply from Team</div>
-                                <div style="font-size: 13px; color: #1e3a8a; line-height: 1.5;">${ticket.reply}</div>
+                            <div class="mt-[15px] p-[15px] bg-blue-50 border-l-4 border-blue-500 rounded-r-lg">
+                                <div class="text-[11px] font-extrabold text-blue-600 mb-[5px] uppercase tracking-wide">Reply from Team</div>
+                                <div class="text-[13px] text-blue-900 leading-relaxed">${ticket.reply}</div>
                             </div>
                         `;
                     }
 
                     const card = `
-                        <div style="border: 1px solid #e2e8f0; border-radius: 12px; padding: 15px; background: white;">
-                            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;">
-                                <h4 style="margin: 0; font-size: 15px; color: #0f172a;">${ticket.subject || 'Doubt Question'}</h4>
+                        <div class="border border-slate-200 rounded-xl p-[15px] bg-white shadow-sm transition hover:shadow-md">
+                            <div class="flex justify-between items-start mb-[10px]">
+                                <h4 class="m-0 text-[15px] text-slate-900 font-bold">${ticket.subject || 'Doubt Question'}</h4>
                                 ${statusBadge}
                             </div>
-                            <div style="font-size: 11px; color: #94a3b8; font-weight: 600; margin-bottom: 10px;">Ticket ID: #${ticket.id.substring(0, 6).toUpperCase()} • ${dateStr}</div>
-                            <p style="margin: 0; font-size: 13px; color: #475569;">${ticket.description || ''}</p>
+                            <div class="text-[11px] text-slate-400 font-semibold mb-[10px]">Ticket ID: #${ticket.id.substring(0, 6).toUpperCase()} &bull; ${dateStr}</div>
+                            <p class="m-0 text-[13px] text-slate-600 leading-relaxed">${ticket.description || ''}</p>
                             ${replyBox}
                         </div>
                     `;
@@ -632,11 +342,11 @@
                 });
 
             } catch (error) {
-                console.error("Error fetching tickets:", error);
-                ticketList.innerHTML = `<div style="text-align:center; color:#ef4444; padding: 15px;">Failed to load tickets. Please refresh.</div>`;
+                ticketList.innerHTML = `<div class="text-center text-red-500 p-[15px] bg-red-50 rounded-lg">Failed to load tickets. Please refresh.</div>`;
             }
         }
-        // 🟢 API-FIRST: Submit Ticket Logic
+
+        // Secure Ticket Submission
         window.submitTicket = async function(e) {
             e.preventDefault();
             const btn = document.getElementById('submit-ticket-btn');
@@ -650,26 +360,22 @@
             btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Submitting...';
 
             try {
-                // Get Current User
                 const user = firebase.auth().currentUser;
                 if (!user) throw new Error("Please login to submit a ticket.");
 
-                const payload = { 
+                const db = firebase.firestore();
+
+                const docRef = await db.collection('tickets').add({ 
                     category: categoryVal, 
                     subject: subject, 
                     description: description, 
                     uid: user.uid, 
                     raisedByEmail: user.email || 'No Email' 
-                };
+                });
                 
-                const response = await window.TicketAPI.createTicket(payload);
-                const ticketId = response.data.id;
-
-                // 3. SUCCESS UI UPDATE
-                alert(`✅ Success! Your ticket has been submitted.\n\nTicket ID: #${ticketId.substring(0,6).toUpperCase()}`);
+                alert(`✅ Success! Your ticket has been submitted.\n\nTicket ID: #${docRef.id.substring(0,6).toUpperCase()}`);
                 document.getElementById('ticket-form').reset();
                 
-                // Immediately update the tickets list on dashboard
                 if(typeof fetchMyTickets === 'function') {
                     fetchMyTickets(user.uid);
                 }
@@ -684,5 +390,4 @@
         };
     </script>
 </body>
-
 </html>

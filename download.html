@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Preparing Your Notes | Xplainer Guru</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+        body { font-family: 'Poppins', sans-serif; }
+    </style>
+</head>
+<body class="bg-gray-50 flex flex-col min-h-screen items-center">
+
+    <div id="top-ad-container" class="w-full flex justify-center py-4 bg-white shadow-sm min-h-[60px]">
+        <script type="text/javascript">
+            atOptions = { 'key' : '1a4e90822d236b74e172b42322f602f7', 'format' : 'iframe', 'height' : 50, 'width' : 320, 'params' : {} };
+            const s = document.createElement('script');
+            s.src = "https://www.highperformanceformat.com/1a4e90822d236b74e172b42322f602f7/invoke.js";
+            document.getElementById('top-ad-container').appendChild(s);
+        </script>
+    </div>
+
+    <main class="flex-grow flex flex-col items-center justify-center px-4 w-full max-w-md text-center">
+        
+        <div class="bg-white p-8 rounded-2xl shadow-xl w-full border border-gray-100">
+            <h1 class="text-2xl font-bold text-gray-800 mb-2">Xplainer <span class="text-blue-600">Guru</span></h1>
+            <p class="text-gray-500 text-sm mb-6">Your requested study material is being prepared.</p>
+
+            <div id="timer-wrapper" class="relative flex items-center justify-center mb-6">
+                <svg class="w-24 h-24 transform -rotate-90">
+                    <circle cx="48" cy="48" r="40" stroke="currentColor" stroke-width="8" fill="transparent" class="text-gray-200" />
+                    <circle id="progress-bar" cx="48" cy="48" r="40" stroke="currentColor" stroke-width="8" fill="transparent" stroke-dasharray="251.2" stroke-dashoffset="0" class="text-blue-600 transition-all duration-1000 ease-linear" />
+                </svg>
+                <span id="timer-text" class="absolute text-2xl font-bold text-gray-700">15</span>
+            </div>
+
+            <p id="status-text" class="text-orange-500 font-medium animate-pulse mb-4">Please wait for 15 seconds...</p>
+
+            <button id="download-btn" class="hidden w-full bg-green-600 hover:bg-green-700 text-white font-bold py-4 rounded-xl shadow-lg transform transition active:scale-95 flex items-center justify-center gap-2">
+                <i class="fas fa-file-pdf text-xl"></i>
+                Click to Download PDF
+            </button>
+        </div>
+
+        <div id="native-ad-container" class="mt-8 w-full flex justify-center min-h-[150px]">
+            <script async="async" data-cfasync="false" src="https://pl29365593.profitablecpmratenetwork.com/e9b12f5418d9e679de47d1e3b3183725/invoke.js"></script>
+            <div id="container-e9b12f5418d9e679de47d1e3b3183725"></div>
+        </div>
+
+    </main>
+
+    <footer class="p-6 text-gray-400 text-xs">
+        &copy; 2026 Xplainer Guru. All Rights Reserved.
+    </footer>
+
+    <script src="https://pl29365933.profitablecpmratenetwork.com/d9/ad/77/d9ad7765f13d86914dce64a5b431bd3b.js"></script>
+
+   <script>
+    // 1. APNA ASLI SMART LINK (DIRECT LINK) YAHAN DALEIN
+    // Adsterra dashboard -> Direct Links -> Copy URL
+    const SMART_LINK = "https://www.profitablecpmratenetwork.com/cait9i7tau?key=22a393a6ed9f96dab738f8c32500f680"; 
+
+    const COUNTDOWN_TIME = 15;
+
+    // URL se file link nikalna
+    const urlParams = new URLSearchParams(window.location.search);
+    const actualFileUrl = urlParams.get('file');
+
+    // Debugging ke liye: Console mein check karein agar link aa raha hai
+    console.log("File to download:", actualFileUrl);
+
+    if (!actualFileUrl) {
+        document.body.innerHTML = "<div class='flex items-center justify-center h-screen font-bold text-red-500 text-xl'>Error: File link missing! Go back and try again.</div>";
+    }
+
+    let timeLeft = COUNTDOWN_TIME;
+    const timerText = document.getElementById('timer-text');
+    const progressBar = document.getElementById('progress-bar');
+    const downloadBtn = document.getElementById('download-btn');
+    const statusText = document.getElementById('status-text');
+    const timerWrapper = document.getElementById('timer-wrapper');
+
+    const countdown = setInterval(() => {
+        timeLeft--;
+        timerText.innerText = timeLeft;
+        const offset = 251.2 - (251.2 * (COUNTDOWN_TIME - timeLeft)) / COUNTDOWN_TIME;
+        progressBar.style.strokeDashoffset = offset;
+
+        if (timeLeft <= 0) {
+            clearInterval(countdown);
+            timerWrapper.classList.add('hidden');
+            statusText.innerText = "Your link is ready!";
+            statusText.classList.replace('text-orange-500', 'text-green-600');
+            downloadBtn.classList.remove('hidden');
+        }
+    }, 1000);
+
+    // FIX: Sahi tarika click handle karne ka
+    // Clean and Direct Download Logic (No Smartlink, No Redirects)
+    downloadBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+
+        const finalFileUrl = decodeURIComponent(actualFileUrl);
+        
+        // Button click karte hi seedha notes usi tab mein khul jayenge
+        window.location.href = finalFileUrl;
+
+        // Note: Agar aap chahte hain ki notes naye tab mein khulein 
+        // toh upar wali line ko hata kar niche wali line use karein:
+        // window.open(finalFileUrl, '_blank');
+    });
+</script>
+</body>
+</html>

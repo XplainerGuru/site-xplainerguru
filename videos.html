@@ -9,85 +9,33 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <link rel="stylesheet" href="css/style.css">
-    
-    <style>
-        body { background: #f8fafc; font-family: 'Manrope', sans-serif; margin: 0; padding-top: 100px; display: flex; flex-direction: column; min-height: 100vh;}
-        .container { max-width: 1100px; margin: 0 auto; padding: 0 20px 50px; flex: 1; width: 100%; box-sizing: border-box; }
-        
-        .page-header { margin-bottom: 30px; }
-        .page-header h1 { font-family: 'Poppins'; color: #0f172a; margin: 0 0 10px; font-size: 2rem;}
-        .page-header p { color: #64748b; margin: 0; font-size: 14px;}
-
-        .player-wrapper { display: none; background: #0f172a; padding: 20px; border-radius: 20px; margin-bottom: 40px; box-shadow: 0 20px 40px rgba(0,0,0,0.15);}
-        .video-box { position: relative; padding-bottom: 56.25%; height: 0; border-radius: 12px; overflow: hidden; background: #000; }
-        .video-box iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
-        .now-playing { color: #fff; font-family: 'Poppins'; margin-bottom: 15px; font-size: 1.2rem; display: flex; align-items: center; gap: 10px; }
-
-        /* LIVE SEARCH BAR CSS */
-        .live-search-container { position: relative; width: 100%; max-width: 600px; margin: 0 auto 30px auto; }
-        .live-search-container i { position: absolute; left: 18px; top: 50%; transform: translateY(-50%); color: #94a3b8; font-size: 16px; }
-        .live-search-input { width: 100%; padding: 14px 15px 14px 45px; border-radius: 50px; border: 1px solid #cbd5e1; outline: none; font-family: 'Manrope'; box-shadow: 0 4px 15px rgba(0,0,0,0.05); font-size: 15px; transition: 0.2s; box-sizing: border-box; }
-        .live-search-input:focus { border-color: #2563eb; box-shadow: 0 4px 20px rgba(37,99,235,0.15); }
-
-        /* CONSISTENT CARD STYLES (FROM TESTS.HTML) */
-        .test-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
-        
-        .test-card {
-            background: white;
-            border-radius: 16px;
-            padding: 25px;
-            border: 1px solid #e2e8f0;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
-            display: flex;
-            flex-direction: column;
-            transition: 0.3s;
-        }
-        .test-card:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05); border-color: #bfdbfe; }
-        
-        .test-meta { display: flex; gap: 15px; margin: 10px 0 20px; font-size: 13px; color: #64748b; font-weight: 600; }
-        
-        .start-btn {
-            background: #0f172a;
-            color: white;
-            border: none;
-            padding: 12px;
-            border-radius: 8px;
-            font-weight: 700;
-            cursor: pointer;
-            text-align: center;
-            text-decoration: none;
-            font-family: 'Manrope';
-            transition: 0.2s;
-            display: block;
-            width: 100%;
-            box-sizing: border-box;
-            margin-top: auto;
-        }
-        .start-btn:hover { background: #1e293b; }
-
-        .loader { text-align: center; padding: 50px; color: #94a3b8; font-family: 'Poppins'; }
-    </style>
 </head>
-<body>
+<body class="bg-slate-50 font-['Manrope'] m-0 pt-[100px] flex flex-col min-h-screen text-slate-800">
 
-    <div class="container">
-        <div class="page-header">
-            <h1><i class="fa-brands fa-youtube" style="color: #ef4444;"></i> Video Classes</h1>
-            <p>Master your concepts with high-quality video explanations.</p>
+    <div class="max-w-[1100px] mx-auto px-5 pb-[50px] flex-1 w-full box-border">
+        
+        <div class="mb-[30px] text-center sm:text-left">
+            <h1 class="font-['Poppins'] text-slate-900 m-0 mb-2.5 text-3xl"><i class="fa-brands fa-youtube text-red-500"></i> Video Classes</h1>
+            <p class="text-slate-500 m-0 text-[14px]">Master your concepts with high-quality video explanations.</p>
         </div>
 
-        <div class="player-wrapper" id="playerView">
-            <div class="now-playing"><i class="fa-solid fa-circle-play" style="color:#ff0000;"></i> <span id="playingTitle">Lecture</span></div>
-            <div class="video-box" id="mainVideoBox"></div>
+        <div class="hidden bg-slate-900 p-5 rounded-[20px] mb-10 shadow-2xl transition-all" id="playerView">
+            <div class="text-white font-['Poppins'] mb-[15px] text-lg flex items-center gap-2.5">
+                <i class="fa-solid fa-circle-play text-red-500"></i> <span id="playingTitle">Lecture</span>
+            </div>
+            <div class="relative pb-[56.25%] h-0 rounded-xl overflow-hidden bg-black" id="mainVideoBox">
+                </div>
         </div>
 
-        <div class="live-search-container">
-            <i class="fa-solid fa-magnifying-glass"></i>
-            <input type="text" id="video-search" class="live-search-input" onkeyup="liveSearchVideos()" placeholder="Search by subject, or video title...">
+        <div class="relative w-full max-w-[600px] mx-auto mb-[30px]">
+            <i class="fa-solid fa-magnifying-glass absolute left-[18px] top-1/2 -translate-y-1/2 text-slate-400 text-[16px]"></i>
+            <input type="text" id="video-search" class="w-full p-[14px_15px_14px_45px] rounded-full border border-slate-300 outline-none font-['Manrope'] shadow-[0_4px_15px_rgba(0,0,0,0.05)] text-[15px] transition duration-200 box-border focus:border-blue-600 focus:shadow-[0_4px_20px_rgba(37,99,235,0.15)] bg-white" onkeyup="liveSearchVideos()" placeholder="Search by subject, or video title...">
         </div>
 
-        <div id="contentGrid" class="test-grid">
-            <div class="loader" style="grid-column: 1/-1;"><i class="fa-solid fa-spinner fa-spin fa-2x"></i><br><br>Loading classes...</div>
+        <div id="contentGrid" class="grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-5">
+            <div class="col-span-full text-center p-[50px] text-slate-400 font-['Poppins']">
+                <i class="fa-solid fa-spinner fa-spin fa-2x mb-4"></i><br>Loading classes...
+            </div>
         </div>
     </div>
 
@@ -100,7 +48,6 @@
     <script src="js/master.js"></script>
 
     <script>
-        // db variable already declared error se bachne ke liye videoDb use kiya gaya hai
         const videoDb = firebase.firestore(); 
         const grid = document.getElementById('contentGrid');
 
@@ -111,55 +58,65 @@
         }
 
         async function loadVideos() {
-            // Real-time listener replaces the static .get() fetch
             videoDb.collection("videos").onSnapshot(snap => {
                 let vData = [];
                 snap.forEach(doc => { 
                     let d = doc.data(); d.id = doc.id;
                     if(d.deleteStatus === 'Active' || !d.isDeleted) vData.push(d); 
                 });
-                
-                // Sort dynamically (newest first)
-                vData.sort((a,b) => (b.timestamp?.seconds || 0) - (a.timestamp?.seconds || 0));
 
                 if(vData.length === 0) {
                     grid.innerHTML = `
-                        <div style="grid-column: 1/-1; text-align:center; padding: 60px 20px; background:#fff; border-radius:16px; border:2px dashed #cbd5e1;">
-                            <i class="fa-solid fa-video-slash" style="font-size: 40px; color: #94a3b8; margin-bottom: 15px;"></i>
-                            <h4 style="margin: 0 0 8px; color: #0f172a; font-family: 'Poppins'; font-size: 18px;">No Videos Found</h4>
-                            <p style="margin: 0; color: #64748b; font-size: 14px;">Classes will be published here soon.</p>
+                        <div class="col-span-full text-center p-[60px_20px] bg-white rounded-2xl border-2 border-dashed border-slate-300">
+                            <i class="fa-solid fa-video-slash text-[40px] text-slate-400 mb-[15px]"></i>
+                            <h4 class="m-0 mb-2 text-slate-900 font-['Poppins'] text-[18px]">No Videos Found</h4>
+                            <p class="m-0 text-slate-500 text-[14px]">Classes will be published here soon.</p>
                         </div>`;
                     return;
                 }
 
-                let html = '';
-                vData.forEach(item => {
-                    const url = item.url || item.link; // Check for both schema properties
-                    const ytId = extractYTId(url);
-                    const safeTitle = item.title ? item.title.replace(/'/g, "\\'") : 'Untitled Video';
+                const groupedVideos = vData.reduce((acc, item) => {
                     const subject = item.subject || 'General';
-                    const dateStr = item.timestamp ? new Date(item.timestamp.seconds * 1000).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) : 'Recently Added';
+                    if (!acc[subject]) acc[subject] = [];
+                    acc[subject].push(item);
+                    return acc;
+                }, {});
 
-                    html += `
-                    <div class="test-card video-card">
-                        <span style="background: #e0e7ff; color: #4f46e5; font-size: 10px; font-weight: 800; padding: 4px 8px; border-radius: 4px; align-self: flex-start; text-transform: uppercase;">${subject}</span>
-                        
-                        <div style="margin-top: 15px; border-radius: 8px; overflow: hidden; position: relative; padding-bottom: 56.25%; background: #000;">
-                            <img src="https://img.youtube.com/vi/${ytId}/hqdefault.jpg" style="position: absolute; width: 100%; height: 100%; object-fit: cover; opacity: 0.9; transition: 0.3s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.9'">
-                        </div>
-                        
-                        <h3 style="margin: 15px 0 5px; font-family: 'Poppins'; color: #0f172a; font-size: 16px; line-height: 1.4;">${item.title}</h3>
-                        
-                        <div class="test-meta">
-                            <span><i class="fa-regular fa-calendar"></i> ${dateStr}</span>
-                        </div>
-                        <button onclick="play('${ytId}', '${safeTitle}', '${item.id}')" class="start-btn"><i class="fa-solid fa-play"></i> Watch Now</button>
-                    </div>`;
-                });
+                let html = '';
+                for (const [subject, videoArray] of Object.entries(groupedVideos)) {
+                    videoArray.sort((a,b) => (b.timestamp?.seconds || 0) - (a.timestamp?.seconds || 0));
+                    html += `<div class="col-span-full mt-8 mb-2"><h2 class="font-['Poppins'] text-slate-900 text-xl border-b-2 border-slate-200 pb-2.5 m-0">${subject}</h2></div>`;
+                    videoArray.forEach(item => {
+                        const url = item.url || item.link; 
+                        const ytId = extractYTId(url);
+                        const safeTitle = item.title ? item.title.replace(/'/g, "\\'") : 'Untitled Video';
+                        const dateStr = item.timestamp ? new Date(item.timestamp.seconds * 1000).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) : 'Recently Added';
+
+                        html += `
+                        <div class="video-card bg-white rounded-2xl p-6 border border-slate-200 shadow-[0_4px_15px_rgba(0,0,0,0.02)] flex flex-col transition duration-300 hover:-translate-y-1 hover:shadow-lg hover:border-blue-300">
+                            <span class="bg-indigo-50 text-indigo-600 text-[10px] font-extrabold px-2.5 py-1 rounded self-start uppercase tracking-wider">${subject}</span>
+                            
+                            <div class="mt-[15px] rounded-xl overflow-hidden relative pb-[56.25%] bg-black group">
+                                <img src="https://img.youtube.com/vi/${ytId}/hqdefault.jpg" class="absolute w-full h-full object-cover opacity-90 transition duration-300 group-hover:opacity-100 group-hover:scale-105" onerror="this.src='logo.png'">
+                                <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+                                    <i class="fa-solid fa-circle-play text-white/80 text-4xl group-hover:text-red-500 transition duration-300 shadow-sm drop-shadow-md"></i>
+                                </div>
+                            </div>
+                            
+                            <h3 class="m-0 mt-[15px] mb-1.5 font-['Poppins'] text-slate-900 text-[16px] leading-snug line-clamp-2">${item.title}</h3>
+                            
+                            <div class="flex gap-[15px] my-2.5 mb-5 text-[13px] text-slate-500 font-semibold">
+                                <span><i class="fa-regular fa-calendar"></i> ${dateStr}</span>
+                            </div>
+                            
+                            <button onclick="play('${ytId}', '${safeTitle}', '${item.id}')" class="mt-auto bg-slate-900 hover:bg-slate-800 text-white border-none p-3 rounded-lg font-bold cursor-pointer text-center no-underline font-['Manrope'] transition duration-200 block w-full"><i class="fa-solid fa-play"></i> Watch Now</button>
+                        </div>`;
+                    });
+                }
                 grid.innerHTML = html;
             }, e => {
                 console.error(e); 
-                grid.innerHTML = `<div style="color:red; grid-column:1/-1; text-align:center; padding: 20px;">Error loading videos. Retrying...</div>`; 
+                grid.innerHTML = `<div class="col-span-full text-center p-5 text-red-500 font-bold bg-red-50 rounded-xl border border-red-200">Error loading videos. Retrying...</div>`; 
             });
         }
 
@@ -168,7 +125,7 @@
             const videoBox = document.getElementById('mainVideoBox');
             document.getElementById('playingTitle').innerText = title;
             view.style.display = 'block';
-            videoBox.innerHTML = `<iframe src="https://www.youtube.com/embed/${id}?autoplay=1&rel=0&playsinline=1&modestbranding=1" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
+            videoBox.innerHTML = `<iframe src="https://www.youtube.com/embed/${id}?autoplay=1&rel=0&playsinline=1&modestbranding=1" class="absolute top-0 left-0 w-full h-full border-none rounded-xl" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
             view.scrollIntoView({ behavior: 'smooth', block: 'center' });
             
             if(docId) videoDb.collection("videos").doc(docId).update({ views: firebase.firestore.FieldValue.increment(1) }).catch(()=>{});
@@ -189,7 +146,6 @@
             });
         }
 
-        // Scripts properly load hone ke baad call hoga
         window.addEventListener('DOMContentLoaded', () => {
             loadVideos();
         });
