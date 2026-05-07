@@ -125,7 +125,15 @@
             const videoBox = document.getElementById('mainVideoBox');
             document.getElementById('playingTitle').innerText = title;
             view.style.display = 'block';
-            videoBox.innerHTML = `<iframe src="https://www.youtube.com/embed/${id}?autoplay=1&rel=0&playsinline=1&modestbranding=1" class="absolute top-0 left-0 w-full h-full border-none rounded-xl" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
+            
+            const origin = window.location.origin;
+            videoBox.innerHTML = `
+                <iframe 
+                    src="https://www.youtube.com/embed/${id}?autoplay=1&rel=0&playsinline=1&modestbranding=1&enablejsapi=1&origin=${encodeURIComponent(origin)}" 
+                    class="absolute top-0 left-0 w-full h-full border-none rounded-xl" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                    allowfullscreen>
+                </iframe>`;
             view.scrollIntoView({ behavior: 'smooth', block: 'center' });
             
             if(docId) videoDb.collection("videos").doc(docId).update({ views: firebase.firestore.FieldValue.increment(1) }).catch(()=>{});

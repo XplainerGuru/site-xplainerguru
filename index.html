@@ -204,10 +204,10 @@
             view.classList.remove('hidden');
             view.style.display = 'block';
             
-            // Iframe parameters are configured to prevent Error 153 (Origin Mismatch)
+            const origin = window.location.origin;
             videoBox.innerHTML = `
                 <iframe 
-                    src="https://www.youtube.com/embed/${id}?autoplay=1&rel=0&modestbranding=1" 
+                    src="https://www.youtube.com/embed/${id}?autoplay=1&rel=0&modestbranding=1&enablejsapi=1&origin=${encodeURIComponent(origin)}" 
                     class="absolute top-0 left-0 w-full h-full border-none rounded-xl" 
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
                     allowfullscreen>
