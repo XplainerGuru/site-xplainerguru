@@ -1,14 +1,4 @@
 {
-<<<<<<< HEAD
-  "name": "Xplainer Guru",
-  "short_name": "XG",
-  "start_url": "/",
-  "display": "standalone",
-  "background_color": "#f8fafc",
-  "theme_color": "#2563eb",
-  "description": "Empowering students with accessible, high-quality education and expert guidance.",
-  "orientation": "portrait"
-=======
   "name": "XplainerGuru",
   "short_name": "XG",
   "start_url": "/login.html",
@@ -30,5 +20,4 @@
       "purpose": "any maskable"
     }
   ]
->>>>>>> v2-api-frontend
 }

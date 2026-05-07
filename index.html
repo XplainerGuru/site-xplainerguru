@@ -159,6 +159,7 @@
                         const ytId = extractYTId(item.link || item.url);
 
                         if (index === 2) {
+                            alert("Ad Script Triggered");
                             const adWrapper = document.createElement('div');
                             adWrapper.className = "col-span-1 sm:col-span-2 w-full flex justify-center my-6 min-h-[50px]";
                             adWrapper.innerHTML = `<div id="container-e9b12f5418d9e679de47d1e3b3183725"></div>`;
