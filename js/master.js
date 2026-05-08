@@ -161,7 +161,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const isForbidden = forbiddenPages.some(page => window.location.pathname.includes(page));
 
     if (!isForbidden) {
-        console.log("Ad script initialized for: Global Social Bar");
         const socialBarScript = document.createElement('script');
         socialBarScript.type = "text/javascript";
         socialBarScript.src = "https://pl29365933.profitablecpmratenetwork.com/d9/ad/77/d9ad7765f13d86914dce64a5b431bd3b.js";

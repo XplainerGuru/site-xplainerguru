@@ -88,9 +88,9 @@
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
     
-    <script src="js/firebase-init.js"></script>
-    <script src="js/auth.js"></script>
-    <script src="js/master.js"></script>
+    <script src="/js/firebase-init.js?v=1.0.5"></script>
+    <script src="/js/auth.js?v=1.0.5"></script>
+    <script src="/js/master.js?v=1.0.5"></script>
 
     <script>
         const track = document.getElementById('sliderTrack');
@@ -159,7 +159,6 @@
                         const ytId = extractYTId(item.link || item.url);
 
                         if (index === 2) {
-                            alert("Ad Script Triggered");
                             const adWrapper = document.createElement('div');
                             adWrapper.className = "col-span-1 sm:col-span-2 w-full flex justify-center my-6 min-h-[50px]";
                             adWrapper.innerHTML = `<div id="container-e9b12f5418d9e679de47d1e3b3183725"></div>`;
@@ -186,6 +185,56 @@
                     });
                 }
 
+                // 🟢 Process and Display Latest Notes
+                let nData = [];
+                nSnap.forEach(doc => { 
+                    let d = doc.data();
+                    if(d.deleteStatus === 'Active' || !d.isDeleted) nData.push({...d, id: doc.id}); 
+                });
+                nData.sort((a,b) => (b.timestamp?.seconds || 0) - (a.timestamp?.seconds || 0));
+
+                nGrid.innerHTML = '';
+                if(nData.length === 0) {
+                    nGrid.innerHTML = `<div class="col-span-full text-center py-5 text-slate-400">No notes published.</div>`;
+                } else {
+                    nData.slice(0, 4).forEach(item => {
+                        const card = document.createElement('div');
+                        card.className = 'bg-white rounded-xl p-4 border border-slate-200 cursor-pointer transition duration-300 hover:-translate-y-1 hover:shadow-lg hover:border-emerald-500';
+                        card.onclick = () => window.location.href = 'notes.html';
+                        card.innerHTML = `
+                            <span class="bg-emerald-50 text-emerald-500 text-[10px] font-extrabold px-2 py-1 rounded-[4px] uppercase tracking-wider">${item.subject || 'Notes'}</span>
+                            <h4 class="m-0 mt-2 text-[12px] sm:text-[13px] font-['Poppins'] text-slate-900 leading-[1.4] line-clamp-2">${item.title}</h4>
+                        `;
+                        nGrid.appendChild(card);
+                    });
+                }
+
+                // 🟢 Process and Display Latest Articles
+                let aData = [];
+                aSnap.forEach(doc => { 
+                    let d = doc.data();
+                    if(d.deleteStatus === 'Active' || !d.isDeleted) aData.push({...d, id: doc.id}); 
+                });
+                aData.sort((a,b) => (b.timestamp?.seconds || 0) - (a.timestamp?.seconds || 0));
+
+                aGrid.innerHTML = '';
+                if(aData.length === 0) {
+                    aGrid.innerHTML = `<div class="col-span-full text-center py-5 text-slate-400">No articles published.</div>`;
+                } else {
+                    aData.slice(0, 4).forEach(item => {
+                        const card = document.createElement('div');
+                        card.className = 'bg-white rounded-xl p-4 border border-slate-200 cursor-pointer transition duration-300 hover:-translate-y-1 hover:shadow-lg hover:border-blue-600';
+                        card.onclick = () => window.location.href = 'read.html?id=' + item.id;
+                        card.innerHTML = `
+                            <h4 class="m-0 text-[12px] sm:text-[13px] font-['Poppins'] text-slate-900 leading-[1.4] line-clamp-2">${item.title}</h4>
+                            <div class="mt-2 flex justify-between items-center">
+                                <span class="text-[11px] text-blue-600 font-bold">${item.authorName || 'Xplainer Guru'}</span>
+                            </div>
+                        `;
+                        aGrid.appendChild(card);
+                    });
+                }
+
             } catch(e) {
                 console.error("Fetch Error:", e);
             }
@@ -193,6 +242,11 @@
 
         function update() { track.style.transform = `translateX(-${idx * 100}%)`; }
         function move(s) { if(latestVideos.length > 0) { idx = (idx + s + latestVideos.length) % latestVideos.length; update(); } }
+
+        // Navigation helper for Notes
+        function checkAndRouteToNotes() {
+            window.location.href = 'notes.html';
+        }
 
         function play(id, title, docId) {
             if (!id || id === "") { alert("Video ID missing or invalid!"); return; }

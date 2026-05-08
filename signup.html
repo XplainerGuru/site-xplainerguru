@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create Account / Apply | Xplainer Guru</title>
+    <title>Create Account | Xplainer Guru</title>
     <link rel="icon" type="image/png" href="logo.png">
+    
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=Poppins:wght@700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
@@ -19,9 +20,9 @@
         </a>
 
         <div class="text-center mb-[25px]">
-            <img src="logo.png" alt="Xplainer Guru" class="w-[55px] h-[55px] rounded-full object-cover mb-[10px] shadow-[0_4px_10px_rgba(0,0,0,0.1)]" onerror="this.src='https://via.placeholder.com/55?text=XG'">
+            <img src="logo.png" alt="Xplainer Guru" class="w-[55px] h-[55px] rounded-full object-cover mb-[10px] shadow-[0_4px_10px_rgba(0,0,0,0.1)] mx-auto" onerror="this.src='https://via.placeholder.com/55?text=XG'">
             <h2 class="font-['Poppins'] text-[22px] text-slate-900 m-0">Create Account</h2>
-            <p class="text-slate-500 text-[13px] mt-[5px]">Join as a Student, Parent, or Apply for Team</p>
+            <p class="text-slate-500 text-[13px] mt-[5px]">Join as a Student, Parent, or Student Writer</p>
         </div>
 
         <div id="signup-error" class="hidden text-red-500 text-[13px] font-bold mb-[15px] bg-red-50 p-3 rounded-lg border border-red-200"></div>
@@ -47,9 +48,6 @@
                     <option value="student" selected>Student / Learner</option>
                     <option value="parent">Parent</option>
                     <option value="student_writer">Student Article Writer</option>
-                    <option value="writer">Content Writer (Apply for Team)</option>
-                    <option value="mentor">Academic Mentor (Apply for Team)</option>
-                    <option value="support">Tech Support (Apply for Team)</option>
                 </select>
             </div>
 
@@ -63,20 +61,10 @@
                 <input type="email" id="su-email" class="w-full p-[14px_15px] border border-slate-200 rounded-[10px] font-['Manrope'] text-[14px] box-border bg-slate-50 outline-none transition duration-300 focus:border-blue-600 focus:bg-white focus:shadow-[0_0_0_3px_rgba(37,99,235,0.1)]" placeholder="Permanent Email" required>
             </div>
 
-            <div class="mb-[18px] text-left relative" id="phoneGroup" style="display:none;">
-                <label class="block text-[11px] font-extrabold text-slate-400 uppercase mb-1.5 tracking-wide">WhatsApp Number <span class="text-red-500">*</span></label>
-                <input type="tel" id="su-phone" class="w-full p-[14px_15px] border border-slate-200 rounded-[10px] font-['Manrope'] text-[14px] box-border bg-slate-50 outline-none transition duration-300 focus:border-blue-600 focus:bg-white focus:shadow-[0_0_0_3px_rgba(37,99,235,0.1)]" placeholder="Mandatory 10-digit mobile number">
-            </div>
-
             <div class="mb-[18px] text-left relative" id="childIdGroup" style="display:none;">
                 <label class="block text-[11px] font-extrabold text-green-600 uppercase mb-1.5 tracking-wide">Verify Child's UID <span class="text-red-500">*</span></label>
                 <input type="text" id="su-childId" class="w-full p-[14px_15px] border border-green-600 rounded-[10px] font-['Manrope'] text-[14px] box-border bg-slate-50 outline-none transition duration-300 focus:border-green-600 focus:bg-white focus:shadow-[0_0_0_3px_rgba(22,163,74,0.1)]" placeholder="e.g., XG-STU-123456">
                 <p class="text-[10px] text-slate-500 m-0 mt-1">Ask your child to copy their secure system UID from their Profile.</p>
-            </div>
-
-            <div class="mb-[18px] text-left relative" id="reasonGroup" style="display:none;">
-                <label class="block text-[11px] font-extrabold text-violet-500 uppercase mb-1.5 tracking-wide">Experience / Reason to Apply <span class="text-red-500">*</span></label>
-                <textarea id="su-reason" class="w-full p-[14px_15px] border border-slate-200 rounded-[10px] font-['Manrope'] text-[13px] box-border bg-slate-50 outline-none transition duration-300 focus:border-blue-600 focus:bg-white focus:shadow-[0_0_0_3px_rgba(37,99,235,0.1)] min-h-[90px] resize-y" placeholder="Why do you want to join this role?"></textarea>
             </div>
 
             <div class="mb-[18px] text-left relative">
@@ -98,34 +86,33 @@
         <div class="text-center mt-[25px] text-[14px] text-slate-500 font-semibold">
             Already have an account? <a href="login.html" class="text-blue-600 font-extrabold no-underline hover:underline">Sign In here</a>
         </div>
+        <div class="mt-2.5 text-center">
+            <a href="careers.html" class="text-violet-500 text-[12px] no-underline font-bold hover:underline"><i class="fa-solid fa-briefcase"></i> Hiring Core Team Members? Apply Here</a>
+        </div>
     </div>
 
     <div class="hidden fixed inset-0 bg-slate-900/70 justify-center items-center z-[1000] p-5 box-border backdrop-blur-sm" id="setupModal">
         <div class="bg-white p-[30px] rounded-[16px] max-w-[500px] w-full relative max-h-[90vh] overflow-y-auto text-left shadow-2xl">
             <button class="absolute top-[15px] right-[15px] bg-transparent border-none text-[20px] text-slate-500 cursor-pointer transition duration-200 hover:text-red-500" onclick="document.getElementById('setupModal').classList.remove('flex'); document.getElementById('setupModal').classList.add('hidden')"><i class="fa-solid fa-xmark"></i></button>
             <h3 class="font-['Poppins'] text-slate-900 m-0 mb-2.5 text-xl"><i class="fa-solid fa-clipboard-check text-violet-500"></i> Authentication Guide</h3>
-            <p class="text-slate-500 text-[13px] mb-5">Follow these instructions to set up your account or apply for roles.</p>
+            <p class="text-slate-500 text-[13px] mb-5">Follow these instructions to set up your regular account.</p>
             
             <div class="bg-slate-50 border border-slate-300 p-3 rounded-lg mb-[15px]">
-                <strong class="text-slate-900 text-[12px]"><i class="fa-solid fa-user-graduate"></i> FOR STUDENTS:</strong>
+                <strong class="text-slate-900 text-[12px]"><i class="fa-solid fa-user-graduate"></i> FOR STUDENTS / STUDENT WRITERS:</strong>
                 <p class="text-[12px] text-slate-600 m-0 mt-1.5 leading-relaxed">You can instantly log in using <b>Continue with Google</b>. Alternatively, fill in your details below. Your email must be verified before you can log in.</p>
-            </div>
-
-            <div class="bg-indigo-50 border border-green-300 p-3 rounded-lg mb-[15px]">
-                <strong class="text-green-800 text-[12px]"><i class="fa-solid fa-pen-nib"></i> FOR STUDENT ARTICLE WRITERS & TEAM:</strong>
-                <ul class="m-0 mt-1.5 pl-5 text-[12px] text-green-800 font-semibold leading-relaxed list-disc">
-                    <li>Select your specific role from the dropdown.</li>
-                    <li>WhatsApp number and your Experience/Reason are <b>mandatory</b>.</li>
-                    <li>Your account will be kept "Pending" until Admin approves it.</li>
-                </ul>
             </div>
 
             <div class="bg-green-50 border border-green-300 p-3 rounded-lg mb-[15px]">
                 <strong class="text-green-800 text-[12px]"><i class="fa-solid fa-shield-halved"></i> FOR PARENTS / GUARDIANS:</strong>
                 <ul class="m-0 mt-1.5 pl-5 text-[12px] text-green-800 font-semibold leading-relaxed list-disc">
-                    <li>Select "Parent" on the Sign Up page.</li>
+                    <li>Select "Parent" from the dropdown menu.</li>
                     <li>You must provide your Child's <b>System Student ID</b> (e.g., XG-STU-123456).</li>
                 </ul>
+            </div>
+
+            <div class="bg-indigo-50 border border-violet-300 p-3 rounded-lg mb-[15px]">
+                <strong class="text-violet-800 text-[12px]"><i class="fa-solid fa-users-gear"></i> FOR CORE TEAM MEMBERS:</strong>
+                <p class="text-[12px] text-violet-700 m-0 mt-1.5 leading-relaxed">Mentors, Writers, and Tech Support must apply through the <a href="careers.html" class="font-bold underline text-violet-800">Careers Page</a>. Do not sign up here.</p>
             </div>
 
             <button class="bg-violet-500 hover:bg-violet-600 text-white border-none p-4 w-full rounded-lg font-extrabold font-['Manrope'] cursor-pointer transition duration-300 text-[15px] mt-[15px]" onclick="document.getElementById('setupModal').classList.remove('flex'); document.getElementById('setupModal').classList.add('hidden')">Close Instructions</button>
@@ -156,27 +143,21 @@
         function togglePassword(inputId, icon) {
             const input = document.getElementById(inputId);
             input.type = input.type === "password" ? "text" : "password";
-            icon.classList.toggle("fa-eye-slash"); icon.classList.toggle("fa-eye");
+            icon.classList.toggle("fa-eye-slash"); 
+            icon.classList.toggle("fa-eye");
         }
 
-        // DYNAMIC FIELD LOGIC
+        // Logic for Parent Field
         function handleRoleChange() {
             const role = document.getElementById('su-role').value;
-            const phoneGroup = document.getElementById('phoneGroup');
-            const reasonGroup = document.getElementById('reasonGroup');
             const childIdGroup = document.getElementById('childIdGroup');
             
-            // Default: hide all dynamic fields
-            phoneGroup.style.display = 'none'; document.getElementById('su-phone').required = false;
-            reasonGroup.style.display = 'none'; document.getElementById('su-reason').required = false;
-            childIdGroup.style.display = 'none'; document.getElementById('su-childId').required = false;
-
             if (role === 'parent') {
-                childIdGroup.style.display = 'block'; document.getElementById('su-childId').required = true;
-            } else if (role !== 'student') {
-                // For Team Members & Student Writer
-                phoneGroup.style.display = 'block'; document.getElementById('su-phone').required = true;
-                reasonGroup.style.display = 'block'; document.getElementById('su-reason').required = true;
+                childIdGroup.style.display = 'block'; 
+                document.getElementById('su-childId').required = true;
+            } else {
+                childIdGroup.style.display = 'none'; 
+                document.getElementById('su-childId').required = false;
             }
         }
 
@@ -190,55 +171,64 @@
             errorBox.classList.remove('block');
 
             const signupData = {
-                role: document.getElementById('su-role').value,
+                role: document.getElementById('su-role').value, // Will only be student, parent, or student_writer
                 name: document.getElementById('su-name').value.trim(),
                 email: document.getElementById('su-email').value.toLowerCase().trim(),
                 pass: document.getElementById('su-password').value,
-                phone: document.getElementById('su-phone').value.trim(),
-                reason: document.getElementById('su-reason').value.trim(),
-                childId: document.getElementById('su-childId').value.trim().toUpperCase(),
+                childId: document.getElementById('su-childId') ? document.getElementById('su-childId').value.trim().toUpperCase() : '',
                 legalAgreementAccepted: document.getElementById('legalAgreement').checked
             };
-
-            // Basic checks
-            if (signupData.phone && !/^[6-9]\d{9}$/.test(signupData.phone)) {
-                errorBox.innerHTML = "<i class='fa-solid fa-triangle-exclamation'></i> Invalid 10-digit Indian phone number!";
-                errorBox.classList.remove('hidden'); errorBox.classList.add('block'); return;
-            }
-            if (signupData.reason && signupData.reason.length < 10) {
-                errorBox.innerHTML = "<i class='fa-solid fa-triangle-exclamation'></i> Please provide a proper reason/experience.";
-                errorBox.classList.remove('hidden'); errorBox.classList.add('block'); return;
-            }
 
             btn.disabled = true;
             btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Processing...`;
 
             if (window.authManager) {
                 window.authManager.processSignup(signupData, 
-                    (user, email, status) => {
-                        const isTeam = ['mentor', 'writer', 'support'].includes(signupData.role);
-                        const msg = isTeam 
-                            ? `Application Submitted! Your account is under review.`
-                            : `Account created successfully! Please verify your email before logging in.`;
+                    (result) => {
+                        // Success View
+                        const { email, waLinks } = result;
+                        let waHtml = '';
                         
+                        waLinks.forEach(link => {
+                            const isGroup = link.includes('chat.whatsapp.com');
+                            const label = isGroup ? "Join Scribe Team Group" : "Follow Xplainer Guru Channel";
+                            const icon = isGroup ? "fa-users" : "fa-bullhorn";
+                            
+                            waHtml += `
+                                <a href="${link}" target="_blank" class="flex items-center justify-center gap-2 w-full p-3 mb-2 bg-[#25d366] text-white rounded-lg no-underline font-bold transition hover:bg-[#128c7e]">
+                                    <i class="fa-brands fa-whatsapp"></i> <i class="fa-solid ${icon} text-[10px]"></i> ${label}
+                                </a>
+                            `;
+                        });
+
                         document.getElementById('main-auth-box').innerHTML = `
                             <div class="text-center">
                                 <i class="fa-solid fa-envelope-circle-check text-[50px] text-blue-600 mb-[15px]"></i>
                                 <h2 class="font-['Poppins'] text-slate-900 m-0 mb-2.5 text-[22px]">Check Your Email</h2>
-                                <p class="text-[14px] text-slate-600 leading-relaxed mb-[15px]">${msg} A verification link has been sent to <b class="text-slate-900">${email}</b>.</p>
-                                <a href="login.html" class="inline-block mt-2.5 px-5 py-2.5 bg-blue-600 text-white rounded-lg no-underline font-bold hover:bg-blue-700 transition">Go to Login</a>
+                                <p class="text-[14px] text-slate-600 leading-relaxed mb-[15px]">Account created successfully! Please verify your email before logging in. A verification link has been sent to <b class="text-slate-900">${email}</b>.</p>
+                                
+                                <div class="my-5 border-t border-b border-slate-100 py-4">
+                                    <p class="text-[12px] font-bold text-slate-400 uppercase tracking-widest mb-3">Next Steps: Join our Community</p>
+                                    ${waHtml}
+                                </div>
+
+                                <a href="login.html" class="inline-block px-5 py-2.5 text-blue-600 border border-blue-600 rounded-lg no-underline font-bold hover:bg-blue-50 transition">Go to Login</a>
                             </div>
                         `;
                     },
                     (errorMsg) => {
-                        btn.disabled = false; btn.innerHTML = originalBtnText;
+                        // Error View
+                        btn.disabled = false; 
+                        btn.innerHTML = originalBtnText;
                         errorBox.innerHTML = `<i class='fa-solid fa-triangle-exclamation'></i> ${errorMsg}`;
-                        errorBox.classList.remove('hidden'); errorBox.classList.add('block');
+                        errorBox.classList.remove('hidden'); 
+                        errorBox.classList.add('block');
                     }
                 );
             } else {
-                alert("Auth module failed to load. Please refresh.");
-                btn.disabled = false; btn.innerHTML = originalBtnText;
+                alert("Auth module failed to load. Please check your internet connection and refresh.");
+                btn.disabled = false; 
+                btn.innerHTML = originalBtnText;
             }
         });
     </script>

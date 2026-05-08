@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apply for Core Team | Xplainer Guru</title>
+    <link rel="icon" type="image/png" href="logo.png">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=Poppins:wght@700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="bg-slate-50 font-['Manrope'] text-slate-800 m-0">
+
+    <div class="bg-white max-w-[500px] w-full my-10 mx-auto p-10 rounded-[20px] shadow-[0_10px_40px_rgba(139,92,246,0.05)] border border-slate-100 relative box-border" id="main-auth-box">
+
+        <div class="text-center mb-[25px]">
+            <div class="w-[60px] h-[60px] bg-violet-100 text-violet-600 rounded-2xl flex items-center justify-center text-[28px] mx-auto mb-[15px] shadow-sm">
+                <i class="fa-solid fa-briefcase"></i>
+            </div>
+            <h2 class="font-['Poppins'] text-[24px] text-slate-900 m-0">Join Our Core Team</h2>
+            <p class="text-slate-500 text-[13px] mt-[5px]">Apply as a Content Writer, Mentor, or Tech Support.</p>
+        </div>
+
+        <div id="signup-error" class="hidden text-red-500 text-[13px] font-bold mb-[15px] bg-red-50 p-3 rounded-lg border border-red-200"></div>
+
+        <form id="applyForm">
+            
+            <div class="mb-[18px] text-left relative">
+                <label class="block text-[11px] font-extrabold text-slate-500 uppercase mb-1.5 tracking-wide">Role Applying For <span class="text-red-500">*</span></label>
+                <select id="app-role" class="w-full p-[14px_15px] border border-slate-200 rounded-[10px] font-['Manrope'] text-[14px] box-border bg-slate-50 outline-none transition duration-300 focus:border-violet-500 focus:bg-white focus:shadow-[0_0_0_3px_rgba(139,92,246,0.1)] cursor-pointer appearance-none bg-no-repeat bg-[right_15px_center]" style="background-image: url('data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'12\' height=\'12\' fill=\'%2364748b\' viewBox=\'0 0 16 16\'%3E%3Cpath d=\'M8 11.5l-5-5h10l-5 5z\'/%3E%3C/svg%3E');" required>
+                    <option value="" disabled selected>Select a Core Team Role</option>
+                    <option value="writer">Content Writer</option>
+                    <option value="mentor">Academic Mentor</option>
+                    <option value="support">Tech Support</option>
+                </select>
+            </div>
+
+            <div class="mb-[18px] text-left relative">
+                <label class="block text-[11px] font-extrabold text-slate-500 uppercase mb-1.5 tracking-wide">Full Name <span class="text-red-500">*</span></label>
+                <input type="text" id="app-name" class="w-full p-[14px_15px] border border-slate-200 rounded-[10px] font-['Manrope'] text-[14px] box-border bg-slate-50 outline-none transition duration-300 focus:border-violet-500 focus:bg-white focus:shadow-[0_0_0_3px_rgba(139,92,246,0.1)]" placeholder="Enter your full name" required>
+            </div>
+            
+            <div class="mb-[18px] text-left relative">
+                <label class="block text-[11px] font-extrabold text-slate-500 uppercase mb-1.5 tracking-wide">Professional Email <span class="text-red-500">*</span></label>
+                <input type="email" id="app-email" class="w-full p-[14px_15px] border border-slate-200 rounded-[10px] font-['Manrope'] text-[14px] box-border bg-slate-50 outline-none transition duration-300 focus:border-violet-500 focus:bg-white focus:shadow-[0_0_0_3px_rgba(139,92,246,0.1)]" placeholder="your.name@gmail.com" required>
+            </div>
+
+            <div class="mb-[18px] text-left relative">
+                <label class="block text-[11px] font-extrabold text-slate-500 uppercase mb-1.5 tracking-wide">WhatsApp Number <span class="text-red-500">*</span></label>
+                <input type="tel" id="app-phone" class="w-full p-[14px_15px] border border-slate-200 rounded-[10px] font-['Manrope'] text-[14px] box-border bg-slate-50 outline-none transition duration-300 focus:border-violet-500 focus:bg-white focus:shadow-[0_0_0_3px_rgba(139,92,246,0.1)]" placeholder="Mandatory 10-digit mobile number" required>
+            </div>
+
+            <div class="mb-[18px] text-left relative">
+                <label class="block text-[11px] font-extrabold text-slate-500 uppercase mb-1.5 tracking-wide">Profile Photo URL <span class="text-slate-400 font-medium normal-case">(Optional)</span></label>
+                <input type="url" id="app-pic" class="w-full p-[14px_15px] border border-slate-200 rounded-[10px] font-['Manrope'] text-[13px] box-border bg-slate-50 outline-none transition duration-300 focus:border-violet-500 focus:bg-white focus:shadow-[0_0_0_3px_rgba(139,92,246,0.1)]" placeholder="Paste a link to your display picture (Drive, LinkedIn, etc.)">
+            </div>
+
+            <div class="mb-[18px] text-left relative">
+                <label class="block text-[11px] font-extrabold text-slate-500 uppercase mb-1.5 tracking-wide">Experience / Reason to Apply <span class="text-red-500">*</span></label>
+                <textarea id="app-reason" class="w-full p-[14px_15px] border border-slate-200 rounded-[10px] font-['Manrope'] text-[13px] box-border bg-slate-50 outline-none transition duration-300 focus:border-violet-500 focus:bg-white focus:shadow-[0_0_0_3px_rgba(139,92,246,0.1)] min-h-[90px] resize-y" placeholder="Briefly describe your experience and why you are the best fit for this role..." required></textarea>
+            </div>
+
+            <div class="flex items-start gap-2.5 text-left mb-5">
+                <input type="checkbox" id="legalAgreement" class="mt-[3px] cursor-pointer" required>
+                <label for="legalAgreement" class="text-[12px] text-slate-500 leading-relaxed">
+                    I confirm that the information provided is accurate and I agree to the <span class="text-violet-500 font-extrabold cursor-pointer hover:underline">Terms of Application</span>.
+                </label>
+            </div>
+
+            <button type="submit" id="submitBtn" class="w-full p-[16px] bg-violet-600 text-white border-none rounded-[10px] font-['Manrope'] font-extrabold text-[15px] cursor-pointer transition duration-300 shadow-[0_4px_15px_rgba(139,92,246,0.2)] hover:bg-violet-700 hover:-translate-y-0.5 disabled:bg-slate-400 disabled:cursor-not-allowed disabled:transform-none">Submit Application</button>
+        </form>
+
+        <div class="text-center mt-[25px] text-[14px] text-slate-500 font-semibold">
+            Already an approved member? <a href="login.html" class="text-violet-600 font-extrabold no-underline hover:underline">Log in here</a>
+        </div>
+        <div class="text-center mt-2.5">
+            <a href="signup.html" class="text-blue-500 text-[12px] no-underline font-bold hover:underline"><i class="fa-solid fa-user-graduate"></i> Student or Parent? Sign Up Here</a>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
+    <script src="js/firebase-init.js"></script>
+
+    <script>
+        // Form Submission Logic
+        document.getElementById('applyForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('submitBtn');
+            const errorBox = document.getElementById('signup-error');
+            const originalBtnText = btn.innerHTML;
+            
+            errorBox.classList.add('hidden');
+            errorBox.classList.remove('block');
+
+            const role = document.getElementById('app-role').value;
+            if (!role) {
+                errorBox.innerHTML = "<i class='fa-solid fa-triangle-exclamation'></i> Please select a Core Team role!";
+                errorBox.classList.remove('hidden'); errorBox.classList.add('block'); 
+                return;
+            }
+
+            // Create Application Data Object
+            const applicationData = {
+                role: role,
+                name: document.getElementById('app-name').value.trim(),
+                email: document.getElementById('app-email').value.toLowerCase().trim(),
+                phone: document.getElementById('app-phone').value.trim(),
+                pic: document.getElementById('app-pic').value.trim(), 
+                reason: document.getElementById('app-reason').value.trim(),
+                status: "pending", // Application status
+                submittedAt: firebase.firestore.FieldValue.serverTimestamp()
+            };
+
+            // Validations
+            if (!/^[6-9]\d{9}$/.test(applicationData.phone)) {
+                errorBox.innerHTML = "<i class='fa-solid fa-triangle-exclamation'></i> Please enter a valid 10-digit Indian mobile number!";
+                errorBox.classList.remove('hidden'); errorBox.classList.add('block'); 
+                return;
+            }
+            if (applicationData.reason.length < 15) {
+                errorBox.innerHTML = "<i class='fa-solid fa-triangle-exclamation'></i> Please provide a more detailed reason or experience.";
+                errorBox.classList.remove('hidden'); errorBox.classList.add('block'); 
+                return;
+            }
+
+            btn.disabled = true;
+            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Submitting...`;
+
+            try {
+                // Ensure Firestore is accessible from your init script
+                const firestore = typeof firebase !== 'undefined' ? firebase.firestore() : null;
+                
+                if (!firestore) {
+                    throw new Error("Database not connected. Please check your internet connection.");
+                }
+
+                // Add to the job_applications collection
+                await firestore.collection('job_applications').add(applicationData);
+
+                // Success State UI - With WhatsApp Channel Link
+                // UPDATE THIS LINK to your actual WhatsApp Channel URL
+                const waChannelLink = "https://whatsapp.com/channel/your_channel_invite_link"; 
+
+                document.getElementById('main-auth-box').innerHTML = `
+                    <div class="text-center py-5">
+                        <i class="fa-solid fa-clipboard-check text-[55px] text-violet-500 mb-[15px]"></i>
+                        <h2 class="font-['Poppins'] text-slate-900 m-0 mb-3 text-[24px]">Application Received!</h2>
+                        
+                        <p class="text-[14px] text-slate-600 leading-relaxed mb-[15px]">
+                            Thank you for applying to the Xplainer Guru Core Team. Your profile is currently under review by our founders.
+                        </p>
+                        <p class="text-[14px] text-slate-600 leading-relaxed mb-[25px]">
+                            If your application is approved, we will contact you directly via the details provided.
+                        </p>
+                        
+                        <div class="bg-green-50 border border-green-200 rounded-[12px] p-4 mb-[25px]">
+                            <p class="text-[13px] text-green-800 font-semibold m-0 mb-2">Stay updated on platform news:</p>
+                            <a href="${waChannelLink}" target="_blank" class="inline-flex items-center gap-2 bg-[#25D366] text-white px-4 py-2.5 rounded-lg no-underline font-bold text-[14px] hover:bg-[#20b858] transition shadow-sm">
+                                <i class="fa-brands fa-whatsapp text-[18px]"></i> Join our WhatsApp Channel
+                            </a>
+                        </div>
+
+                        <a href="index.html" class="inline-block px-6 py-3 bg-violet-600 text-white rounded-[10px] no-underline font-extrabold hover:bg-violet-700 transition shadow-md hover:-translate-y-0.5">Return to Home</a>
+                    </div>
+                `;
+
+            } catch (error) {
+                console.error("Application Submission Error:", error);
+                btn.disabled = false; 
+                btn.innerHTML = originalBtnText;
+                errorBox.innerHTML = `<i class='fa-solid fa-triangle-exclamation'></i> Failed to submit application. Please try again.`;
+                errorBox.classList.remove('hidden'); 
+                errorBox.classList.add('block');
+            }
+        });
+    </script>
+</body>
+</html>

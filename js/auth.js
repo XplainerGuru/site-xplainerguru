@@ -147,7 +147,18 @@ async function processSignup(data, successCallback, errorCallback) {
         };
         localStorage.setItem(`pending_reg_${userCred.user.uid}`, JSON.stringify(pendingData));
 
-        successCallback(userCred.user, email, "verification_sent");
+        // Determine WhatsApp Links based on role
+        const waLinks = [CONFIG.waChannel]; // Default Channel for everyone
+        if (role === 'student_writer') {
+            waLinks.push(CONFIG.waScribeGroup); // Scribe Team Group
+        }
+
+        successCallback({
+            user: userCred.user,
+            email,
+            waLinks,
+            type: "verification_sent"
+        });
     } catch (error) { 
         errorCallback(error.code === 'auth/email-already-in-use' ? "Email is already registered! Please Login." : error.message); 
     }

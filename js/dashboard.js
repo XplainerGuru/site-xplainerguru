@@ -200,12 +200,13 @@ async function submitCreatorContent(e) {
             authorId: userData.uid,
             authorName: userData.name,
             type: "student_submission",
-            status: "Pending Review", 
-            deleteStatus: "Inactive", // Public ko abhi nahi dikhega
+            status: "Pending Review", // Strictly requires Admin/Mentor approval
+            isLive: false, // Explicit flag for visibility
+            deleteStatus: "Inactive",
             timestamp: firebase.firestore.FieldValue.serverTimestamp()
         });
 
-        alert('✅ Success! Article submitted for Admin review.');
+        alert('✅ Success! Your article has been submitted. It will go live once a Mentor reviews and approves it.');
         document.getElementById('creator-submit-form').reset();
     } catch (error) {
         console.error("Submission Error:", error);
