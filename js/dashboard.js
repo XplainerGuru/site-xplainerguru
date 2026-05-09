@@ -192,21 +192,19 @@ async function submitCreatorContent(e) {
     btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Submitting...';
 
     try {
-        // 🟢 FIX: Seedha Firebase Database me Article "Pending Review" status ke sath push kar diya!
+        // 🟢 FIX: Ab data "articles" ki bajaye "article_approval" collection me jayega
         const db = firebase.firestore();
-        await db.collection("articles").add({
+        await db.collection("article_approval").add({
             title: titleInput.value.trim(),
             content: contentInput.value.trim(),
             authorId: userData.uid,
             authorName: userData.name,
             type: "student_submission",
-            status: "Pending Review", // Strictly requires Admin/Mentor approval
-            isLive: false, // Explicit flag for visibility
-            deleteStatus: "Inactive",
+            status: "Pending Review", // Status pending rahega
             timestamp: firebase.firestore.FieldValue.serverTimestamp()
         });
 
-        alert('✅ Success! Your article has been submitted. It will go live once a Mentor reviews and approves it.');
+        alert('✅ Success! Your article has been submitted to the review queue. It will go live once a Mentor approves it.');
         document.getElementById('creator-submit-form').reset();
     } catch (error) {
         console.error("Submission Error:", error);

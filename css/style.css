@@ -2812,25 +2812,6 @@
       font-size: 2.2rem;
     }
   }
-  .\[\&\>\.checked-icon\]\:hidden {
-    &>.checked-icon {
-      display: none;
-    }
-  }
-  .peer-checked\:\[\&\>\.checked-icon\]\:inline-block {
-    &:is(:where(.peer):checked ~ *) {
-      &>.checked-icon {
-        display: inline-block;
-      }
-    }
-  }
-  .peer-checked\:\[\&\>\.unchecked-icon\]\:hidden {
-    &:is(:where(.peer):checked ~ *) {
-      &>.unchecked-icon {
-        display: none;
-      }
-    }
-  }
 }
 @property --tw-translate-x {
   syntax: "*";

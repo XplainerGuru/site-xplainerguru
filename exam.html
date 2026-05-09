@@ -10,6 +10,12 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <link rel="stylesheet" href="css/style.css">
+
+    <style>
+        .exam-option-label .checked-icon { display: none; }
+        .peer:checked + .exam-option-label .checked-icon { display: inline-block; }
+        .peer:checked + .exam-option-label .unchecked-icon { display: none; }
+    </style>
 </head>
 
 <body class="m-0 p-0 font-['Manrope'] bg-slate-50 text-slate-900 overflow-x-hidden select-none">
@@ -188,6 +194,7 @@
                 imgEl.style.display = 'none';
             }
 
+            // ✅ FIX: Cleaned up option classes to work properly with the CSS rule we added
             let optionsHTML = "";
             const opts = ['A', 'B', 'C', 'D'];
             opts.forEach(optKey => {
@@ -196,7 +203,7 @@
                 optionsHTML += `
                     <div class="relative">
                         <input type="radio" name="q_option" id="opt_${optKey}" value="${optKey}" ${isChecked} onchange="saveAnswer('${optKey}')" class="peer hidden">
-                        <label for="opt_${optKey}" class="flex items-center p-[15px_20px] border-2 border-slate-200 rounded-xl cursor-pointer font-semibold transition duration-200 text-[16px] text-slate-700 hover:bg-slate-50 hover:border-slate-300 peer-checked:border-blue-600 peer-checked:bg-blue-50 peer-checked:text-blue-700 [&>.checked-icon]:hidden peer-checked:[&>.checked-icon]:inline-block peer-checked:[&>.unchecked-icon]:hidden">
+                        <label for="opt_${optKey}" class="exam-option-label flex items-center p-[15px_20px] border-2 border-slate-200 rounded-xl cursor-pointer font-semibold transition duration-200 text-[16px] text-slate-700 hover:bg-slate-50 hover:border-slate-300 peer-checked:border-blue-600 peer-checked:bg-blue-50 peer-checked:text-blue-700">
                             <i class="fa-regular fa-circle text-slate-300 mr-3 text-[18px] unchecked-icon"></i>
                             <i class="fa-solid fa-circle-check text-blue-600 mr-3 text-[18px] checked-icon"></i>
                             ${optKey}. ${q.options[optKey]}
@@ -253,7 +260,6 @@
             loadQuestion(index);
         }
 
-        // 5. PALETTE RENDERER (TAILWIND DYNAMIC INJECTION)
         function renderPalette() {
             let paletteHTML = "";
             userResponses.forEach((res, i) => {
@@ -269,7 +275,6 @@
             document.getElementById('palette-container').innerHTML = paletteHTML;
         }
 
-        // 6. TIMER LOGIC
         function startGlobalTimer(minutes) {
             let timeRemaining = minutes * 60;
             let isCountUp = (minutes === 0);
@@ -295,7 +300,6 @@
             }, 1000);
         }
 
-        // 7. FINAL SUBMISSION LOGIC 
         function forceSubmit(reason) {
             if (!isTestActive) return;
             
