@@ -77,6 +77,7 @@ window.notificationManager = {
                 mode: 'no-cors',
                 headers: { 'Content-Type': 'text/plain;charset=utf-8' },
                 body: JSON.stringify({ to: toEmail, subject: subject, body: finalBody, senderName: senderName })
+               
             });
         } catch (error) {
             console.error("Failed to trigger Email Webhook:", error);

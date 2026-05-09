@@ -18,7 +18,7 @@
   * *Senior Mentor (Academic Tier 2):* Solves escalated doubts. **Extra Power:** Upload videos, notes, articles, and test questions to the platform.
   * *Junior Mentor (Academic Tier 1, Age 15+):* Solves student doubts via tickets. Can request deletions from Admin. Gets feedback notifications (but not raw star ratings).
 * **Writer Tiers & Strict Branding Protocol:**
-  * *Student Writer (Contributor):* NOT a team member. Has all Student features + capability to create/submit Articles, Notes, and Test Content. All submissions strictly follow the 'Zero Direct Live' policy. **Branding Protocol:** Credit shows as "[Student Name] via Xplainer Guru" (Mutual popularity).
+  * *Student Writer (Scribe - Contributor):* NOT a team member. Has all Student features + capability to submit original educational Articles. All submissions strictly follow the 'Zero Direct Live' policy. **Branding Protocol:** Credit shows as "[Student Name] via Xplainer Guru".
   * *Article Writer (Team Member, Age 15+):* Has advanced writing features + capability to create/submit Articles, Notes, and Test Content. All submissions strictly follow the 'Zero Direct Live' policy. **Branding Protocol:** 100% Startup Branding. Credit shows strictly as "Xplainer Guru" (No individual name).
 * **Support (Sr/Jr):** Manages the Ticketing System. (Sr can close, Jr can reply).
   * *Senior Support (Support Tier 2):* Handles tickets escalated by Juniors. Can escalate to Admin. Full history logs.

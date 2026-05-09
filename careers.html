@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Apply for Core Team | Xplainer Guru</title>
+    <title>Join Our Team | Xplainer Guru</title>
     <link rel="icon" type="image/png" href="logo.png">
     
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=Poppins:wght@700;800&display=swap" rel="stylesheet">
@@ -31,7 +31,7 @@
                 <label class="block text-[11px] font-extrabold text-slate-500 uppercase mb-1.5 tracking-wide">Role Applying For <span class="text-red-500">*</span></label>
                 <select id="app-role" class="w-full p-[14px_15px] border border-slate-200 rounded-[10px] font-['Manrope'] text-[14px] box-border bg-slate-50 outline-none transition duration-300 focus:border-violet-500 focus:bg-white focus:shadow-[0_0_0_3px_rgba(139,92,246,0.1)] cursor-pointer appearance-none bg-no-repeat bg-[right_15px_center]" style="background-image: url('data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'12\' height=\'12\' fill=\'%2364748b\' viewBox=\'0 0 16 16\'%3E%3Cpath d=\'M8 11.5l-5-5h10l-5 5z\'/%3E%3C/svg%3E');" required>
                     <option value="" disabled selected>Select a Core Team Role</option>
-                    <option value="writer">Content Writer</option>
+                    <option value="writer">Content Writer (Core Team)</option>
                     <option value="mentor">Academic Mentor</option>
                     <option value="support">Tech Support</option>
                 </select>
@@ -72,20 +72,48 @@
             <button type="submit" id="submitBtn" class="w-full p-[16px] bg-violet-600 text-white border-none rounded-[10px] font-['Manrope'] font-extrabold text-[15px] cursor-pointer transition duration-300 shadow-[0_4px_15px_rgba(139,92,246,0.2)] hover:bg-violet-700 hover:-translate-y-0.5 disabled:bg-slate-400 disabled:cursor-not-allowed disabled:transform-none">Submit Application</button>
         </form>
 
-        <div class="text-center mt-[25px] text-[14px] text-slate-500 font-semibold">
-            Already an approved member? <a href="login.html" class="text-violet-600 font-extrabold no-underline hover:underline">Log in here</a>
-        </div>
-        <div class="text-center mt-2.5">
-            <a href="signup.html" class="text-blue-500 text-[12px] no-underline font-bold hover:underline"><i class="fa-solid fa-user-graduate"></i> Student or Parent? Sign Up Here</a>
-        </div>
     </div>
 
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
     <script src="js/firebase-init.js"></script>
+    <script src="js/master.js"></script>
+    <script src="js/notification.js"></script>
+    <script src="js/chatbot.js"></script>
 
     <script>
+        // Smart Hiring Listener
+        firebase.firestore().collection('system_settings').doc('config').onSnapshot((doc) => {
+            const config = doc.data();
+            const applyForm = document.getElementById('applyForm');
+            if (config && config.hiring_open === false) {
+                applyForm.style.display = 'none';
+                const closedMsg = `
+                    <div class="text-center py-10" id="hiring-closed-view">
+                        <div class="w-20 h-20 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center text-3xl mx-auto mb-6">
+                            <i class="fa-solid fa-door-closed"></i>
+                        </div>
+                        <h2 class="font-['Poppins'] text-2xl text-slate-900 mb-4">Hiring Currently Closed</h2>
+                        <p class="text-slate-500 mb-4">We are not accepting Core Team applications at the moment. Join our WhatsApp channel to be notified of future openings!</p>
+                        
+                        <div class="bg-violet-50 border border-violet-100 p-5 rounded-2xl mb-8 text-left">
+                            <h4 class="text-violet-700 m-0 mb-2 font-bold"><i class="fa-solid fa-pen-nib"></i> Join as a Scribe (Student Writer)</h4>
+                            <p class="text-[13px] text-slate-600 m-0 mb-3 leading-relaxed">
+                                Good news! You can still apply as a <b>Scribe</b>. Your role will be to write original, high-quality educational articles for our library.
+                                <br><br><b>Important:</b> Articles must be your own original work (not AI-generated or copied) and must be strictly educational.
+                            </p>
+                            <a href="signup.html?role=student_writer" class="text-violet-600 font-extrabold text-[13px] no-underline hover:underline">Apply as a Scribe now →</a>
+                        </div>
+
+                        <a href="https://whatsapp.com/channel/0029Vb7p4QV0QeadmOIpgx36" target="_blank" class="inline-flex items-center gap-2 bg-green-500 text-white px-6 py-3 rounded-xl font-bold hover:bg-green-600 transition">
+                            <i class="fa-brands fa-whatsapp"></i> Stay Updated on WhatsApp
+                        </a>
+                    </div>`;
+                if(!document.getElementById('hiring-closed-view')) applyForm.insertAdjacentHTML('afterend', closedMsg);
+            }
+        });
+
         // Form Submission Logic
         document.getElementById('applyForm').addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -143,7 +171,7 @@
 
                 // Success State UI - With WhatsApp Channel Link
                 // UPDATE THIS LINK to your actual WhatsApp Channel URL
-                const waChannelLink = "https://whatsapp.com/channel/your_channel_invite_link"; 
+                const waChannelLink = "https://whatsapp.com/channel/0029Vb7p4QV0QeadmOIpgx36"; 
 
                 document.getElementById('main-auth-box').innerHTML = `
                     <div class="text-center py-5">

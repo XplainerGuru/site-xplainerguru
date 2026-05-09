@@ -47,8 +47,11 @@
                 <select id="su-role" class="w-full p-[14px_15px] border border-slate-200 rounded-[10px] font-['Manrope'] text-[14px] box-border bg-slate-50 outline-none transition duration-300 focus:border-blue-600 focus:bg-white focus:shadow-[0_0_0_3px_rgba(37,99,235,0.1)] cursor-pointer appearance-none bg-no-repeat bg-[right_15px_center]" style="background-image: url('data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'12\' height=\'12\' fill=\'%2364748b\' viewBox=\'0 0 16 16\'%3E%3Cpath d=\'M8 11.5l-5-5h10l-5 5z\'/%3E%3C/svg%3E');" required onchange="handleRoleChange()">
                     <option value="student" selected>Student / Learner</option>
                     <option value="parent">Parent</option>
-                    <option value="student_writer">Student Article Writer</option>
+                    <option value="student_writer">Student Writer (Scribe)</option>
                 </select>
+                <div id="scribe-info" class="hidden mt-3 p-3 bg-violet-50 border border-violet-100 rounded-lg text-[12px] text-slate-600 leading-relaxed">
+                    <i class="fa-solid fa-pen-nib text-violet-500"></i> <b>What is a Scribe?</b> Scribes are contributors who write original educational articles for our library. Content must be your own work (strictly no AI/copy-paste) and purely educational.
+                </div>
             </div>
 
             <div class="mb-[18px] text-left relative">
@@ -59,6 +62,21 @@
             <div class="mb-[18px] text-left relative">
                 <label class="block text-[11px] font-extrabold text-slate-400 uppercase mb-1.5 tracking-wide">Email Address <span class="text-red-500">*</span></label>
                 <input type="email" id="su-email" class="w-full p-[14px_15px] border border-slate-200 rounded-[10px] font-['Manrope'] text-[14px] box-border bg-slate-50 outline-none transition duration-300 focus:border-blue-600 focus:bg-white focus:shadow-[0_0_0_3px_rgba(37,99,235,0.1)]" placeholder="Permanent Email" required>
+            </div>
+
+            <div id="writer-extra-fields" class="hidden">
+                <div class="mb-[18px] text-left relative">
+                    <label class="block text-[11px] font-extrabold text-slate-400 uppercase mb-1.5 tracking-wide">WhatsApp Number</label>
+                    <input type="tel" id="su-phone" class="w-full p-[14px_15px] border border-slate-200 rounded-[10px] font-['Manrope'] text-[14px] box-border bg-slate-50 outline-none transition duration-300 focus:border-blue-600 focus:bg-white focus:shadow-[0_0_0_3px_rgba(37,99,235,0.1)]" placeholder="10-digit mobile number">
+                </div>
+                <div class="mb-[18px] text-left relative">
+                    <label class="block text-[11px] font-extrabold text-slate-400 uppercase mb-1.5 tracking-wide">Your Age</label>
+                    <input type="number" id="su-age" class="w-full p-[14px_15px] border border-slate-200 rounded-[10px] font-['Manrope'] text-[14px] box-border bg-slate-50 outline-none transition duration-300 focus:border-blue-600 focus:bg-white focus:shadow-[0_0_0_3px_rgba(37,99,235,0.1)]" placeholder="Minimum 15 years">
+                </div>
+                <div class="mb-[18px] text-left relative">
+                    <label class="block text-[11px] font-extrabold text-slate-400 uppercase mb-1.5 tracking-wide">Why do you want to be a Scribe?</label>
+                    <textarea id="su-reason" class="w-full p-[14px_15px] border border-slate-200 rounded-[10px] font-['Manrope'] text-[14px] box-border bg-slate-50 outline-none transition duration-300 focus:border-blue-600 focus:bg-white focus:shadow-[0_0_0_3px_rgba(37,99,235,0.1)] min-h-[80px]" placeholder="Briefly describe your interest in educational writing..."></textarea>
+                </div>
             </div>
 
             <div class="mb-[18px] text-left relative" id="childIdGroup" style="display:none;">
@@ -138,6 +156,8 @@
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
     <script src="js/firebase-init.js"></script>
     <script src="js/auth.js"></script>
+    <script src="js/master.js"></script>
+    <script src="js/chatbot.js"></script>
 
     <script>
         function togglePassword(inputId, icon) {
@@ -151,13 +171,24 @@
         function handleRoleChange() {
             const role = document.getElementById('su-role').value;
             const childIdGroup = document.getElementById('childIdGroup');
+            const writerFields = document.getElementById('writer-extra-fields');
+            const scribeInfo = document.getElementById('scribe-info');
             
             if (role === 'parent') {
                 childIdGroup.style.display = 'block'; 
                 document.getElementById('su-childId').required = true;
+                writerFields.classList.add('hidden');
+                if(scribeInfo) scribeInfo.classList.add('hidden');
+            } else if (role === 'student_writer') {
+                writerFields.classList.remove('hidden');
+                childIdGroup.style.display = 'none';
+                document.getElementById('su-childId').required = false;
+                if(scribeInfo) scribeInfo.classList.remove('hidden');
             } else {
                 childIdGroup.style.display = 'none'; 
                 document.getElementById('su-childId').required = false;
+                writerFields.classList.add('hidden');
+                if(scribeInfo) scribeInfo.classList.add('hidden');
             }
         }
 
@@ -176,7 +207,10 @@
                 email: document.getElementById('su-email').value.toLowerCase().trim(),
                 pass: document.getElementById('su-password').value,
                 childId: document.getElementById('su-childId') ? document.getElementById('su-childId').value.trim().toUpperCase() : '',
-                legalAgreementAccepted: document.getElementById('legalAgreement').checked
+                legalAgreementAccepted: document.getElementById('legalAgreement').checked,
+                phone: document.getElementById('su-phone').value.trim(),
+                age: document.getElementById('su-age').value.trim(),
+                reason: document.getElementById('su-reason').value.trim()
             };
 
             btn.disabled = true;
@@ -220,7 +254,12 @@
                         // Error View
                         btn.disabled = false; 
                         btn.innerHTML = originalBtnText;
-                        errorBox.innerHTML = `<i class='fa-solid fa-triangle-exclamation'></i> ${errorMsg}`;
+                        
+                        if (errorMsg.includes("already registered")) {
+                            errorBox.innerHTML = `<i class='fa-solid fa-circle-info'></i> Aapka email pehle se 'Student' ke roop mein registered hai. Naya account banane ki zarurat nahi hai! Kripya <b>Login</b> karein aur dashboard mein <b>'Become a Scribe'</b> button ka use karke upgrade karein.`;
+                        } else {
+                            errorBox.innerHTML = `<i class='fa-solid fa-triangle-exclamation'></i> ${errorMsg}`;
+                        }
                         errorBox.classList.remove('hidden'); 
                         errorBox.classList.add('block');
                     }
@@ -229,6 +268,19 @@
                 alert("Auth module failed to load. Please check your internet connection and refresh.");
                 btn.disabled = false; 
                 btn.innerHTML = originalBtnText;
+            }
+        });
+
+        // 🟢 AUTO-SELECT ROLE FROM URL (e.g. ?role=student_writer)
+        window.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const roleParam = urlParams.get('role');
+            if (roleParam) {
+                const roleSelect = document.getElementById('su-role');
+                if (roleSelect) {
+                    roleSelect.value = roleParam;
+                    handleRoleChange(); // UI visibility अपडेट करने के लिए
+                }
             }
         });
     </script>

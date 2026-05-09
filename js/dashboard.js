@@ -58,9 +58,6 @@ document.addEventListener('DOMContentLoaded', () => {
             document.body.style.overflow = ''; 
         });
     }
-
-    // Trigger Notification Popup (Safe for public)
-    triggerNotificationPrompt();
 });
 
 function handleUserUnauthenticated() {
@@ -144,7 +141,7 @@ function updatePortalTitle(role) {
     if (!portalTitle) return;
     
     if (role === 'parent') portalTitle.innerText = 'Parent Portal';
-    else if (role === 'student_writer') portalTitle.innerText = 'Writer Portal';
+    else if (role === 'student_writer') portalTitle.innerText = 'Writer Portal (Scribe)';
     else portalTitle.innerText = 'Student Portal';
 }
 
@@ -227,12 +224,11 @@ async function loadParentDashboard(linkedChildId) {
     placeholder.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Fetching data for Student ID: <b>${linkedChildId}</b>...`;
 
     try {
-        const response = await fetch(`${window.BASE_URL}/parent/child-data?child_id=${linkedChildId}`);
-        const result = await response.json();
+        // Replace Render GET with direct Firestore call
+        const doc = await firebase.firestore().collection("users").doc(linkedChildId).get();
+        if (!doc.exists) throw new Error("Student ID not found.");
 
-        if (result.status !== 'success') throw new Error(result.message || "Student ID not found.");
-
-        const childData = result.data;
+        const childData = doc.data();
         const childName = childData.name || 'Student';
         const childAvatar = childData.pic || `https://ui-avatars.com/api/?name=${encodeURIComponent(childName)}&background=16a34a&color=fff&bold=true`;
         
@@ -268,9 +264,11 @@ async function loadStudentDashboardData(uid) {
     if (!ticketCountEl) return;
 
     try {
-        const response = await fetch(`${window.BASE_URL}/student/stats?uid=${uid}`);
-        const result = await response.json();
-        if (result.status === 'success') ticketCountEl.innerText = result.data.open_tickets_count || 0;
+        // Direct Firestore calculation for stats
+        const snapshot = await firebase.firestore().collection("tickets")
+            .where("uid", "==", uid)
+            .where("status", "in", ["Open", "Pending"]).get();
+        ticketCountEl.innerText = snapshot.size;
     } catch (error) {
         ticketCountEl.innerHTML = '<i class="fa-solid fa-triangle-exclamation" style="font-size:14px;"></i>';
     }
@@ -285,46 +283,40 @@ window.submitCreatorContent = submitCreatorContent;
 // ==========================================
 // NOTIFICATION LOGIC (Public Version)
 // ==========================================
-async function listenToNotifications(uid) {
-    const fetchUnread = async () => {
-        try {
-            const response = await fetch(`${window.BASE_URL}/notifications/unread?uid=${uid}`);
-            const result = await response.json();
-            if (result.status !== 'success') return;
+function listenToNotifications(uid) {
+    const db = firebase.firestore();
+    // Direct Firestore Real-time Listener for Personal Notifications
+    db.collection("notifications").where("uid", "==", uid).orderBy("timestamp", "desc").limit(10).onSnapshot((snapshot) => {
+        const badge = document.getElementById('notif-badge');
+        const bellIcon = document.getElementById('bell-icon');
+        const dropBody = document.getElementById('nd-body-content');
+        if (!badge || !bellIcon || !dropBody) return;
 
-            const badge = document.getElementById('notif-badge');
-            const bellIcon = document.getElementById('bell-icon');
-            const dropBody = document.getElementById('nd-body-content');
-            
-            if (!badge || !bellIcon || !dropBody) return;
-            
-            let unreadCount = result.unread_count || 0;
-            let html = '';
-            
-            if (result.data && result.data.length > 0) {
-                result.data.forEach(notif => {
-                    const timeStr = new Date(notif.timestamp).toLocaleString([], { dateStyle: 'short', timeStyle: 'short' });
-                    const unreadClass = notif.read ? '' : 'unread';
-                    html += `<div class="nd-item ${unreadClass}"><div class="nd-title">${notif.title}</div><div class="nd-text">${notif.body}</div><div class="nd-time">${timeStr}</div></div>`;
-                });
-            } else {
-                html = '<div class="nd-empty">No notifications yet</div>';
-            }
-            
-            dropBody.innerHTML = html;
-            
-            if (unreadCount > 0) {
-                badge.style.display = 'inline-block';
-                badge.innerText = unreadCount > 9 ? '9+' : unreadCount;
-                bellIcon.classList.add('bell-ringing');
-            } else {
-                badge.style.display = 'none';
-                bellIcon.classList.remove('bell-ringing');
-            }
-        } catch (error) {}
-    };
-    fetchUnread();
-    setInterval(fetchUnread, 180000);
+        let unreadCount = 0;
+        let html = '';
+
+        if (!snapshot.empty) {
+            snapshot.forEach(doc => {
+                const notif = doc.data();
+                if (!notif.read) unreadCount++;
+                const timeStr = notif.timestamp ? notif.timestamp.toDate().toLocaleString([], { dateStyle: 'short', timeStyle: 'short' }) : 'Just now';
+                const unreadClass = notif.read ? '' : 'unread';
+                html += `<div class="nd-item ${unreadClass}"><div class="nd-title">${notif.title}</div><div class="nd-text">${notif.body}</div><div class="nd-time">${timeStr}</div></div>`;
+            });
+        } else {
+            html = '<div class="nd-empty">No notifications yet</div>';
+        }
+
+        dropBody.innerHTML = html;
+        if (unreadCount > 0) {
+            badge.style.display = 'inline-block';
+            badge.innerText = unreadCount > 9 ? '9+' : unreadCount;
+            bellIcon.classList.add('bell-ringing');
+        } else {
+            badge.style.display = 'none';
+            bellIcon.classList.remove('bell-ringing');
+        }
+    });
 }
 
 window.toggleNotifications = async function(e) {

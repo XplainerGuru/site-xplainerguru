@@ -18,14 +18,11 @@ function initializeAuthListener(onUserLoaded, onUserUnauthenticated) {
                 if (user.emailVerified && localStorage.getItem(`pending_reg_${user.uid}`)) {
                     await finalizeRegistration(user);
                 }
-
-                const response = await fetch(`${BASE_URL}/auth/profile?uid=${user.uid}`);
-                let userData = null;
                 
-                if (response.ok) {
-                    userData = await response.json();
-                }
-
+                // Direct Firestore Read for Profile
+                const userDoc = await db.collection("users").doc(user.uid).get();
+                const userData = userDoc.exists ? userDoc.data() : null;
+                
                 try {
                     if (onUserLoaded) onUserLoaded(user, userData);
                 } catch (uiError) {
@@ -57,22 +54,21 @@ async function enforceRouting(user, userData, errorCallback) {
     const role = (userData.role || 'student').toLowerCase();
     const status = (userData.accountStatus || userData.status || 'active').toLowerCase();
 
-    const allowedPublicRoles = ['student', 'parent', 'student_writer'];
-    const isPublicUser = allowedPublicRoles.includes(role);
+    const staffRoles = ['mentor', 'support', 'admin', 'founder'];
+    const isStaff = staffRoles.includes(role);
+
+    // Gatekeeping: Staff members are blocked from public student dashboards
+    if (isStaff) {
+        alert("⚠️ Access Denied: Staff members must use the Workspace Portal (xg-workspace).");
+        window.location.href = "https://xg-workspace.netlify.app"; // Redirect to internal portal
+        return;
+    }
 
     let hasValidTestPass = false;
     if (userData.testPassExpiry) {
         const expiryTime = typeof userData.testPassExpiry.toMillis === 'function' ? userData.testPassExpiry.toMillis() : userData.testPassExpiry;
         if (Date.now() < expiryTime) hasValidTestPass = true;
     }
-
-    if (!isPublicUser && !hasValidTestPass) {
-        alert("⚠️ Access Denied: Staff members must use the Workspace Portal.");
-        await auth.signOut();
-        window.location.href = "login.html";
-        return;
-    }
-
     if (status !== 'active') {
         alert("Access Denied: Your account is pending review or suspended.");
         await auth.signOut();
@@ -192,6 +188,15 @@ async function finalizeRegistration(user) {
 // 7. GOOGLE AUTH LOGIN/SIGNUP LOGIC
 window.triggerGoogleAuth = async function() {
     try {
+        // Capture intended role from signup page if available
+        const roleEl = document.getElementById('su-role') || document.getElementById('role-select');
+        const selectedRole = (roleEl?.value || 'student').toLowerCase().replace(/\s+/g, '_');
+
+        if (selectedRole === 'student_writer') {
+            alert("Scribe (Student Writer) accounts cannot be created via Google. Please use the Email/Password signup form to verify your credentials.");
+            return;
+        }
+
         const provider = new firebase.auth.GoogleAuthProvider();
         const result = await firebase.auth().signInWithPopup(provider);
         const user = result.user;
@@ -200,9 +205,6 @@ window.triggerGoogleAuth = async function() {
         const docRef = await db.collection("users").doc(user.uid).get();
 
         if (!docRef.exists) {
-            // Capture intended role from UI if available, else default to student
-            const selectedRole = (document.getElementById('role-select')?.value || 'student').toLowerCase().replace(/\s+/g, '_');
-
             await db.collection("users").doc(user.uid).set({
                 uid: user.uid,
                 name: user.displayName,

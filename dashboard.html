@@ -59,6 +59,13 @@
                             <a href="videos.html" class="text-slate-900 bg-slate-50 border border-slate-200 px-[15px] py-3 rounded-lg font-semibold no-underline text-[14px] flex items-center gap-[10px] transition hover:bg-slate-100 hover:border-slate-300"><i class="fa-solid fa-play text-blue-500"></i> Video Classes</a>
                         </div>
                     </div>
+
+                    <!-- Upgrade to Scribe Card -->
+                    <div id="scribe-upgrade-card" class="bg-violet-50 rounded-2xl p-[clamp(15px,3vw,25px)] border border-violet-200 shadow-sm hidden">
+                        <h3 class="m-0 mb-[10px] font-['Poppins'] text-violet-800 text-[17px] flex items-center gap-2"><i class="fa-solid fa-pen-nib"></i> Become a Scribe</h3>
+                        <p class="text-[12px] text-slate-600 m-0 mb-4">Share your knowledge! Apply to write educational articles for the XG library.</p>
+                        <button onclick="showScribeForm()" class="w-full py-2.5 bg-violet-600 text-white rounded-lg font-bold text-[13px] hover:bg-violet-700 transition">Apply Now</button>
+                    </div>
                 </div>
 
                 <div class="bg-white rounded-2xl p-[clamp(15px,3vw,25px)] border border-slate-200 mt-5 shadow-sm overflow-hidden">
@@ -89,6 +96,37 @@
                 <div id="child-stats-placeholder"></div>
             </div>
 
+            <!-- Upgrade Form Modal (Hidden by default) -->
+            <div id="scribe-application-modal" class="hidden fixed inset-0 bg-slate-900/60 z-[10000] flex justify-center items-center p-5 backdrop-blur-sm">
+                <div class="bg-white p-8 rounded-2xl max-w-[450px] w-full shadow-2xl">
+                    <h3 class="font-['Poppins'] text-slate-900 m-0 mb-4">Scribe Application (Student Writer)</h3>
+                    <div id="scribe-form-content">
+                        <div class="bg-slate-50 p-3 rounded-lg mb-5 border border-slate-200">
+                            <p class="text-[11px] font-extrabold text-slate-400 uppercase mb-2">Details we already have:</p>
+                            <div class="text-[13px] text-slate-700"><b>Name:</b> <span id="scribe-prefill-name"></span></div>
+                            <div class="text-[13px] text-slate-700"><b>Email:</b> <span id="scribe-prefill-email"></span></div>
+                        </div>
+                        
+                        <p class="text-[11px] font-extrabold text-violet-600 uppercase mb-3">Additional Details Needed:</p>
+                        <div class="mb-4">
+                            <label class="block text-[11px] font-bold text-slate-500 mb-1">WhatsApp Number</label>
+                            <input type="tel" id="up-phone" class="w-full p-3 border rounded-lg text-sm bg-slate-50 outline-none focus:border-violet-500" placeholder="10-digit number">
+                        </div>
+                        <div class="mb-4">
+                            <label class="block text-[11px] font-bold text-slate-500 mb-1">Your Age</label>
+                            <input type="number" id="up-age" class="w-full p-3 border rounded-lg text-sm bg-slate-50 outline-none focus:border-violet-500" placeholder="e.g., 16">
+                        </div>
+                        <div class="mb-5">
+                            <label class="block text-[11px] font-bold text-slate-500 mb-1">Why do you want to write?</label>
+                            <textarea id="up-reason" class="w-full p-3 border rounded-lg text-sm bg-slate-50 outline-none focus:border-violet-500 min-h-[80px]" placeholder="Explain your interest..."></textarea>
+                        </div>
+                        <div class="flex gap-3">
+                            <button onclick="closeScribeForm()" class="flex-1 py-3 rounded-lg bg-slate-100 font-bold text-slate-600 hover:bg-slate-200">Cancel</button>
+                            <button onclick="submitScribeUpgrade()" id="upgrade-btn" class="flex-1 py-3 rounded-lg bg-violet-600 text-white font-bold hover:bg-violet-700 shadow-md transition">Submit & Upgrade</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div id="creator-studio-widget" class="hidden mt-5">
                 <div class="bg-white rounded-2xl p-[clamp(15px,3vw,25px)] border border-slate-200 shadow-sm">
                     <h3 class="m-0 mb-[15px] font-['Poppins'] flex items-center gap-[10px] text-[clamp(15px,2vw,17px)]"><i class="fa-solid fa-wand-magic-sparkles text-blue-600"></i> Creator Studio</h3>
