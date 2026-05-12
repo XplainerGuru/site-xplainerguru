@@ -56,24 +56,28 @@
         async function loadArticles() {
             try {
                 let aData = [];
+                let mainSnap, scribeSnap;
                 
-                // Fetch from both collections
-                const [mainSnap, scribeSnap] = await Promise.all([
-                    db.collection("articles").get(),
-                    db.collection("scribe_articles").get()
-                ]);
+                // Fetching with individual try-catch to prevent full crash if one fails
+                try {
+                    mainSnap = await db.collection("articles").get();
+                    mainSnap.forEach(doc => { 
+                        let d = doc.data(); d.id = doc.id;
+                        d.isScribeArticle = false;
+                        if(d.deleteStatus === 'Active' || !d.isDeleted) aData.push(d); 
+                    });
+                } catch(e) { console.error("Error fetching main articles:", e); }
 
-                mainSnap.forEach(doc => { 
-                    let d = doc.data(); d.id = doc.id;
-                    d.isScribeArticle = false;
-                    if(d.deleteStatus === 'Active' || !d.isDeleted) aData.push(d); 
-                });
-
-                scribeSnap.forEach(doc => { 
-                    let d = doc.data(); d.id = doc.id;
-                    d.isScribeArticle = true;
-                    if(d.deleteStatus === 'Active' || !d.isDeleted) aData.push(d); 
-                });
+                try {
+                    scribeSnap = await db.collection("scribe_articles").get();
+                    scribeSnap.forEach(doc => { 
+                        let d = doc.data(); d.id = doc.id;
+                        d.isScribeArticle = true;
+                        if(d.deleteStatus === 'Active' || !d.isDeleted) aData.push(d); 
+                    });
+                } catch(e) { 
+                    console.error("Error fetching scribe articles (Check Firestore Rules):", e); 
+                }
 
                 aData.sort((a,b) => (b.timestamp?.seconds || 0) - (a.timestamp?.seconds || 0));
 
@@ -100,7 +104,7 @@
                     // Author Logic
                     let authorDisplay = "Xplainer Guru";
                     if (item.isScribeArticle) {
-                        authorDisplay = `${item.authorName || 'Scribe'} via Xplainer Guru`;
+                        authorDisplay = `${item.authorName || 'Scribe'} - Xplainer Guru`;
                     }
 
                     html += `

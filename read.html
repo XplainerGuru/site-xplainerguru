@@ -49,10 +49,20 @@
             }
 
             try {
-                const doc = await db.collection('articles').doc(articleId).get();
+                let doc = await db.collection('articles').doc(articleId).get();
+                let isScribe = false;
+
+                // If not found in main articles, check scribe_articles
+                if (!doc.exists) {
+                    doc = await db.collection('scribe_articles').doc(articleId).get();
+                    if (doc.exists) {
+                        isScribe = true;
+                    }
+                }
+
                 const data = doc.exists ? doc.data() : {};
                 
-                if(!doc.exists || !(data.deleteStatus === 'Active' || !data.isDeleted)) {
+                if(!doc.exists || (data.deleteStatus && data.deleteStatus !== 'Active') || data.isDeleted) {
                     container.innerHTML = `
                         <div class="text-center p-[50px] bg-white rounded-xl border border-dashed border-red-500 text-red-500 font-['Poppins'] shadow-sm">
                             <i class="fa-solid fa-file-circle-xmark text-[32px] mb-4"></i><br>This article has been removed.
@@ -90,11 +100,14 @@
 
                 document.title = `${data.title} | Xplainer Guru`;
 
+                // Branding Logic: "Author - Xplainer Guru" for scribes, otherwise just "Xplainer Guru"
+                const authorDisplay = isScribe ? `${data.authorName || 'Scribe'} - Xplainer Guru` : 'Xplainer Guru';
+
                 container.innerHTML = `
                     <div class="text-center mb-[30px]">
                         <h1 class="font-['Poppins'] text-slate-900 text-[clamp(1.8rem,4vw,2.5rem)] m-0 mb-[15px] leading-snug">${data.title}</h1>
                         <div class="text-slate-500 text-[14px] font-semibold flex justify-center gap-5 flex-wrap mb-[25px]">
-                            <span class="flex items-center gap-1.5 text-blue-600"><i class="fa-solid fa-pen-nib"></i> ${data.authorName || 'Xplainer Guru'}</span>
+                            <span class="flex items-center gap-1.5 text-blue-600"><i class="fa-solid fa-pen-nib"></i> ${authorDisplay}</span>
                             <span class="flex items-center gap-1.5"><i class="fa-solid fa-calendar"></i> ${dateStr}</span>
                         </div>
                     </div>
