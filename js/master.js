@@ -6,10 +6,11 @@ const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwq33obEvRjmPhOU-TDh
 const CONFIG = {
     email: "xplainerguru@gmail.com",
     waChannel: "https://whatsapp.com/channel/0029Vb7p4QV0QeadmOIpgx36",
-    ig: "https://instagram.com/xplainer.guru.official",
-    yt: "https://youtube.com/@XplainerGuruOfficial",
+    waScribeGroup: "https://chat.whatsapp.com/FdU3678VG4nLICbTVRbZub", 
+    ig: "https://instagram.com/xplainerguru",
+    yt: "https://youtube.com/@xplainerguru",
     fb: "https://facebook.com/xplainerguru",
-    developer: { ig: "https://instagram.com/ashu7061a" }
+    developer: { website: "https://coderkaushal.netlify.app" }
 };
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -166,7 +167,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 <a href="${CONFIG.fb}" target="_blank" class="ft-link"><i class="fa-brands fa-facebook"></i> Facebook Page</a>
             </div>
         </div>
-        <div class="credits"> Designed and Developed with ❤️ by <a href="${CONFIG.developer.ig}" target="_blank" style="color:#fff; font-weight:700;">Ashutosh Kaushal</a> | &copy; 2026 </div>
+        <div class="credits"> Designed and Developed with ❤️ by <a href="${CONFIG.developer.website}" target="_blank" rel="author" style="color:#fff; font-weight:700;">Ashutosh Kaushal (CoderKaushal)</a> | &copy; 2026 </div>
     </footer>
     `;
 
@@ -177,7 +178,7 @@ document.addEventListener("DOMContentLoaded", () => {
     <div id="xg-bot-modal">
         <div class="bot-header">
             <div style="font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 16px; display: flex; align-items: center; gap: 10px;">
-                <span style="background: #3b82f6; width: 30px; height: 30px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 16px;">🤖</span>
+                <img src="bot-logo.png" style="width: 30px; height: 30px; border-radius: 50%; object-fit: cover;" alt="Bot Logo">
                 Ya Bro
             </div>
             <div style="display: flex; gap: 15px; font-size: 20px; font-weight: bold; align-items: center;">

@@ -37,7 +37,7 @@
                 <div class="flex justify-between items-start border-b-2 border-dashed border-slate-200 pb-5 mb-6 relative z-10 flex-wrap gap-4">
                     <div>
                         <div class="flex items-center gap-2.5 font-['Poppins'] text-[20px] sm:text-[24px] font-extrabold text-slate-900">
-                            <img src="logo.png" alt="XG" class="w-10 h-10 rounded-full object-cover" onerror="this.src='https://ui-avatars.com/api/?name=XG&background=2563eb&color=fff'"> 
+                            <img src="logo.png" crossorigin="anonymous" alt="XG" class="w-10 h-10 rounded-full object-cover" onerror="this.src='https://ui-avatars.com/api/?name=XG&background=2563eb&color=fff'"> 
                             Xplainer Guru
                         </div>
                         <h2 id="test-title-display" class="my-3.5 mt-4 font-['Poppins'] text-[18px] sm:text-[20px] text-slate-900 leading-tight">Loading...</h2>
@@ -45,7 +45,7 @@
                         <p id="cert-id" class="m-0 mt-1 text-slate-400 text-[12px] font-mono font-bold">ID: XG-XXXX</p>
                     </div>
                     <div class="text-right shrink-0">
-                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=80x80&data=https://xplainerguru.netlify.app" alt="Verify QR" class="rounded-lg border border-slate-200 p-1 bg-white w-[60px] h-[60px] sm:w-[80px] sm:h-[80px]">
+                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=80x80&data=https://xplainerguru.netlify.app" crossorigin="anonymous" alt="Verify QR" class="rounded-lg border border-slate-200 p-1 bg-white w-[60px] h-[60px] sm:w-[80px] sm:h-[80px]">
                         <p class="text-[10px] text-slate-400 m-0 mt-1.5 font-extrabold uppercase tracking-wider">VERIFIED RESULT</p>
                     </div>
                 </div>
@@ -228,7 +228,8 @@
 
                 let imgHTML = '';
                 if (q.image && q.image.trim() !== '') {
-                    imgHTML = `<img src="${q.image}" class="max-w-full max-h-[200px] rounded-lg mb-[15px] border border-slate-200 object-contain">`;
+                    // Added crossorigin here as well just in case questions have images from external domains
+                    imgHTML = `<img src="${q.image}" crossorigin="anonymous" class="max-w-full max-h-[200px] rounded-lg mb-[15px] border border-slate-200 object-contain">`;
                 }
 
                 const cardHTML = `
@@ -268,7 +269,8 @@
 
             const element = document.getElementById('certificate-node');
             
-            html2canvas(element, { scale: 2, backgroundColor: '#ffffff', useCORS: true }).then(canvas => {
+            // Fixed: useCORS is set to true to allow cross-origin images like QR code
+            html2canvas(element, { scale: 2, backgroundColor: '#ffffff', useCORS: true, allowTaint: true }).then(canvas => {
                 const imgData = canvas.toDataURL('image/png');
                 
                 const link = document.createElement('a');
@@ -282,7 +284,8 @@
                     btn.disabled = false;
                 }, 3000);
             }).catch(err => {
-                alert("Failed to generate image. Please try again.");
+                console.error("html2canvas error: ", err);
+                alert("Failed to generate image. Please try again or take a screenshot.");
                 btn.innerHTML = originalText;
                 btn.disabled = false;
             });

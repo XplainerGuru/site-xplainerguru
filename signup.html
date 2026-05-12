@@ -22,7 +22,7 @@
         <div class="text-center mb-[25px]">
             <img src="logo.png" alt="Xplainer Guru" class="w-[55px] h-[55px] rounded-full object-cover mb-[10px] shadow-[0_4px_10px_rgba(0,0,0,0.1)] mx-auto" onerror="this.src='https://via.placeholder.com/55?text=XG'">
             <h2 class="font-['Poppins'] text-[22px] text-slate-900 m-0">Create Account</h2>
-            <p class="text-slate-500 text-[13px] mt-[5px]">Join as a Student, Parent, or Student Writer</p>
+            <p class="text-slate-500 text-[13px] mt-[5px]">Join as a Student, Parent, or Scribe</p>
         </div>
 
         <div id="signup-error" class="hidden text-red-500 text-[13px] font-bold mb-[15px] bg-red-50 p-3 rounded-lg border border-red-200"></div>
@@ -44,13 +44,13 @@
         <form id="signupForm">
             <div class="mb-[18px] text-left relative">
                 <label class="block text-[11px] font-extrabold text-slate-400 uppercase mb-1.5 tracking-wide">I am joining as a...</label>
-                <select id="su-role" class="w-full p-[14px_15px] border border-slate-200 rounded-[10px] font-['Manrope'] text-[14px] box-border bg-slate-50 outline-none transition duration-300 focus:border-blue-600 focus:bg-white focus:shadow-[0_0_0_3px_rgba(37,99,235,0.1)] cursor-pointer appearance-none bg-no-repeat bg-[right_15px_center]" style="background-image: url('data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'12\' height=\'12\' fill=\'%2364748b\' viewBox=\'0 0 16 16\'%3E%3Cpath d=\'M8 11.5l-5-5h10l-5 5z\'/%3E%3C/svg%3E');" required onchange="handleRoleChange()">
+                <select id="su-role" class="w-full p-[14px_15px] border border-slate-200 rounded-[10px] font-['Manrope'] text-[14px] box-border bg-slate-50 outline-none transition duration-300 focus:border-blue-600 focus:bg-white focus:shadow-[0_0_0_3px_rgba(37,99,235,0.1)] cursor-pointer appearance-none bg-no-repeat bg-[right_15px_center]" style="background-image: url('data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'12\' height=\'12\' fill=\'%2364748b\' viewBox=\'0 0 16 16\'%3E%3Cpath d=\'M8 11.5l-5-5h10l-5 5z\'/%3E%3C/svg%3E');" required onchange="toggleSignupFields()">
                     <option value="student" selected>Student / Learner</option>
                     <option value="parent">Parent</option>
                     <option value="student_writer">Student Writer (Scribe)</option>
                 </select>
                 <div id="scribe-info" class="hidden mt-3 p-3 bg-violet-50 border border-violet-100 rounded-lg text-[12px] text-slate-600 leading-relaxed">
-                    <i class="fa-solid fa-pen-nib text-violet-500"></i> <b>What is a Scribe?</b> Scribes are contributors who write original educational articles for our library. Content must be your own work (strictly no AI/copy-paste) and purely educational.
+                    <i class="fa-solid fa-pen-nib text-violet-500"></i> <b>What is a Scribe?</b> Scribes are contributors who write original educational articles for our library. Content must be your own work.
                 </div>
             </div>
 
@@ -64,25 +64,26 @@
                 <input type="email" id="su-email" class="w-full p-[14px_15px] border border-slate-200 rounded-[10px] font-['Manrope'] text-[14px] box-border bg-slate-50 outline-none transition duration-300 focus:border-blue-600 focus:bg-white focus:shadow-[0_0_0_3px_rgba(37,99,235,0.1)]" placeholder="Permanent Email" required>
             </div>
 
-            <div id="writer-extra-fields" class="hidden">
-                <div class="mb-[18px] text-left relative">
-                    <label class="block text-[11px] font-extrabold text-slate-400 uppercase mb-1.5 tracking-wide">WhatsApp Number</label>
-                    <input type="tel" id="su-phone" class="w-full p-[14px_15px] border border-slate-200 rounded-[10px] font-['Manrope'] text-[14px] box-border bg-slate-50 outline-none transition duration-300 focus:border-blue-600 focus:bg-white focus:shadow-[0_0_0_3px_rgba(37,99,235,0.1)]" placeholder="10-digit mobile number">
-                </div>
-                <div class="mb-[18px] text-left relative">
-                    <label class="block text-[11px] font-extrabold text-slate-400 uppercase mb-1.5 tracking-wide">Your Age</label>
-                    <input type="number" id="su-age" class="w-full p-[14px_15px] border border-slate-200 rounded-[10px] font-['Manrope'] text-[14px] box-border bg-slate-50 outline-none transition duration-300 focus:border-blue-600 focus:bg-white focus:shadow-[0_0_0_3px_rgba(37,99,235,0.1)]" placeholder="Minimum 15 years">
-                </div>
-                <div class="mb-[18px] text-left relative">
-                    <label class="block text-[11px] font-extrabold text-slate-400 uppercase mb-1.5 tracking-wide">Why do you want to be a Scribe?</label>
-                    <textarea id="su-reason" class="w-full p-[14px_15px] border border-slate-200 rounded-[10px] font-['Manrope'] text-[14px] box-border bg-slate-50 outline-none transition duration-300 focus:border-blue-600 focus:bg-white focus:shadow-[0_0_0_3px_rgba(37,99,235,0.1)] min-h-[80px]" placeholder="Briefly describe your interest in educational writing..."></textarea>
-                </div>
+            <div class="mb-[18px] text-left relative">
+                <label class="block text-[11px] font-extrabold text-slate-400 uppercase mb-1.5 tracking-wide">WhatsApp Number</label>
+                <input type="tel" id="su-phone" class="w-full p-[14px_15px] border border-slate-200 rounded-[10px] font-['Manrope'] text-[14px] box-border bg-slate-50 outline-none transition duration-300 focus:border-blue-600 focus:bg-white focus:shadow-[0_0_0_3px_rgba(37,99,235,0.1)]" placeholder="Optional for Students">
             </div>
 
             <div class="mb-[18px] text-left relative" id="childIdGroup" style="display:none;">
                 <label class="block text-[11px] font-extrabold text-green-600 uppercase mb-1.5 tracking-wide">Verify Child's UID <span class="text-red-500">*</span></label>
                 <input type="text" id="su-childId" class="w-full p-[14px_15px] border border-green-600 rounded-[10px] font-['Manrope'] text-[14px] box-border bg-slate-50 outline-none transition duration-300 focus:border-green-600 focus:bg-white focus:shadow-[0_0_0_3px_rgba(22,163,74,0.1)]" placeholder="e.g., XG-STU-123456">
                 <p class="text-[10px] text-slate-500 m-0 mt-1">Ask your child to copy their secure system UID from their Profile.</p>
+            </div>
+
+            <div id="scribe-fields" class="hidden">
+                <div class="mb-[18px] text-left relative">
+                    <label class="block text-[11px] font-extrabold text-slate-400 uppercase mb-1.5 tracking-wide">Date of Birth <span class="text-red-500">*</span></label>
+                    <input type="date" id="su-dob" class="w-full p-[14px_15px] border border-slate-200 rounded-[10px] font-['Manrope'] text-[14px] box-border bg-slate-50 outline-none transition duration-300 focus:border-blue-600 focus:bg-white focus:shadow-[0_0_0_3px_rgba(37,99,235,0.1)]">
+                </div>
+                <div class="mb-[18px] text-left relative">
+                    <label class="block text-[11px] font-extrabold text-slate-400 uppercase mb-1.5 tracking-wide">Why do you want to be a Scribe? <span class="text-red-500">*</span></label>
+                    <textarea id="su-reason" class="w-full p-[14px_15px] border border-slate-200 rounded-[10px] font-['Manrope'] text-[14px] box-border bg-slate-50 outline-none transition duration-300 focus:border-blue-600 focus:bg-white focus:shadow-[0_0_0_3px_rgba(37,99,235,0.1)] min-h-[80px]" placeholder="Briefly describe your interest in educational writing..."></textarea>
+                </div>
             </div>
 
             <div class="mb-[18px] text-left relative">
@@ -116,21 +117,21 @@
             <p class="text-slate-500 text-[13px] mb-5">Follow these instructions to set up your regular account.</p>
             
             <div class="bg-slate-50 border border-slate-300 p-3 rounded-lg mb-[15px]">
-                <strong class="text-slate-900 text-[12px]"><i class="fa-solid fa-user-graduate"></i> FOR STUDENTS / STUDENT WRITERS:</strong>
-                <p class="text-[12px] text-slate-600 m-0 mt-1.5 leading-relaxed">You can instantly log in using <b>Continue with Google</b>. Alternatively, fill in your details below. Your email must be verified before you can log in.</p>
+                <strong class="text-slate-900 text-[12px]"><i class="fa-solid fa-user-graduate"></i> FOR STUDENTS:</strong>
+                <p class="text-[12px] text-slate-600 m-0 mt-1.5 leading-relaxed">You can instantly log in using <b>Continue with Google</b>. Or use email/password to create an account directly.</p>
             </div>
 
             <div class="bg-green-50 border border-green-300 p-3 rounded-lg mb-[15px]">
                 <strong class="text-green-800 text-[12px]"><i class="fa-solid fa-shield-halved"></i> FOR PARENTS / GUARDIANS:</strong>
                 <ul class="m-0 mt-1.5 pl-5 text-[12px] text-green-800 font-semibold leading-relaxed list-disc">
                     <li>Select "Parent" from the dropdown menu.</li>
-                    <li>You must provide your Child's <b>System Student ID</b> (e.g., XG-STU-123456).</li>
+                    <li>You must provide your Child's <b>System Student ID</b>.</li>
                 </ul>
             </div>
 
             <div class="bg-indigo-50 border border-violet-300 p-3 rounded-lg mb-[15px]">
                 <strong class="text-violet-800 text-[12px]"><i class="fa-solid fa-users-gear"></i> FOR CORE TEAM MEMBERS:</strong>
-                <p class="text-[12px] text-violet-700 m-0 mt-1.5 leading-relaxed">Mentors, Writers, and Tech Support must apply through the <a href="careers.html" class="font-bold underline text-violet-800">Careers Page</a>. Do not sign up here.</p>
+                <p class="text-[12px] text-violet-700 m-0 mt-1.5 leading-relaxed">Mentors, Writers, and Tech Support must apply through the <a href="careers.html" class="font-bold underline text-violet-800">Careers Page</a>.</p>
             </div>
 
             <button class="bg-violet-500 hover:bg-violet-600 text-white border-none p-4 w-full rounded-lg font-extrabold font-['Manrope'] cursor-pointer transition duration-300 text-[15px] mt-[15px]" onclick="document.getElementById('setupModal').classList.remove('flex'); document.getElementById('setupModal').classList.add('hidden')">Close Instructions</button>
@@ -155,8 +156,8 @@
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
     <script src="js/firebase-init.js"></script>
-    <script src="js/auth.js"></script>
     <script src="js/master.js"></script>
+    <script src="js/auth.js"></script>
     <script src="js/chatbot.js"></script>
 
     <script>
@@ -167,28 +168,49 @@
             icon.classList.toggle("fa-eye");
         }
 
-        // Logic for Parent Field
-        function handleRoleChange() {
+        // Dynamic Field Logic for Roles
+        function toggleSignupFields() {
             const role = document.getElementById('su-role').value;
             const childIdGroup = document.getElementById('childIdGroup');
-            const writerFields = document.getElementById('writer-extra-fields');
+            const scribeFields = document.getElementById('scribe-fields');
             const scribeInfo = document.getElementById('scribe-info');
+            const phoneInput = document.getElementById('su-phone');
+            const dobInput = document.getElementById('su-dob');
+            const reasonInput = document.getElementById('su-reason');
             
             if (role === 'parent') {
                 childIdGroup.style.display = 'block'; 
                 document.getElementById('su-childId').required = true;
-                writerFields.classList.add('hidden');
-                if(scribeInfo) scribeInfo.classList.add('hidden');
+                
+                scribeFields.style.display = 'none';
+                scribeInfo.classList.add('hidden');
+                
+                phoneInput.placeholder = "WhatsApp Number (Optional)";
+                phoneInput.required = false;
+                dobInput.required = false;
+                reasonInput.required = false;
             } else if (role === 'student_writer') {
-                writerFields.classList.remove('hidden');
-                childIdGroup.style.display = 'none';
+                childIdGroup.style.display = 'none'; 
                 document.getElementById('su-childId').required = false;
-                if(scribeInfo) scribeInfo.classList.remove('hidden');
+                
+                scribeFields.style.display = 'block';
+                scribeInfo.classList.remove('hidden');
+                
+                phoneInput.placeholder = "WhatsApp Number (Required)*";
+                phoneInput.required = true;
+                dobInput.required = true;
+                reasonInput.required = true;
             } else {
                 childIdGroup.style.display = 'none'; 
                 document.getElementById('su-childId').required = false;
-                writerFields.classList.add('hidden');
-                if(scribeInfo) scribeInfo.classList.add('hidden');
+                
+                scribeFields.style.display = 'none';
+                scribeInfo.classList.add('hidden');
+                
+                phoneInput.placeholder = "WhatsApp Number (Optional)";
+                phoneInput.required = false;
+                dobInput.required = false;
+                reasonInput.required = false;
             }
         }
 
@@ -202,28 +224,28 @@
             errorBox.classList.remove('block');
 
             const signupData = {
-                role: document.getElementById('su-role').value, // Will only be student, parent, or student_writer
+                role: document.getElementById('su-role').value, 
                 name: document.getElementById('su-name').value.trim(),
                 email: document.getElementById('su-email').value.toLowerCase().trim(),
                 pass: document.getElementById('su-password').value,
                 childId: document.getElementById('su-childId') ? document.getElementById('su-childId').value.trim().toUpperCase() : '',
                 legalAgreementAccepted: document.getElementById('legalAgreement').checked,
                 phone: document.getElementById('su-phone').value.trim(),
-                age: document.getElementById('su-age').value.trim(),
-                reason: document.getElementById('su-reason').value.trim()
+                dob: document.getElementById('su-dob') ? document.getElementById('su-dob').value : '',
+                reason: document.getElementById('su-reason') ? document.getElementById('su-reason').value.trim() : ''
             };
 
             btn.disabled = true;
-            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Processing...`;
+            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Creating Account...`;
 
             if (window.authManager) {
                 window.authManager.processSignup(signupData, 
                     (result) => {
-                        // Success View
                         const { email, waLinks } = result;
                         let waHtml = '';
                         
-                        waLinks.forEach(link => {
+                        waLinks && waLinks.forEach(link => {
+                            if (!link) return; // Prevent "includes" error on undefined links
                             const isGroup = link.includes('chat.whatsapp.com');
                             const label = isGroup ? "Join Scribe Team Group" : "Follow Xplainer Guru Channel";
                             const icon = isGroup ? "fa-users" : "fa-bullhorn";
@@ -237,26 +259,25 @@
 
                         document.getElementById('main-auth-box').innerHTML = `
                             <div class="text-center">
-                                <i class="fa-solid fa-envelope-circle-check text-[50px] text-blue-600 mb-[15px]"></i>
-                                <h2 class="font-['Poppins'] text-slate-900 m-0 mb-2.5 text-[22px]">Check Your Email</h2>
-                                <p class="text-[14px] text-slate-600 leading-relaxed mb-[15px]">Account created successfully! Please verify your email before logging in. A verification link has been sent to <b class="text-slate-900">${email}</b>.</p>
+                                <i class="fa-solid fa-circle-check text-[50px] text-green-500 mb-[15px]"></i>
+                                <h2 class="font-['Poppins'] text-slate-900 m-0 mb-2.5 text-[22px]">Account Ready!</h2>
+                                <p class="text-[14px] text-slate-600 leading-relaxed mb-[15px]">Welcome aboard, <b class="text-slate-900">${signupData.name}</b>! Your account has been created successfully.</p>
                                 
                                 <div class="my-5 border-t border-b border-slate-100 py-4">
-                                    <p class="text-[12px] font-bold text-slate-400 uppercase tracking-widest mb-3">Next Steps: Join our Community</p>
+                                    <p class="text-[12px] font-bold text-slate-400 uppercase tracking-widest mb-3">Important: Join our Community</p>
                                     ${waHtml}
                                 </div>
 
-                                <a href="login.html" class="inline-block px-5 py-2.5 text-blue-600 border border-blue-600 rounded-lg no-underline font-bold hover:bg-blue-50 transition">Go to Login</a>
+                                <a href="login.html" class="inline-block px-5 py-3 w-full text-center bg-blue-600 text-white rounded-lg no-underline font-bold hover:bg-blue-700 transition shadow-md">Enter Dashboard</a>
                             </div>
                         `;
                     },
                     (errorMsg) => {
-                        // Error View
                         btn.disabled = false; 
                         btn.innerHTML = originalBtnText;
                         
                         if (errorMsg.includes("already registered")) {
-                            errorBox.innerHTML = `<i class='fa-solid fa-circle-info'></i> Aapka email pehle se 'Student' ke roop mein registered hai. Naya account banane ki zarurat nahi hai! Kripya <b>Login</b> karein aur dashboard mein <b>'Become a Scribe'</b> button ka use karke upgrade karein.`;
+                            errorBox.innerHTML = `<i class='fa-solid fa-circle-info'></i> Aapka email pehle se registered hai! Agar aap Scribe banna chahte hain, toh kripya <b>Login</b> karein aur dashboard se upgrade karein.`;
                         } else {
                             errorBox.innerHTML = `<i class='fa-solid fa-triangle-exclamation'></i> ${errorMsg}`;
                         }
@@ -271,7 +292,7 @@
             }
         });
 
-        // 🟢 AUTO-SELECT ROLE FROM URL (e.g. ?role=student_writer)
+        // AUTO-SELECT ROLE FROM URL (e.g. ?role=student_writer)
         window.addEventListener('DOMContentLoaded', () => {
             const urlParams = new URLSearchParams(window.location.search);
             const roleParam = urlParams.get('role');
@@ -279,7 +300,7 @@
                 const roleSelect = document.getElementById('su-role');
                 if (roleSelect) {
                     roleSelect.value = roleParam;
-                    handleRoleChange(); // UI visibility अपडेट करने के लिए
+                    toggleSignupFields();
                 }
             }
         });

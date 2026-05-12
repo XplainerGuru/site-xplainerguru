@@ -10,6 +10,49 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <link rel="stylesheet" href="css/style.css">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "@id": "https://xplainerguru.netlify.app/careers.html/#webpage",
+  "url": "https://xplainerguru.netlify.app/careers.html",
+  "name": "Join Our Team | Xplainer Guru",
+  "description": "Official core team expansion portal for Xplainer Guru.",
+  "publisher": {
+    "@id": "https://xplainerguru.netlify.app/#organization"
+  },
+  "isPartOf": {
+    "@id": "https://xplainerguru.netlify.app/#website"
+  },
+  "mainEntity": {
+    "@type": "ItemList",
+    "name": "Core Team Opportunities",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Content Writer"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Academic Mentor"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": "Tech Support"
+      }
+    ]
+  },
+  "mentions": [
+    { "@id": "https://xplainerguru.netlify.app/#ashutosh" },
+    { "@id": "https://xplainerguru.netlify.app/#shiwendu" }
+  ]
+}
+</script>
+
 </head>
 <body class="bg-slate-50 font-['Manrope'] text-slate-800 m-0">
 
@@ -53,6 +96,11 @@
             </div>
 
             <div class="mb-[18px] text-left relative">
+                <label class="block text-[11px] font-extrabold text-slate-500 uppercase mb-1.5 tracking-wide">Date of Birth <span class="text-red-500">*</span></label>
+                <input type="date" id="app-dob" class="w-full p-[14px_15px] border border-slate-200 rounded-[10px] font-['Manrope'] text-[14px] box-border bg-slate-50 outline-none transition duration-300 focus:border-violet-500 focus:bg-white focus:shadow-[0_0_0_3px_rgba(139,92,246,0.1)]" required>
+            </div>
+
+            <div class="mb-[18px] text-left relative">
                 <label class="block text-[11px] font-extrabold text-slate-500 uppercase mb-1.5 tracking-wide">Profile Photo URL <span class="text-slate-400 font-medium normal-case">(Optional)</span></label>
                 <input type="url" id="app-pic" class="w-full p-[14px_15px] border border-slate-200 rounded-[10px] font-['Manrope'] text-[13px] box-border bg-slate-50 outline-none transition duration-300 focus:border-violet-500 focus:bg-white focus:shadow-[0_0_0_3px_rgba(139,92,246,0.1)]" placeholder="Paste a link to your display picture (Drive, LinkedIn, etc.)">
             </div>
@@ -78,8 +126,8 @@
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
     <script src="js/firebase-init.js"></script>
+    <script src="js/auth.js"></script>
     <script src="js/master.js"></script>
-    <script src="js/notification.js"></script>
     <script src="js/chatbot.js"></script>
 
     <script>
@@ -106,7 +154,7 @@
                             <a href="signup.html?role=student_writer" class="text-violet-600 font-extrabold text-[13px] no-underline hover:underline">Apply as a Scribe now →</a>
                         </div>
 
-                        <a href="https://whatsapp.com/channel/0029Vb7p4QV0QeadmOIpgx36" target="_blank" class="inline-flex items-center gap-2 bg-green-500 text-white px-6 py-3 rounded-xl font-bold hover:bg-green-600 transition">
+                        <a href="${CONFIG.waChannel}" target="_blank" class="inline-flex items-center gap-2 bg-green-500 text-white px-6 py-3 rounded-xl font-bold hover:bg-green-600 transition">
                             <i class="fa-brands fa-whatsapp"></i> Stay Updated on WhatsApp
                         </a>
                     </div>`;
@@ -137,9 +185,10 @@
                 name: document.getElementById('app-name').value.trim(),
                 email: document.getElementById('app-email').value.toLowerCase().trim(),
                 phone: document.getElementById('app-phone').value.trim(),
+                dob: document.getElementById('app-dob').value.trim(), // Added DOB field
                 pic: document.getElementById('app-pic').value.trim(), 
                 reason: document.getElementById('app-reason').value.trim(),
-                status: "pending", // Application status
+                status: "pending", 
                 submittedAt: firebase.firestore.FieldValue.serverTimestamp()
             };
 
@@ -159,18 +208,11 @@
             btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Submitting...`;
 
             try {
-                // Ensure Firestore is accessible from your init script
                 const firestore = typeof firebase !== 'undefined' ? firebase.firestore() : null;
-                
-                if (!firestore) {
-                    throw new Error("Database not connected. Please check your internet connection.");
-                }
+                if (!firestore) throw new Error("Database not connected. Please check your internet connection.");
 
-                // Add to the job_applications collection
                 await firestore.collection('job_applications').add(applicationData);
 
-                // Success State UI - With WhatsApp Channel Link
-                // UPDATE THIS LINK to your actual WhatsApp Channel URL
                 const waChannelLink = "https://whatsapp.com/channel/0029Vb7p4QV0QeadmOIpgx36"; 
 
                 document.getElementById('main-auth-box').innerHTML = `

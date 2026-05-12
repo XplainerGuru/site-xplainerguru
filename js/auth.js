@@ -15,12 +15,11 @@ function initializeAuthListener(onUserLoaded, onUserUnauthenticated) {
     auth.onAuthStateChanged(async (user) => {
         if (user) {
             try {
-                if (user.emailVerified && localStorage.getItem(`pending_reg_${user.uid}`)) {
-                    await finalizeRegistration(user);
+                // Check Scribes collection first, then Users to support Admin backend sync
+                let userDoc = await db.collection("scribes").doc(user.uid).get();
+                if (!userDoc.exists) {
+                    userDoc = await db.collection("users").doc(user.uid).get();
                 }
-                
-                // Direct Firestore Read for Profile
-                const userDoc = await db.collection("users").doc(user.uid).get();
                 const userData = userDoc.exists ? userDoc.data() : null;
                 
                 try {
@@ -69,6 +68,7 @@ async function enforceRouting(user, userData, errorCallback) {
         const expiryTime = typeof userData.testPassExpiry.toMillis === 'function' ? userData.testPassExpiry.toMillis() : userData.testPassExpiry;
         if (Date.now() < expiryTime) hasValidTestPass = true;
     }
+    
     if (status !== 'active') {
         alert("Access Denied: Your account is pending review or suspended.");
         await auth.signOut();
@@ -87,11 +87,8 @@ async function processLogin(email, password, portalType, options = {}, errorCall
     try {
         const userCred = await auth.signInWithEmailAndPassword(email, password);
         
-        if (!userCred.user.emailVerified) {
-            await auth.signOut();
-            return errorCallback("Access Denied! Please verify your email first. Check your inbox or spam folder.");
-        }
-
+        // Removed emailVerified check to allow direct login
+        
         const syncResponse = await fetch(`${BASE_URL}/auth/login-sync`, {
             method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ uid: userCred.user.uid })
         });
@@ -112,117 +109,117 @@ async function processLogin(email, password, portalType, options = {}, errorCall
 
 // 5. SIGNUP LOGIC
 async function processSignup(data, successCallback, errorCallback) {
-    let { role, name, email, pass, phone, age, reason, childId } = data;
-    role = role.toLowerCase().replace(/\s+/g, '_'); // Normalize "Student Writer" to "student_writer"
+    let { role, name, email, pass, phone, dob, reason, childId } = data;
+    role = role.toLowerCase().replace(/\s+/g, '_'); 
     
-    const emailDomain = email.split('@')[1];
-    if (blockedDomains.includes(emailDomain)) return errorCallback("Temporary email addresses are not allowed.");
+    // Safety check to prevent "includes of undefined" error
+    if (!email || email.indexOf('@') === -1) {
+        return errorCallback("Invalid email address format.");
+    }
+    
+    const emailDomain = email?.split('@')[1];
+    if (emailDomain && blockedDomains.includes(emailDomain.toLowerCase())) {
+        return errorCallback("Temporary email addresses are not allowed.");
+    }
 
     // Role-Specific Validation
     if (role === 'parent' && !childId) {
         return errorCallback("Parent accounts require a valid Student ID.");
     }
-    
-    const minAge = (role === 'parent') ? 18 : 15;
-    if (parseInt(age) < minAge) {
-        return errorCallback(`Minimum age for this role is ${minAge}.`);
-    }
 
     try {
         const userCred = await auth.createUserWithEmailAndPassword(email, pass);
         await userCred.user.updateProfile({ displayName: name });
-        await userCred.user.sendEmailVerification();
+        // Removed sendEmailVerification to allow direct login creation
 
-        // Fix: Include all metadata in the persistence object
-        const pendingData = {
-            uid: userCred.user.uid, 
-            name, email, role, phone, age,
+        // Fix: Save to 'scribes' if role is student_writer, else 'users'
+        const collectionName = role === 'student_writer' ? 'scribes' : 'users';
+        await db.collection(collectionName).doc(userCred.user.uid).set({
+            uid: userCred.user.uid,
+            name: name,
+            email: email,
+            role: role,
+            phone: phone || "",
+            dob: dob || "", // Use dob instead of age
             reason: reason || "",
             childId: childId || null,
-            legalAgreementAccepted: Boolean(data.legalAgreementAccepted)
-        };
-        localStorage.setItem(`pending_reg_${userCred.user.uid}`, JSON.stringify(pendingData));
+            accountStatus: "active",
+            joined: firebase.firestore.FieldValue.serverTimestamp()
+        });
+
+        // Trigger Automatic Welcome Email (Non-blocking)
+        fetch("https://script.google.com/macros/s/AKfycbyvnS3Ie78b1FiCXntWoT5buqruMY5I71K-r0wo8sH1xVbcSN6Mhj_4TFq5j8BWA4hI/exec", {
+            method: "POST",
+            headers: { "Content-Type": "text/plain;charset=utf-8" },
+            redirect: "follow",
+            keepalive: true,
+            body: JSON.stringify({ action: "signup_user", name: name, email: email, role: role })
+        }).catch(e => console.log("Silent Email Alert Error", e));
 
         // Determine WhatsApp Links based on role
-        const waLinks = [CONFIG.waChannel]; // Default Channel for everyone
-        if (role === 'student_writer') {
-            waLinks.push(CONFIG.waScribeGroup); // Scribe Team Group
+        const waChannel = (typeof CONFIG !== 'undefined') ? CONFIG.waChannel : '';
+        const waLinks = waChannel ? [waChannel] : []; 
+        if (role === 'student_writer' && typeof CONFIG !== 'undefined' && CONFIG.waScribeGroup) {
+            waLinks.push(CONFIG.waScribeGroup);
         }
 
         successCallback({
             user: userCred.user,
-            email,
-            waLinks,
-            type: "verification_sent"
+            email: email,
+            waLinks: waLinks,
+            type: "direct_login"
         });
     } catch (error) { 
         errorCallback(error.code === 'auth/email-already-in-use' ? "Email is already registered! Please Login." : error.message); 
     }
 }
 
-// 6. FINALIZE REGISTRATION (Called when they first login after clicking email link)
-async function finalizeRegistration(user) {
-    const cacheKey = `pending_reg_${user.uid}`;
-    const cachedData = localStorage.getItem(cacheKey);
-    if (!cachedData) return;
-
-    try {
-        const data = JSON.parse(cachedData);
-        const payload = {
-            uid: user.uid, 
-            name: data.name, email: data.email, 
-            role: data.role, phone: data.phone, 
-            age: data.age, reason: data.reason,
-            childId: data.childId,
-            legalAgreementAccepted: data.legalAgreementAccepted 
-        };
-
-        const response = await fetch(`${BASE_URL}/auth/register`, {
-            method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload)
-        });
-
-        if (response.ok) localStorage.removeItem(cacheKey);
-    } catch (err) { console.error("Backend Registration Sync Failed:", err); }
-}
-
-// 7. GOOGLE AUTH LOGIN/SIGNUP LOGIC
+// 6. GOOGLE AUTH LOGIN/SIGNUP LOGIC
 window.triggerGoogleAuth = async function() {
     try {
-        // Capture intended role from signup page if available
-        const roleEl = document.getElementById('su-role') || document.getElementById('role-select');
-        const selectedRole = (roleEl?.value || 'student').toLowerCase().replace(/\s+/g, '_');
-
-        if (selectedRole === 'student_writer') {
-            alert("Scribe (Student Writer) accounts cannot be created via Google. Please use the Email/Password signup form to verify your credentials.");
-            return;
-        }
-
         const provider = new firebase.auth.GoogleAuthProvider();
         const result = await firebase.auth().signInWithPopup(provider);
         const user = result.user;
 
-        // Check if user exists in our Firestore
-        const docRef = await db.collection("users").doc(user.uid).get();
+        // 1. Check if user exists in scribes collection (Prevent role overwrite)
+        const scribeDoc = await db.collection("scribes").doc(user.uid).get();
+        if (scribeDoc.exists) {
+            await enforceRouting(user, scribeDoc.data(), (err) => alert(err));
+            return;
+        }
 
-        if (!docRef.exists) {
-            await db.collection("users").doc(user.uid).set({
+        // 2. Check if user exists in users collection (Prevent role overwrite)
+        const userDoc = await db.collection("users").doc(user.uid).get();
+        if (userDoc.exists) {
+            await enforceRouting(user, userDoc.data(), (err) => alert(err));
+            return;
+        }
+
+        // 3. New User -> ONLY THEN create in users collection with role: 'student'
+        const userData = {
                 uid: user.uid,
                 name: user.displayName,
                 email: user.email,
                 pic: user.photoURL,
-                role: selectedRole, 
+            role: 'student', 
                 accountStatus: "active",
                 joined: firebase.firestore.FieldValue.serverTimestamp()
-            });
-            // Redirect to dashboard immediately since Google emails are pre-verified
-            const redirectUrl = localStorage.getItem("redirectAfterLogin") || "dashboard.html";
-            localStorage.removeItem("redirectAfterLogin");
-            window.location.href = redirectUrl;
-        } else {
-            // Existing user -> Sync and enforce routing
-            const userData = docRef.data();
-            await enforceRouting(user, userData, (err) => alert(err));
-        }
+        };
+        await db.collection("users").doc(user.uid).set(userData);
+        
+        // Trigger Automatic Welcome Email (Non-blocking)
+        fetch("https://script.google.com/macros/s/AKfycbyvnS3Ie78b1FiCXntWoT5buqruMY5I71K-r0wo8sH1xVbcSN6Mhj_4TFq5j8BWA4hI/exec", {
+            method: "POST",
+            headers: { "Content-Type": "text/plain;charset=utf-8" },
+            redirect: "follow",
+            keepalive: true,
+            body: JSON.stringify({ action: "signup_user", name: user.displayName, email: user.email, role: 'student' })
+        }).catch(e => console.log("Silent Email Alert Error", e));
+
+        const redirectUrl = localStorage.getItem("redirectAfterLogin") || "dashboard.html";
+        localStorage.removeItem("redirectAfterLogin");
+        window.location.href = redirectUrl;
+
     } catch (error) {
         console.error("Google Auth Error:", error);
         alert("Failed to sign in with Google. " + error.message);

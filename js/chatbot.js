@@ -9,7 +9,27 @@ const CHAT_BODY_ID = 'xg-bot-body';
 let isBotInitialized = false;
 
 function initChatbot() {
-    if (!document.getElementById(XG_BOT_ID)) return;
+    const modal = document.getElementById(XG_BOT_ID);
+    if (!modal) return;
+
+    // Floating Action Button (FAB) में बोट का लोगो सेट करना
+    const fab = document.getElementById(XG_FAB_ID);
+    if (fab) {
+        fab.innerHTML = `<img src="bot-logo.png" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;" alt="Bot Logo">`;
+        fab.style.background = 'white'; // बैकग्राउंड को वाइट रखा ताकि लोगो साफ़ दिखे
+    }
+
+    // Chat Modal के Header में मौजूद रोबोट आइकन को नए लोगो से बदलना
+    const modalHeader = modal.querySelector('header, .xg-bot-header, div:first-child');
+    if (modalHeader) {
+        const headerImg = modalHeader.querySelector('img');
+        if (headerImg) {
+            headerImg.src = "bot-logo.png";
+            headerImg.style.borderRadius = "50%";
+            headerImg.style.objectFit = "cover";
+        }
+    }
+
     setTimeout(() => {
         showGreeting();
     }, 500); 
@@ -60,7 +80,10 @@ function addMessage(text, sender) {
 
     if(sender === 'bot') {
         bubble.innerHTML = `
-            <div style="font-size: 10px; color: #64748b; margin-bottom: 4px; font-weight: 800; text-transform: uppercase;">🤖 YA BRO</div>
+            <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 4px;">
+                <img src="bot-logo.png" style="width: 20px; height: 20px; border-radius: 50%; object-fit: cover;" alt="Bot Logo">
+                <div style="font-size: 10px; color: #64748b; font-weight: 800; text-transform: uppercase;">YA BRO</div>
+            </div>
             <div style="${contentStyle}">${text}</div>
         `;
     } else {

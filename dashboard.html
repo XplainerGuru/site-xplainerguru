@@ -60,7 +60,6 @@
                         </div>
                     </div>
 
-                    <!-- Upgrade to Scribe Card -->
                     <div id="scribe-upgrade-card" class="bg-violet-50 rounded-2xl p-[clamp(15px,3vw,25px)] border border-violet-200 shadow-sm hidden">
                         <h3 class="m-0 mb-[10px] font-['Poppins'] text-violet-800 text-[17px] flex items-center gap-2"><i class="fa-solid fa-pen-nib"></i> Become a Scribe</h3>
                         <p class="text-[12px] text-slate-600 m-0 mb-4">Share your knowledge! Apply to write educational articles for the XG library.</p>
@@ -96,7 +95,6 @@
                 <div id="child-stats-placeholder"></div>
             </div>
 
-            <!-- Upgrade Form Modal (Hidden by default) -->
             <div id="scribe-application-modal" class="hidden fixed inset-0 bg-slate-900/60 z-[10000] flex justify-center items-center p-5 backdrop-blur-sm">
                 <div class="bg-white p-8 rounded-2xl max-w-[450px] w-full shadow-2xl">
                     <h3 class="font-['Poppins'] text-slate-900 m-0 mb-4">Scribe Application (Student Writer)</h3>
@@ -113,8 +111,8 @@
                             <input type="tel" id="up-phone" class="w-full p-3 border rounded-lg text-sm bg-slate-50 outline-none focus:border-violet-500" placeholder="10-digit number">
                         </div>
                         <div class="mb-4">
-                            <label class="block text-[11px] font-bold text-slate-500 mb-1">Your Age</label>
-                            <input type="number" id="up-age" class="w-full p-3 border rounded-lg text-sm bg-slate-50 outline-none focus:border-violet-500" placeholder="e.g., 16">
+                            <label class="block text-[11px] font-bold text-slate-500 mb-1">Date of Birth</label>
+                            <input type="date" id="up-dob" class="w-full p-3 border rounded-lg text-sm bg-slate-50 outline-none focus:border-violet-500" required>
                         </div>
                         <div class="mb-5">
                             <label class="block text-[11px] font-bold text-slate-500 mb-1">Why do you want to write?</label>
@@ -127,11 +125,21 @@
                     </div>
                 </div>
             </div>
+            
             <div id="creator-studio-widget" class="hidden mt-5">
                 <div class="bg-white rounded-2xl p-[clamp(15px,3vw,25px)] border border-slate-200 shadow-sm">
                     <h3 class="m-0 mb-[15px] font-['Poppins'] flex items-center gap-[10px] text-[clamp(15px,2vw,17px)]"><i class="fa-solid fa-wand-magic-sparkles text-blue-600"></i> Creator Studio</h3>
                     <form id="creator-submit-form" onsubmit="submitCreatorContent(event)">
                         <div class="mb-[15px]"><input type="text" id="cs-title" placeholder="Article Title" required class="w-full p-3 border border-slate-200 rounded-lg outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition"></div>
+                        <div class="mb-[15px]">
+                            <label for="cs-class-level" class="block text-[11px] font-bold text-slate-500 mb-1 uppercase">Select Category / Class:</label>
+                            <select id="cs-class-level" class="w-full p-3 border border-slate-200 rounded-lg outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition bg-white cursor-pointer">
+                                <option value="General" selected>General/Tips</option>
+                                <option value="Class 8">Class 8</option>
+                                <option value="Class 9">Class 9</option>
+                                <option value="Class 10">Class 10</option>
+                            </select>
+                        </div>
                         <div class="mb-[20px]"><textarea id="cs-content" placeholder="Write your article content here..." required class="w-full p-3 min-h-[150px] border border-slate-200 rounded-lg outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition"></textarea></div>
                         <button type="submit" id="cs-submit-btn" class="bg-blue-600 hover:bg-blue-700 text-white border-none py-3 px-6 rounded-lg font-bold cursor-pointer flex items-center justify-center gap-2 transition duration-200 w-full sm:w-auto"><i class="fa-solid fa-paper-plane"></i> Submit for Review</button>
                     </form>
@@ -145,7 +153,10 @@
                         <div class="mb-[15px]"><input type="text" id="t-subject" placeholder="Ticket Subject (e.g., Chapter 4 Doubt)" required class="w-full p-3 border border-slate-200 rounded-lg outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition"></div>
                         <div class="mb-[15px]">
                             <select id="t-category" required class="w-full p-3 border border-slate-200 rounded-lg outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition bg-white cursor-pointer appearance-none" style="background-image: url('data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' fill=\'none\' viewBox=\'0 0 24 24\' stroke=\'%2364748b\'%3E%3Cpath stroke-linecap=\'round\' stroke-linejoin=\'round\' stroke-width=\'2\' d=\'M19 9l-7 7-7-7\'%3E%3C/path%3E%3C/svg%3E'); background-repeat: no-repeat; background-position: right 1rem center; background-size: 1.5em 1.5em;">
-                                </select>
+                                <option value="" disabled selected>-- Select Category --</option>
+                                <option value="academic">Academic Doubt</option>
+                                <option value="technical">Tech Issue</option>
+                            </select>
                         </div>
                         <div class="mb-[15px]"><textarea id="t-desc" placeholder="Describe your issue..." required class="w-full p-3 min-h-[100px] border border-slate-200 rounded-lg outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition"></textarea></div>
                         <button type="submit" id="submit-ticket-btn" class="bg-blue-600 hover:bg-blue-700 text-white border-none py-3 px-5 rounded-lg font-bold cursor-pointer w-full flex items-center justify-center gap-2 transition duration-200"><i class="fa-solid fa-paper-plane"></i> Submit Ticket</button>
@@ -199,16 +210,21 @@
                     document.getElementById('p-name').innerText = user.displayName || userData?.name || "Learner";
 
                     let roleKey = (userData?.role || 'student').toUpperCase();
-                    let prefix = roleKey === 'STUDENT' ? 'STU' : (roleKey === 'PARENT' ? 'PRN' : 'USR');
+                    // Correct prefix mapping to ensure Scribes (student_writer) show 'SCR'
+                    const rolePrefixMap = {
+                        'STUDENT': 'STU',
+                        'PARENT': 'PRN',
+                        'STUDENT_WRITER': 'SCR'
+                    };
+                    let prefix = rolePrefixMap[roleKey] || 'USR';
 
-                    // Clean Dynamic Hash Generation (Admin locks removed)
                     let customId = `XG-${prefix}-${user.uid.substring(0, 6).toUpperCase()}`;
 
                     document.getElementById('p-id').innerText = `ID: ${customId}`;
                     document.getElementById('p-email').innerText = user.email;
 
                     if (userData && userData.role) {
-                        document.getElementById('p-role').innerText = userData.role;
+                        document.getElementById('p-role').innerText = userData.role.replace('_', ' ');
                     }
 
                     setupRoleViews(userData?.role || 'student');
@@ -222,7 +238,7 @@
                     setTimeout(() => {
                         document.getElementById('loader').style.display = 'none';
                         document.getElementById('dashboard-main-content').classList.remove('hidden');
-                        document.getElementById('dashboard-main-content').style.display = 'block'; // Fallback
+                        document.getElementById('dashboard-main-content').style.display = 'block'; 
 
                         if (!localStorage.getItem('notif_prompt_shown')) {
                             const p = document.getElementById('push-soft-prompt');
@@ -242,14 +258,16 @@
             document.getElementById('parent-view').style.display = 'none';
             document.getElementById('creator-studio-widget').style.display = 'none';
             document.getElementById('help-desk-section').style.display = 'none';
+            document.getElementById('scribe-upgrade-card').style.display = 'none';
 
             if (role === 'student') {
                 document.getElementById('portal-title').innerText = 'Student Portal';
                 document.getElementById('student-view').style.display = 'block';
                 document.getElementById('help-desk-section').style.display = 'block';
+                document.getElementById('scribe-upgrade-card').style.display = 'block';
             }
             else if (role === 'student_writer') {
-                document.getElementById('portal-title').innerText = 'Student Writer Portal';
+                document.getElementById('portal-title').innerText = 'Writer Portal (Scribe)';
                 document.getElementById('student-view').style.display = 'block';
                 document.getElementById('creator-studio-widget').style.display = 'block';
                 document.getElementById('help-desk-section').style.display = 'block';
@@ -260,172 +278,6 @@
                 document.getElementById('help-desk-section').style.display = 'block';
             }
         }
-
-        async function fetchRecentPerformance(uid) {
-            const tableBody = document.getElementById('performance-table-body');
-            const tableHead = tableBody.previousElementSibling;
-
-            try {
-                const db = firebase.firestore();
-                const snapshot = await db.collection('test_results').where('uid', '==', uid).get();
-
-                if (snapshot.empty) {
-                    tableHead.style.display = 'none';
-                    tableBody.innerHTML = `
-                        <tr>
-                            <td colspan="4" class="text-center p-10 border-none">
-                                <div class="bg-slate-50 border-2 border-dashed border-slate-300 rounded-2xl p-[30px] max-w-[400px] mx-auto transition hover:bg-slate-100">
-                                    <i class="fa-solid fa-flask-vial text-[40px] text-slate-400 mb-[15px]"></i>
-                                    <h4 class="m-0 mb-2 text-slate-900 font-['Poppins'] text-[18px]">No Data Found</h4>
-                                    <p class="m-0 mb-5 text-slate-500 text-[14px]">You haven't attempted any mock tests yet. Give it a try to see your analysis here!</p>
-                                    <a href="tests.html" class="bg-slate-900 text-white px-6 py-3 rounded-xl font-bold no-underline inline-flex items-center gap-2 text-[14px] shadow-md hover:bg-slate-800 transition">
-                                        <i class="fa-solid fa-play"></i> Take a Mock Test
-                                    </a>
-                                </div>
-                            </td>
-                        </tr>
-                    `;
-                    return;
-                }
-
-                tableHead.style.display = 'table-header-group'; // Tailwind way
-                let testHistory = [];
-                snapshot.forEach(doc => { testHistory.push(doc.data()); });
-
-                testHistory.sort((a, b) => {
-                    let timeA = a.timestamp ? a.timestamp.toMillis() : 0;
-                    let timeB = b.timestamp ? b.timestamp.toMillis() : 0;
-                    return timeB - timeA;
-                });
-
-                testHistory = testHistory.slice(0, 5);
-                tableBody.innerHTML = '';
-
-                testHistory.forEach(data => {
-                    let dateStr = "Recently";
-                    if (data.timestamp) {
-                        const dateObj = data.timestamp.toDate();
-                        dateStr = dateObj.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
-                    }
-
-                    let accClass = data.accuracy >= 70 ? 'bg-green-100 text-green-600' : (data.accuracy < 40 ? 'bg-red-100 text-red-600' : 'bg-amber-100 text-amber-600');
-                    let accHTML = `<span class="px-2.5 py-1 rounded-full font-extrabold text-[12px] ${accClass}">${data.accuracy}%</span>`;
-
-                    const row = `
-                        <tr class="hover:bg-slate-50 transition">
-                            <td class="p-3 border-b border-slate-100">
-                                <div class="font-extrabold text-slate-900">${data.testTitle}</div>
-                                <div class="text-[11px] text-slate-500">${Math.floor(data.timeSpent / 60)}m ${data.timeSpent % 60}s spent</div>
-                            </td>
-                            <td class="p-3 border-b border-slate-100 text-slate-600 text-[13px]">${dateStr}</td>
-                            <td class="p-3 border-b border-slate-100">${accHTML}</td>
-                            <td class="p-3 border-b border-slate-100 font-extrabold font-mono text-[16px] text-slate-900">${data.score}</td>
-                        </tr>
-                    `;
-                    tableBody.innerHTML += row;
-                });
-
-            } catch (error) {
-                tableBody.innerHTML = `<tr><td colspan="4" class="text-center text-red-500 p-5">Failed to load data. Please refresh.</td></tr>`;
-            }
-        }
-
-        async function fetchMyTickets(uid) {
-            const ticketList = document.getElementById('my-tickets-list');
-
-            try {
-                const db = firebase.firestore();
-                const snapshot = await db.collection('tickets').where('uid', '==', uid).get();
-
-                if (snapshot.empty) {
-                    ticketList.innerHTML = `<div class="text-center text-slate-500 p-[15px] bg-slate-50 rounded-lg border border-dashed border-slate-300">No tickets raised yet. Need help? Ask above!</div>`;
-                    return;
-                }
-
-                ticketList.innerHTML = '';
-
-                tickets.forEach(ticket => {
-                    let dateStr = "Recently";
-                    if (ticket.timestamp) {
-                        dateStr = new Date(ticket.timestamp).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
-                    }
-
-                    let isSolved = ticket.status === 'solved';
-                    let statusBadge = isSolved
-                        ? `<span class="bg-green-100 text-green-600 text-[10px] font-extrabold px-2 py-1 rounded text-center"><i class="fa-solid fa-check-circle"></i> SOLVED</span>`
-                        : `<span class="bg-amber-100 text-amber-600 text-[10px] font-extrabold px-2 py-1 rounded text-center"><i class="fa-solid fa-clock"></i> PENDING</span>`;
-
-                    let replyBox = '';
-                    if (isSolved && ticket.reply) {
-                        replyBox = `
-                            <div class="mt-[15px] p-[15px] bg-blue-50 border-l-4 border-blue-500 rounded-r-lg">
-                                <div class="text-[11px] font-extrabold text-blue-600 mb-[5px] uppercase tracking-wide">Reply from Team</div>
-                                <div class="text-[13px] text-blue-900 leading-relaxed">${ticket.reply}</div>
-                            </div>
-                        `;
-                    }
-
-                    const card = `
-                        <div class="border border-slate-200 rounded-xl p-[15px] bg-white shadow-sm transition hover:shadow-md">
-                            <div class="flex justify-between items-start mb-[10px]">
-                                <h4 class="m-0 text-[15px] text-slate-900 font-bold">${ticket.subject || 'Doubt Question'}</h4>
-                                ${statusBadge}
-                            </div>
-                            <div class="text-[11px] text-slate-400 font-semibold mb-[10px]">Ticket ID: #${ticket.id.substring(0, 6).toUpperCase()} &bull; ${dateStr}</div>
-                            <p class="m-0 text-[13px] text-slate-600 leading-relaxed">${ticket.description || ''}</p>
-                            ${replyBox}
-                        </div>
-                    `;
-                    ticketList.innerHTML += card;
-                });
-
-            } catch (error) {
-                ticketList.innerHTML = `<div class="text-center text-red-500 p-[15px] bg-red-50 rounded-lg">Failed to load tickets. Please refresh.</div>`;
-            }
-        }
-
-        // Secure Ticket Submission
-        window.submitTicket = async function(e) {
-            e.preventDefault();
-            const btn = document.getElementById('submit-ticket-btn');
-            const originalText = btn.innerHTML;
-            
-            const subject = document.getElementById('t-subject').value.trim();
-            const categoryVal = document.getElementById('t-category').value;
-            const description = document.getElementById('t-desc').value.trim();
-
-            btn.disabled = true;
-            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Submitting...';
-
-            try {
-                const user = firebase.auth().currentUser;
-                if (!user) throw new Error("Please login to submit a ticket.");
-
-                const db = firebase.firestore();
-
-                const docRef = await db.collection('tickets').add({ 
-                    category: categoryVal, 
-                    subject: subject, 
-                    description: description, 
-                    uid: user.uid, 
-                    raisedByEmail: user.email || 'No Email' 
-                });
-                
-                alert(`✅ Success! Your ticket has been submitted.\n\nTicket ID: #${docRef.id.substring(0,6).toUpperCase()}`);
-                document.getElementById('ticket-form').reset();
-                
-                if(typeof fetchMyTickets === 'function') {
-                    fetchMyTickets(user.uid);
-                }
-
-            } catch (error) { 
-                console.error("Ticket Submission Error:", error); 
-                alert("Failed to submit ticket: " + error.message); 
-            } finally { 
-                btn.disabled = false; 
-                btn.innerHTML = originalText; 
-            }
-        };
     </script>
 </body>
 </html>

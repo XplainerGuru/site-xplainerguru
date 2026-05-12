@@ -20,7 +20,7 @@ async function createTicket(user, userData, ticketData) {
 
     // Smart Routing (Section 6.2)
     const academicCategories = ['academic_doubt', 'article_approval'];
-    const targetPool = academicCategories.includes(category) ? 'mentor_pool' : 'support_pool';
+    const targetPool = academicCategories.includes(category) ? 'MNT' : 'SUP';
 
     const ticketId = `XG-TKT-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
 
@@ -60,8 +60,8 @@ function getTicketsQuery(user, userData) {
     // Admin/Founder: Can see everything in their pools
     if (['founder', 'admin_global'].includes(userData.role)) return ticketsRef;
     
-    if (userData.role === 'admin_mentor') return ticketsRef.where("pool", "==", "mentor_pool");
-    if (userData.role === 'admin_support') return ticketsRef.where("pool", "==", "support_pool");
+    if (userData.role === 'admin_mentor') return ticketsRef.where("pool", "==", "MNT");
+    if (userData.role === 'admin_support') return ticketsRef.where("pool", "==", "SUP");
 
     // Parent: Can only see tickets created for their child's Student ID
     if (userData.role === 'parent') {

@@ -58,6 +58,15 @@
             }, 800);
         });
 
+        function shareTest(testId, title) {
+            const shareUrl = window.location.origin + '/exam.html?id=' + testId;
+            if (navigator.share) {
+                navigator.share({ title: title, url: shareUrl }).catch(console.error);
+            } else {
+                navigator.clipboard.writeText(shareUrl).then(() => alert('Link copied to clipboard!')).catch(console.error);
+            }
+        }
+
         // 2. 🚀 FIREBASE REAL-TIME FETCH ENGINE WITH GROUPING
         async function fetchLiveTests() {
             const container = document.getElementById('test-list-container');
@@ -100,11 +109,10 @@
                         <div class="search-item bg-white rounded-[16px] p-[25px] border border-slate-200 shadow-[0_4px_15px_rgba(0,0,0,0.02)] flex flex-col transition duration-300 hover:-translate-y-1 hover:shadow-[0_10px_25px_rgba(0,0,0,0.05)] hover:border-blue-300" data-title="${safeSearchTitle}">
                             <span class="bg-indigo-50 text-indigo-600 text-[10px] font-extrabold px-2 py-1 rounded-[4px] self-start uppercase">${subject}</span>
                             <h3 class="m-0 mt-[15px] font-['Poppins'] text-slate-900 text-[18px] leading-tight">${test.title || 'Untitled Test'}</h3>
-                            <div class="flex gap-[15px] my-2.5 mb-5 text-[13px] text-slate-500 font-semibold">
-                                <span><i class="fa-regular fa-circle-question"></i> ${modeText}</span>
-                                <span><i class="fa-regular fa-clock"></i> ${durationText}</span>
+                            <div class="flex gap-2 mt-auto pt-5">
+                                <button onclick="handleTestClick('${test.id}')" class="flex-1 bg-slate-900 text-white border-none p-3 rounded-lg font-bold cursor-pointer text-center no-underline font-['Manrope'] transition duration-200 hover:bg-slate-800"><i class="fa-solid fa-play"></i> Start CBT Test</button>
+                                <button onclick="shareTest('${test.id}', '${test.title || 'Mock Test'}')" class="bg-slate-100 text-slate-600 p-3 rounded-lg border-none hover:bg-slate-200 transition cursor-pointer" title="Share"><i class="fa-solid fa-share-nodes"></i></button>
                             </div>
-                            <button onclick="handleTestClick('${test.id}')" class="mt-auto bg-slate-900 text-white border-none p-3 rounded-lg font-bold cursor-pointer text-center no-underline font-['Manrope'] transition duration-200 block w-full hover:bg-slate-800"><i class="fa-solid fa-play"></i> Start CBT Test</button>
                         </div>`;
                     });
                 }

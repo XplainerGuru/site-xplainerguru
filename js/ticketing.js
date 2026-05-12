@@ -50,19 +50,51 @@ async function submitTicket(e) {
 
         const userData = window.dashboardManager?.currentUserData;
 
-        const payload = {
+        // Determine target collection and webhook category based on ticket category
+        let targetCollection;
+        let webhookCategory;
+        // If category is 'academic_doubt' (mapped to 'academic') or 'article_verification_request' (mapped to 'MNT_ART')
+        if (categoryVal === 'academic' || categoryVal === 'MNT_ART') {
+            targetCollection = 'academic_tickets';
+            webhookCategory = 'academic';
+        } else {
+            // For any other category (technical, billing, etc.)
+            targetCollection = 'support_tickets';
+            webhookCategory = 'support';
+        }
+
+        const ticketPayload = {
             category: categoryVal || 'technical', subject: subject || 'No Subject', 
-            description: description || 'No Description', uid: user.uid, email: userData?.email || user.email
+            description: description || 'No Description', uid: user.uid, email: userData?.email || user.email,
+            // Add status and timestamp for consistency
+            status: 'open', // Default status for new tickets
+            timestamp: firebase.firestore.FieldValue.serverTimestamp()
         };
 
-        const response = await fetch(`${window.BASE_URL}/tickets/create`, {
-            method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload)
-        });
+        // Save the document to the determined Firestore collection
+        const db = firebase.firestore(); // Get Firestore instance
+        const docRef = await db.collection(targetCollection).add(ticketPayload);
+        const ticketId = docRef.id; // Get the ID of the newly created document
 
-        if (!response.ok) throw new Error('Failed to submit ticket.');
-        const result = await response.json();
+        // Trigger Google Apps Script Webhook for email alert (Non-blocking)
+        const GOOGLE_APPS_SCRIPT_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbyvnS3Ie78b1FiCXntWoT5buqruMY5I71K-r0wo8sH1xVbcSN6Mhj_4TFq5j8BWA4hI/exec";
+        fetch(GOOGLE_APPS_SCRIPT_WEBHOOK_URL, {
+            method: "POST",
+            headers: { "Content-Type": "text/plain;charset=utf-8" },
+            redirect: "follow",
+            keepalive: true,
+            body: JSON.stringify({
+                action: "new_ticket",
+                category: webhookCategory,
+                subject: subject,
+                description: description,
+                ticketId: ticketId,
+                userEmail: user.email,
+                userName: userData?.name || user.displayName
+            })
+        }).catch(e => console.log("Silent New Ticket Email Alert Error", e));
 
-        alert(`✅ Success! Your ticket has been submitted.\n\nTicket ID: #${result.ticket_id}`);
+        alert(`✅ Success! Your ticket has been submitted.\n\nTicket ID: #${ticketId}`);
         e.target.reset(); 
 
         if(typeof fetchMyTickets === 'function') fetchMyTickets(user.uid); // Pass UID here just in case

@@ -56,6 +56,15 @@
             loadNotes();
         });
 
+        function shareNote(link, title) {
+            const shareUrl = window.location.origin + '/download.html?file=' + encodeURIComponent(link);
+            if (navigator.share) {
+                navigator.share({ title: title, url: shareUrl }).catch(console.error);
+            } else {
+                navigator.clipboard.writeText(shareUrl).then(() => alert('Link copied to clipboard!')).catch(console.error);
+            }
+        }
+
         function loadNotes() {
             db.collection("notes").onSnapshot(snap => {
                 let nData = [];
@@ -111,10 +120,10 @@
                         <div class="note-card search-item bg-white rounded-[16px] p-[25px] border border-slate-200 shadow-[0_4px_15px_rgba(0,0,0,0.02)] flex flex-col transition duration-300 hover:-translate-y-1 hover:shadow-lg hover:border-emerald-500" data-title="${safeSearchTitle} ${subject.toLowerCase()}">
                             <span class="bg-emerald-50 text-emerald-500 text-[10px] font-extrabold px-2 py-1 rounded-[4px] self-start uppercase tracking-wider">${subject}</span>
                             <h3 class="m-0 mt-[15px] mb-[5px] font-['Poppins'] text-slate-900 text-[16px] leading-[1.4]">${item.title}</h3>
-                            <div class="flex gap-[15px] my-[10px] mb-[20px] text-[13px] text-slate-500 font-semibold">
-                                <span><i class="fa-regular fa-calendar"></i> ${dateStr}</span>
+                            <div class="flex gap-2 mt-auto pt-5">
+                                <button onclick="handleNoteClick('${safeLink}', '${item.id}')" class="flex-1 bg-slate-900 text-white border-none p-3 rounded-lg font-bold cursor-pointer text-center no-underline font-['Manrope'] transition duration-200 hover:bg-slate-800"><i class="fa-solid fa-lock-open"></i> View PDF</button>
+                                <button onclick="shareNote('${safeLink}', '${item.title}')" class="bg-slate-100 text-emerald-600 p-3 rounded-lg border-none hover:bg-slate-200 transition cursor-pointer" title="Share"><i class="fa-solid fa-share-nodes"></i></button>
                             </div>
-                            <button onclick="handleNoteClick('${safeLink}', '${item.id}')" class="mt-auto bg-slate-900 text-white border-none p-3 rounded-lg font-bold cursor-pointer text-center no-underline font-['Manrope'] transition duration-200 block w-full hover:bg-slate-800"><i class="fa-solid fa-lock-open"></i> View PDF</button>
                         </div>`;
                     });
                 }

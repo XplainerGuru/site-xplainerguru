@@ -1,22 +1,23 @@
 const CONFIG = {
     email: "xplainerguru@gmail.com",
     waChannel: "https://whatsapp.com/channel/0029Vb7p4QV0QeadmOIpgx36",
-    ig: "https://instagram.com/xplainer.guru.official",
-    yt: "https://youtube.com/@XplainerGuruOfficial",
+    ig: "https://instagram.com/xplainerguru",
+    yt: "https://youtube.com/@xplainerguru",
     scriptURL: "https://script.google.com/macros/s/AKfycbwi9kCj0ALebjHcpNacSzAaRkF2ePkzcq9r5BlIIjO-y9Rbr6aXVH45aFD5Rvh2CqlX/exec",
 
     mentor: {
         name: "Shiwendu Kaushal",
-        role: "Founder & CEO", // Updated Title
-        ig: "https://www.instagram.com/shiwendu.kaushal",
+        role: "Founder & Chief Product Officer (CPO)", 
+        ig: "https://instagram.com/shiwendukaushal",
         pic: "team/shiwendu.png" 
     },
     developer: {
         name: "Ashutosh Kaushal",
-        role: "Founder & Managing Director(MD)", // Updated Title
+        role: "Founder & Chief Executive Officer (CEO), Lead Architect", 
         bio: "The technical visionary behind Xplainer Guru. Managing platform infrastructure and digital strategy.",
+        website: "https://coderkaushal.netlify.app",
         ig: "https://instagram.com/ashu7061a",
-        li: "https://linkedin.com/in/ashutoshkaushal-1412",
+        li: "https://www.linkedin.com/in/ashutosh-kaushal1412",
         pic: "team/ashutosh.jpeg" 
     }
 };
