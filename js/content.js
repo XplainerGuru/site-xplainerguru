@@ -17,7 +17,7 @@ const CONFIG = {
         bio: "The technical visionary behind Xplainer Guru. Managing platform infrastructure and digital strategy.",
         website: "https://coderkaushal.netlify.app",
         ig: "https://instagram.com/ashu7061a",
-        li: "https://www.linkedin.com/in/ashutosh-kaushal1412",
+        li: "https://www.linkedin.com/in/ashutoshkaushal1412",
         pic: "team/ashutosh.jpeg" 
     }
 };
