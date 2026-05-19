@@ -303,14 +303,20 @@
                         }
 
                         const card = document.createElement('div');
-                        card.className = 'bg-white rounded-xl overflow-hidden border border-slate-200 cursor-pointer transition duration-300 hover:-translate-y-1 hover:shadow-lg hover:border-blue-600';
-                        card.onclick = () => play(ytId, item.title, item.id);
+                        card.className = 'bg-white rounded-xl overflow-hidden border border-slate-200 shadow-[0_4px_15px_rgba(0,0,0,0.02)] flex flex-col transition duration-300 hover:-translate-y-1 hover:shadow-lg hover:border-blue-300';
                         card.innerHTML = `
-                            <div class="relative pb-[56.25%] bg-black">
-                                <img src="https://img.youtube.com/vi/${ytId}/hqdefault.jpg" class="absolute w-full h-full object-cover">
+                            <div class="relative pb-[56.25%] bg-black group cursor-pointer" onclick="play('${ytId}', '${item.title}', '${item.id}')">
+                                <img src="https://img.youtube.com/vi/${ytId}/hqdefault.jpg" class="absolute w-full h-full object-cover opacity-90 transition duration-300 group-hover:opacity-100 group-hover:scale-105" onerror="this.src='logo.png'">
+                                <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+                                    <i class="fa-solid fa-circle-play text-white/80 text-4xl group-hover:text-red-500 transition duration-300 shadow-sm drop-shadow-md"></i>
+                                </div>
                             </div>
-                            <div class="p-3">
-                                <h4 class="m-0 text-[12px] sm:text-[13px] font-['Poppins'] text-slate-900 leading-[1.4]">${item.title}</h4>
+                            <div class="p-3 flex-1 flex flex-col">
+                                <h4 class="m-0 text-[12px] sm:text-[13px] font-['Poppins'] text-slate-900 leading-[1.4] line-clamp-2">${item.title}</h4>
+                                <div class="flex gap-2 mt-auto pt-2">
+                                    <button onclick="play('${ytId}', '${item.title}', '${item.id}')" class="flex-1 bg-slate-900 hover:bg-slate-800 text-white border-none p-2 rounded-lg font-bold cursor-pointer text-center no-underline font-['Manrope'] transition duration-200 text-xs"><i class="fa-solid fa-play"></i> Watch Now</button>
+                                    <a href="https://www.youtube.com/watch?v=${ytId}" target="_blank" class="bg-red-600 text-white p-2 rounded-lg border-none hover:bg-red-700 transition cursor-pointer flex items-center justify-center text-xs" title="Watch on YouTube" onclick="event.stopPropagation();"><i class="fa-brands fa-youtube"></i></a>
+                                </div>
                             </div>`;
                         vGrid.appendChild(card);
                     });
