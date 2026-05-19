@@ -261,7 +261,7 @@
 
                 if(vData.length === 0) {
                     track.innerHTML = `<div class="col-span-full text-center py-10 px-5 text-slate-500">No classes published.</div>`;
-                    vGrid.innerHTML = `<div class="col-span-full text-center py-10 px-5 bg-white border-2 border-dashed border-slate-300 rounded-[15px]">No video classes uploaded yet.</div>`;
+ vGrid.innerHTML = `<div class="col-span-full text-center py-10 px-5 bg-white border-2 border-dashed border-slate-300 rounded-[15px]">No video classes uploaded yet.</div>`;
                 } else {
                     latestVideos = vData.slice(0, 5);
                     latestVideos.forEach(item => {
@@ -269,7 +269,7 @@
                         const slide = document.createElement('div');
                         slide.className = 'min-w-full relative cursor-pointer group';
                         slide.onclick = () => play(ytId, item.title, item.id);
-                        
+
                         slide.innerHTML = `
                             <img src="https://img.youtube.com/vi/${ytId}/maxresdefault.jpg" 
                                  class="w-full h-full block aspect-video object-cover opacity-90 transition duration-400 group-hover:opacity-100" 
@@ -289,7 +289,7 @@
                     vData.slice(0, 4).forEach((item, index) => {
                         const ytId = extractYTId(item.link || item.url);
 
-                        if (index === 2) {
+                            if (index === 2) {
                             const adWrapper = document.createElement('div');
                             adWrapper.className = "col-span-1 sm:col-span-2 w-full flex justify-center my-6 min-h-[50px]";
                             adWrapper.innerHTML = `<div id="container-e9b12f5418d9e679de47d1e3b3183725"></div>`;
@@ -299,7 +299,7 @@
                             adScript.async = true;
                             adScript.dataset.cfasync = "false";
                             adScript.src = "https://pl29365593.profitablecpmratenetwork.com/e9b12f5418d9e679de47d1e3b3183725/invoke.js";
-                            document.body.appendChild(adScript);
+ document.body.appendChild(adScript);
                         }
 
                         const card = document.createElement('div');

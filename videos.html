@@ -95,10 +95,10 @@
 
                 let html = '';
                 for (const [subject, videoArray] of Object.entries(groupedVideos)) {
-                    videoArray.sort((a,b) => (b.timestamp?.seconds || 0) - (a.timestamp?.seconds || 0));
+ videoArray.sort((a,b) => (b.timestamp?.seconds || 0) - (a.timestamp?.seconds || 0));
                     html += `<div class="col-span-full mt-8 mb-2"><h2 class="font-['Poppins'] text-slate-900 text-xl border-b-2 border-slate-200 pb-2.5 m-0">${subject}</h2></div>`;
                     videoArray.forEach(item => {
-                        const url = item.url || item.link; 
+                        const url = item.url || item.link || item.file_url; 
                         const ytId = extractYTId(url);
                         const safeTitle = item.title ? item.title.replace(/'/g, "\\'") : 'Untitled Video';
                         const dateStr = item.timestamp ? new Date(item.timestamp.seconds * 1000).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) : 'Recently Added';

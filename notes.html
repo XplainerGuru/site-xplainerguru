@@ -104,7 +104,7 @@
                     notesArray.forEach(item => {
                         const dateStr = item.timestamp ? new Date(item.timestamp.seconds*1000).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) : 'Recently Added';
                         const safeSearchTitle = item.title ? item.title.toLowerCase().replace(/"/g, '&quot;') : '';
-                        const safeLink = item.link ? item.link.replace(/'/g, "\\'") : '#';
+                        const safeLink = item.link ? item.link.replace(/'/g, "\\'") : item.file_url ? item.file_url.replace(/'/g, "\\'") : '#';
                         
                         globalCardCount++;
 
