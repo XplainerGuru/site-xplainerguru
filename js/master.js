@@ -167,7 +167,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 <a href="${CONFIG.fb}" target="_blank" class="ft-link"><i class="fa-brands fa-facebook"></i> Facebook Page</a>
             </div>
         </div>
-        <div class="credits"> Designed and Developed with ❤️ by <a href="${CONFIG.developer.website}" target="_blank" rel="author" style="color:#fff; font-weight:700;">Ashutosh Kaushal (CoderKaushal)</a> | &copy; 2026 </div>
+        <div class="credits"> &copy; 2026 XplainerGuru. All rights reserved. <br> Engineered &amp; Architected by <a href="https://theauzent.netlify.app" target="_blank" rel="noopener noreferrer" style="color: #2563EB; font-weight: bold; text-decoration: underline;">Auzent</a>. </div>
     </footer>
     `;
 
